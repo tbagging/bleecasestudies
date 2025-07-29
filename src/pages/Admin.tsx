@@ -187,6 +187,10 @@ const Admin = () => {
     const file = event.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
       setEditForm({...editForm, imageFile: file, image: URL.createObjectURL(file)});
+      toast({
+        title: "Photo uploaded",
+        description: "Case study photo has been uploaded successfully.",
+      });
     }
   };
 
