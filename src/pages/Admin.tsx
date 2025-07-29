@@ -52,8 +52,8 @@ const Admin = () => {
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-      const fileName = file.name.replace('.docx', '');
+    if (file && (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type === "application/pdf")) {
+      const fileName = file.name.replace(/\.(docx|pdf)$/, '');
       const newId = String(Date.now()); // Use timestamp as string ID
       
       const newCaseStudy = {
@@ -308,13 +308,13 @@ const Admin = () => {
               <CardContent>
                 <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center">
                   <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-lg font-medium mb-2">Upload .docx Case Study</p>
+                  <p className="text-lg font-medium mb-2">Upload Case Study Document</p>
                   <p className="text-muted-foreground mb-4">
-                    Select a Word document containing your case study
+                    Select a Word document (.docx) or PDF file containing your case study
                   </p>
                   <input
                     type="file"
-                    accept=".docx"
+                    accept=".docx,.pdf"
                     onChange={handleFileUpload}
                     className="hidden"
                     id="case-study-upload"
