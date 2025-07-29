@@ -318,11 +318,11 @@ const Admin = () => {
                         className="hidden"
                         id="logo-file-upload"
                       />
-                      <Button variant="outline" size="sm" asChild>
-                        <label htmlFor="logo-file-upload" className="cursor-pointer">
+                      <label htmlFor="logo-file-upload" className="cursor-pointer">
+                        <Button variant="outline" size="sm">
                           Choose File
-                        </label>
-                      </Button>
+                        </Button>
+                      </label>
                     </div>
                     {newLogo.url && (
                       <div className="mt-2 p-2 border rounded">
