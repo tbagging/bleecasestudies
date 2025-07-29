@@ -390,11 +390,15 @@ const Admin = () => {
                                   className="hidden"
                                   id={`case-study-image-upload-${caseStudy.id}`}
                                 />
-                                <label htmlFor={`case-study-image-upload-${caseStudy.id}`} className="cursor-pointer">
-                                  <Button variant="outline" size="sm">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  asChild
+                                >
+                                  <label htmlFor={`case-study-image-upload-${caseStudy.id}`} className="cursor-pointer">
                                     Choose Image
-                                  </Button>
-                                </label>
+                                  </label>
+                                </Button>
                               </div>
                               {editForm.image && (
                                 <div className="mt-2 p-2 border rounded">
