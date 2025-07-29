@@ -18,11 +18,13 @@ const Admin = () => {
     aboutContent, 
     ctaContent, 
     clientLogos, 
+    caseStudies,
     availableTags,
     updateHeroContent,
     updateAboutContent,
     updateCTAContent,
     updateClientLogos,
+    updateCaseStudies,
     updateAvailableTags
   } = useContent();
 
@@ -45,11 +47,6 @@ const Admin = () => {
   const [newTag, setNewTag] = useState("");
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
-  const [caseStudies, setCaseStudies] = useState([
-    { id: 1, title: "Revenue Growth Through Strategic Alignment", company: "TechCorp", industry: "Technology", fileName: "techcorp-case-study.docx" },
-    { id: 2, title: "Digital Transformation Success", company: "RetailCorp", industry: "Retail", fileName: "retailcorp-case-study.docx" },
-    { id: 3, title: "Market Expansion Strategy", company: "StartupInc", industry: "SaaS", fileName: "startupinc-case-study.docx" }
-  ]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -62,14 +59,16 @@ const Admin = () => {
         title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         company: "New Company",
         industry: "Unknown",
-        fileName: file.name
+        fileName: file.name,
+        summary: "This case study details successful organizational transformation and strategic implementation.",
+        tags: ["strategy"]
       };
       
-      setCaseStudies([...caseStudies, newCaseStudy]);
+      updateCaseStudies([...caseStudies, newCaseStudy]);
       
       toast({
         title: "Case study uploaded",
-        description: `"${file.name}" has been uploaded and added to the list.`,
+        description: `"${file.name}" has been uploaded and added to the main page.`,
       });
     }
   };
@@ -295,7 +294,7 @@ const Admin = () => {
                           <Download className="w-4 h-4 mr-1" />
                           PDF
                         </Button>
-                        <Button variant="destructive" size="sm" onClick={() => setCaseStudies(caseStudies.filter(cs => cs.id !== caseStudy.id))}>
+                        <Button variant="destructive" size="sm" onClick={() => updateCaseStudies(caseStudies.filter(cs => cs.id !== caseStudy.id))}>
                           <Trash2 className="w-4 h-4 mr-1" />
                           Delete
                         </Button>

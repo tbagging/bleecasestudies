@@ -21,16 +21,28 @@ interface ClientLogo {
   url: string;
 }
 
+interface CaseStudy {
+  id: number;
+  title: string;
+  company: string;
+  industry: string;
+  fileName: string;
+  summary?: string;
+  tags?: string[];
+}
+
 interface ContentContextType {
   heroContent: HeroContent;
   aboutContent: AboutContent;
   ctaContent: CTAContent;
   clientLogos: ClientLogo[];
+  caseStudies: CaseStudy[];
   availableTags: string[];
   updateHeroContent: (content: HeroContent) => void;
   updateAboutContent: (content: AboutContent) => void;
   updateCTAContent: (content: CTAContent) => void;
   updateClientLogos: (logos: ClientLogo[]) => void;
+  updateCaseStudies: (caseStudies: CaseStudy[]) => void;
   updateAvailableTags: (tags: string[]) => void;
 }
 
@@ -98,6 +110,14 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     ])
   );
 
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(() =>
+    getInitialState('caseStudies', [
+      { id: 1, title: "Revenue Growth Through Strategic Alignment", company: "TechCorp", industry: "Technology", fileName: "techcorp-case-study.docx", summary: "Transformed internal processes to achieve 40% revenue increase within 6 months through strategic clarity and team alignment.", tags: ["revenue-growth", "alignment", "process-optimization"] },
+      { id: 2, title: "Market Expansion Strategy Implementation", company: "GrowthCo", industry: "SaaS", fileName: "growthco-case-study.docx", summary: "Enabled rapid market entry into 3 new regions through organizational restructuring and strategic focus.", tags: ["market-expansion", "strategy", "restructuring"] },
+      { id: 3, title: "Operational Excellence in Manufacturing", company: "ManufactureX", industry: "Manufacturing", fileName: "manufacturex-case-study.docx", summary: "Reduced operational costs by 25% while improving quality metrics through systematic process improvements.", tags: ["operational-excellence", "cost-reduction", "quality"] }
+    ])
+  );
+
   const updateHeroContent = (content: HeroContent) => {
     setHeroContent(content);
     localStorage.setItem('heroContent', JSON.stringify(content));
@@ -118,6 +138,11 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('clientLogos', JSON.stringify(logos));
   };
 
+  const updateCaseStudies = (caseStudies: CaseStudy[]) => {
+    setCaseStudies(caseStudies);
+    localStorage.setItem('caseStudies', JSON.stringify(caseStudies));
+  };
+
   const updateAvailableTags = (tags: string[]) => {
     setAvailableTags(tags);
     localStorage.setItem('availableTags', JSON.stringify(tags));
@@ -128,11 +153,13 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     aboutContent,
     ctaContent,
     clientLogos,
+    caseStudies,
     availableTags,
     updateHeroContent,
     updateAboutContent,
     updateCTAContent,
     updateClientLogos,
+    updateCaseStudies,
     updateAvailableTags
   };
 
