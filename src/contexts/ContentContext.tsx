@@ -21,6 +21,15 @@ interface ClientLogo {
   url: string;
 }
 
+interface CaseStudyContent {
+  background: string;
+  challenge: string[];
+  process: { phase: string; description: string }[];
+  results: { metric: string; value: string; description: string }[];
+  companySize?: string;
+  timeline?: string;
+}
+
 interface CaseStudy {
   id: string;
   title: string;
@@ -30,6 +39,7 @@ interface CaseStudy {
   company: string;
   industry: string;
   fileName?: string;
+  content?: CaseStudyContent;
 }
 
 interface ContentContextType {
@@ -120,7 +130,28 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         company: "TechCorp",
         industry: "Technology",
         tags: ["revenue-growth", "alignment", "process-optimization"],
-        fileName: "techcorp-case-study.docx"
+        fileName: "techcorp-case-study.docx",
+        content: {
+          background: "TechCorp faced stagnating revenue growth despite having a strong product and talented team. Internal processes were fragmented, teams were working in silos, and strategic priorities were unclear across departments.",
+          challenge: [
+            "Disconnected teams working without shared strategic vision",
+            "Inefficient processes causing delays and resource waste",
+            "Lack of clear accountability and ownership across departments",
+            "Revenue plateau despite market opportunities"
+          ],
+          process: [
+            { phase: "Month 1-2: Strategic Clarity Workshop", description: "Facilitated intensive alignment sessions to establish clear strategic priorities and shared vision." },
+            { phase: "Month 3-4: Process Optimization", description: "Redesigned key workflows and implemented new accountability frameworks." },
+            { phase: "Month 5-6: Implementation & Scale", description: "Rolled out new processes company-wide with embedded support and monitoring." }
+          ],
+          results: [
+            { metric: "40%", value: "Revenue Growth", description: "Increase in 6 months" },
+            { metric: "60%", value: "Process Efficiency", description: "Reduction in delivery time" },
+            { metric: "85%", value: "Team Alignment", description: "Measured satisfaction score" }
+          ],
+          companySize: "150+ employees",
+          timeline: "6 months"
+        }
       },
       {
         id: "2",
@@ -129,7 +160,27 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         company: "GrowthCo",
         industry: "SaaS",
         tags: ["market-expansion", "strategy", "restructuring"],
-        fileName: "growthco-case-study.docx"
+        fileName: "growthco-case-study.docx",
+        content: {
+          background: "GrowthCo had achieved strong success in their home market but struggled to expand internationally. Their existing organizational structure and processes were optimized for a single market, creating barriers to effective multi-regional operations and customer acquisition.",
+          challenge: [
+            "Organizational structure not designed for multi-regional operations",
+            "Lack of localized market knowledge and customer insights",
+            "Resource allocation challenges across multiple time zones"
+          ],
+          process: [
+            { phase: "Month 1-2: Market Analysis & Strategy Design", description: "Deep dive into target markets and designed region-specific go-to-market strategies." },
+            { phase: "Month 3-4: Organizational Restructuring", description: "Redesigned team structure and processes to support multi-regional operations." },
+            { phase: "Month 5-8: Implementation & Scale", description: "Launched in new markets with embedded support and continuous optimization." }
+          ],
+          results: [
+            { metric: "3", value: "New Markets Entered", description: "Successful regional expansion" },
+            { metric: "120%", value: "Revenue Growth", description: "Total company growth" },
+            { metric: "8", value: "Months to Market", description: "Time to full operation" }
+          ],
+          companySize: "200+ employees",
+          timeline: "8 months"
+        }
       },
       {
         id: "3",
@@ -138,7 +189,27 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         company: "ManufactureX",
         industry: "Manufacturing", 
         tags: ["operational-excellence", "cost-reduction", "quality"],
-        fileName: "manufacturex-case-study.docx"
+        fileName: "manufacturex-case-study.docx",
+        content: {
+          background: "ManufactureX was facing increasing pressure from competitors with lower costs while maintaining high quality standards. Their existing processes had grown organically over time, creating inefficiencies and quality inconsistencies.",
+          challenge: [
+            "Rising operational costs impacting competitiveness",
+            "Quality inconsistencies affecting customer satisfaction",
+            "Outdated processes preventing scalability"
+          ],
+          process: [
+            { phase: "Month 1-2: Process Analysis", description: "Comprehensive audit of all operational processes and quality control systems." },
+            { phase: "Month 3-4: System Redesign", description: "Implemented lean manufacturing principles and new quality frameworks." },
+            { phase: "Month 5-6: Training & Rollout", description: "Trained teams and rolled out new processes with continuous monitoring." }
+          ],
+          results: [
+            { metric: "25%", value: "Cost Reduction", description: "Operational efficiency gains" },
+            { metric: "40%", value: "Quality Improvement", description: "Defect rate reduction" },
+            { metric: "95%", value: "Process Adoption", description: "Team implementation rate" }
+          ],
+          companySize: "500+ employees",
+          timeline: "6 months"
+        }
       },
       {
         id: "4",
@@ -147,7 +218,27 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         company: "Ichilov Hospital",
         industry: "Healthcare",
         tags: ["innovation", "collaboration", "entrepreneurship", "healthcare"],
-        fileName: "ichilov-hackathon-case-study.docx"
+        fileName: "ichilov-hackathon-case-study.docx",
+        content: {
+          background: "Ichilov Hospital sought to foster innovation culture and entrepreneurial thinking among their staff while identifying opportunities for industry partnerships and commercial development.",
+          challenge: [
+            "Limited culture of innovation and entrepreneurship",
+            "Lack of structured approach to idea development",
+            "Need for industry partnerships and commercial viability"
+          ],
+          process: [
+            { phase: "Week 1-2: Preparation & Setup", description: "Designed hackathon framework and recruited cross-functional teams." },
+            { phase: "Week 3: Intensive Hackathon", description: "48-hour intensive innovation session with mentorship and industry experts." },
+            { phase: "Week 4-8: Development & Partnership", description: "Supported winning ideas and facilitated industry connections." }
+          ],
+          results: [
+            { metric: "50+", value: "Participants", description: "Cross-departmental engagement" },
+            { metric: "12", value: "Commercial Ideas", description: "Viable concepts developed" },
+            { metric: "3", value: "Industry Partnerships", description: "Active collaborations formed" }
+          ],
+          companySize: "2000+ employees",
+          timeline: "2 months"
+        }
       }
     ])
   );
