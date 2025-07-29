@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import bleeLogoMain from "@/assets/blee-logo-main.png";
 import { useContent } from "@/contexts/ContentContext";
 
 const Hero = () => {
@@ -15,8 +14,8 @@ const Hero = () => {
     <section className="min-h-screen flex items-center justify-center bg-primary text-primary-foreground">
       <div className="text-center max-w-4xl mx-auto px-6">
         <img 
-          src={bleeLogoMain} 
-          alt="BLEE" 
+          src="/lovable-uploads/0fa26a4f-c79b-4add-a50b-3f74bff263b7.png" 
+          alt="BLEE - beyond hackathons" 
           className="w-64 h-auto mx-auto mb-12"
         />
         <h1 className="text-5xl md:text-7xl font-title font-bold mb-8 leading-tight">
