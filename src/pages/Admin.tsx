@@ -44,13 +44,20 @@ const Admin = () => {
   }, [ctaContent]);
   const [newTag, setNewTag] = useState("");
 
-  const [newLogo, setNewLogo] = useState({ name: "", url: "" });
+  const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
       console.log("Uploading case study:", file.name);
       // Handle .docx upload
+    }
+  };
+
+  const handleLogoFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      setNewLogo({...newLogo, file, url: URL.createObjectURL(file)});
     }
   };
 
@@ -100,8 +107,8 @@ const Admin = () => {
   const addNewLogo = () => {
     if (newLogo.name.trim() && newLogo.url.trim()) {
       const newId = Math.max(...clientLogos.map(logo => logo.id)) + 1;
-      updateClientLogos([...clientLogos, { id: newId, ...newLogo }]);
-      setNewLogo({ name: "", url: "" });
+      updateClientLogos([...clientLogos, { id: newId, name: newLogo.name, url: newLogo.url }]);
+      setNewLogo({ name: "", url: "", file: null });
       toast({
         title: "Client logo added",
         description: `"${newLogo.name}" has been added to client logos.`,
@@ -285,7 +292,7 @@ const Admin = () => {
                 <CardTitle>Manage Client Logos</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
                   <div>
                     <Label htmlFor="logo-name">Logo Name</Label>
                     <Input
@@ -295,17 +302,49 @@ const Admin = () => {
                       onChange={(e) => setNewLogo({...newLogo, name: e.target.value})}
                     />
                   </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Upload Logo</Label>
+                    <div className="border-2 border-dashed border-muted rounded-lg p-6 text-center">
+                      <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-sm font-medium mb-1">Upload logo from computer</p>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        PNG, JPG or SVG up to 2MB
+                      </p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleLogoFileUpload}
+                        className="hidden"
+                        id="logo-file-upload"
+                      />
+                      <Button variant="outline" size="sm" asChild>
+                        <label htmlFor="logo-file-upload" className="cursor-pointer">
+                          Choose File
+                        </label>
+                      </Button>
+                    </div>
+                    {newLogo.url && (
+                      <div className="mt-2 p-2 border rounded">
+                        <img src={newLogo.url} alt="Preview" className="w-20 h-10 object-contain mx-auto" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="text-center text-sm text-muted-foreground">or</div>
+                  
                   <div>
                     <Label htmlFor="logo-url">Logo URL</Label>
                     <Input
                       id="logo-url"
                       placeholder="https://example.com/logo.png"
                       value={newLogo.url}
-                      onChange={(e) => setNewLogo({...newLogo, url: e.target.value})}
+                      onChange={(e) => setNewLogo({...newLogo, url: e.target.value, file: null})}
                     />
                   </div>
                 </div>
-                <Button onClick={addNewLogo}>
+                
+                <Button onClick={addNewLogo} disabled={!newLogo.name.trim() || !newLogo.url.trim()}>
                   <Plus className="w-4 h-4 mr-1" />
                   Add Logo
                 </Button>
