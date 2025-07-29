@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as React from "react";
 import { useContent } from "@/contexts/ContentContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,19 @@ const Admin = () => {
   const [localHeroContent, setLocalHeroContent] = useState(heroContent);
   const [localAboutContent, setLocalAboutContent] = useState(aboutContent);
   const [localCTAContent, setLocalCTAContent] = useState(ctaContent);
+
+  // Sync local state when context changes
+  React.useEffect(() => {
+    setLocalHeroContent(heroContent);
+  }, [heroContent]);
+
+  React.useEffect(() => {
+    setLocalAboutContent(aboutContent);
+  }, [aboutContent]);
+
+  React.useEffect(() => {
+    setLocalCTAContent(ctaContent);
+  }, [ctaContent]);
   const [newTag, setNewTag] = useState("");
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "" });

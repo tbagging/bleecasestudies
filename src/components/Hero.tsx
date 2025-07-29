@@ -3,9 +3,7 @@ import bleeLogoMain from "@/assets/blee-logo-main.png";
 import { useContent } from "@/contexts/ContentContext";
 
 const Hero = () => {
-  console.log('Hero component rendering');
   const { heroContent, ctaContent } = useContent();
-  console.log('Hero got context:', { heroContent, ctaContent });
 
   const handleEmailCTA = () => {
     const subject = "Strategic Transformation Discussion";
