@@ -48,7 +48,7 @@ const Admin = () => {
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
   const [editingCaseStudy, setEditingCaseStudy] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "", summary: "" });
+  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "", summary: "", tags: [] as string[] });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -152,20 +152,21 @@ const Admin = () => {
       title: caseStudy.title,
       company: caseStudy.company,
       industry: caseStudy.industry,
-      summary: caseStudy.summary || ""
+      summary: caseStudy.summary || "",
+      tags: caseStudy.tags || []
     });
   };
 
   const cancelEditing = () => {
     setEditingCaseStudy(null);
-    setEditForm({ title: "", company: "", industry: "", summary: "" });
+    setEditForm({ title: "", company: "", industry: "", summary: "", tags: [] });
   };
 
   const saveEdit = () => {
     if (editingCaseStudy) {
       updateCaseStudies(caseStudies.map(cs => 
         cs.id === editingCaseStudy 
-          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary }
+          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags }
           : cs
       ));
       
@@ -176,6 +177,13 @@ const Admin = () => {
       
       cancelEditing();
     }
+  };
+
+  const toggleTag = (tag: string) => {
+    const newTags = editForm.tags.includes(tag)
+      ? editForm.tags.filter(t => t !== tag)
+      : [...editForm.tags, tag];
+    setEditForm({...editForm, tags: newTags});
   };
 
   return (
@@ -350,6 +358,36 @@ const Admin = () => {
                               onChange={(e) => setEditForm({...editForm, summary: e.target.value})}
                               rows={3}
                             />
+                          </div>
+                          <div>
+                            <Label>Hashtags</Label>
+                            <div className="space-y-2">
+                              <p className="text-sm text-muted-foreground">Select tags for this case study:</p>
+                              <div className="flex flex-wrap gap-2">
+                                {availableTags.map((tag) => (
+                                  <Badge
+                                    key={tag}
+                                    variant={editForm.tags.includes(tag) ? "default" : "outline"}
+                                    className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                                    onClick={() => toggleTag(tag)}
+                                  >
+                                    #{tag}
+                                  </Badge>
+                                ))}
+                              </div>
+                              {editForm.tags.length > 0 && (
+                                <div className="mt-2">
+                                  <p className="text-sm font-medium text-muted-foreground mb-1">Selected tags:</p>
+                                  <div className="flex flex-wrap gap-1">
+                                    {editForm.tags.map((tag) => (
+                                      <Badge key={tag} variant="secondary" className="text-xs">
+                                        #{tag}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                           <div className="flex gap-2 justify-end">
                             <Button variant="outline" size="sm" onClick={cancelEditing}>
