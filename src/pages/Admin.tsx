@@ -48,7 +48,7 @@ const Admin = () => {
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
   const [editingCaseStudy, setEditingCaseStudy] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "", summary: "", tags: [] as string[] });
+  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "", summary: "", tags: [] as string[], image: "", imageFile: null as File | null });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -153,20 +153,24 @@ const Admin = () => {
       company: caseStudy.company,
       industry: caseStudy.industry,
       summary: caseStudy.summary || "",
-      tags: caseStudy.tags || []
+      tags: caseStudy.tags || [],
+      image: caseStudy.image || "",
+      imageFile: null
     });
   };
 
   const cancelEditing = () => {
     setEditingCaseStudy(null);
-    setEditForm({ title: "", company: "", industry: "", summary: "", tags: [] });
+    setEditForm({ title: "", company: "", industry: "", summary: "", tags: [], image: "", imageFile: null });
   };
 
   const saveEdit = () => {
     if (editingCaseStudy) {
+      const finalImage = editForm.imageFile ? URL.createObjectURL(editForm.imageFile) : editForm.image;
+      
       updateCaseStudies(caseStudies.map(cs => 
         cs.id === editingCaseStudy 
-          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags }
+          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage }
           : cs
       ));
       
@@ -176,6 +180,13 @@ const Admin = () => {
       });
       
       cancelEditing();
+    }
+  };
+
+  const handleCaseStudyImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      setEditForm({...editForm, imageFile: file, image: URL.createObjectURL(file)});
     }
   };
 
@@ -358,6 +369,43 @@ const Admin = () => {
                               onChange={(e) => setEditForm({...editForm, summary: e.target.value})}
                               rows={3}
                             />
+                          </div>
+                          <div>
+                            <Label>Case Study Photo</Label>
+                            <div className="space-y-2">
+                              <div className="border-2 border-dashed border-muted rounded-lg p-4 text-center">
+                                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                                <p className="text-sm font-medium mb-1">Upload case study image</p>
+                                <p className="text-xs text-muted-foreground mb-3">
+                                  PNG, JPG or SVG up to 2MB
+                                </p>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleCaseStudyImageUpload}
+                                  className="hidden"
+                                  id={`case-study-image-upload-${caseStudy.id}`}
+                                />
+                                <label htmlFor={`case-study-image-upload-${caseStudy.id}`} className="cursor-pointer">
+                                  <Button variant="outline" size="sm">
+                                    Choose Image
+                                  </Button>
+                                </label>
+                              </div>
+                              {editForm.image && (
+                                <div className="mt-2 p-2 border rounded">
+                                  <img src={editForm.image} alt="Case study preview" className="w-full h-32 object-cover rounded" />
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="mt-2 w-full"
+                                    onClick={() => setEditForm({...editForm, image: "", imageFile: null})}
+                                  >
+                                    Remove Image
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
                           </div>
                           <div>
                             <Label>Hashtags</Label>
