@@ -18,6 +18,11 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
 
   const caseStudy = caseStudies.find(cs => cs.id === caseStudyId);
 
+  console.log('CaseStudyPage - caseStudyId:', caseStudyId);
+  console.log('CaseStudyPage - caseStudies:', caseStudies);
+  console.log('CaseStudyPage - found caseStudy:', caseStudy);
+  console.log('CaseStudyPage - caseStudy.content:', caseStudy?.content);
+
   useEffect(() => {
     const unlockedEmail = localStorage.getItem("unlockedEmail");
     if (unlockedEmail) {
