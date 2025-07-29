@@ -37,6 +37,7 @@ interface ContentContextType {
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
 
 export const useContent = () => {
+  console.log('useContent called');
   const context = useContext(ContentContext);
   if (!context) {
     throw new Error('useContent must be used within a ContentProvider');
@@ -45,6 +46,7 @@ export const useContent = () => {
 };
 
 export const ContentProvider = ({ children }: { children: ReactNode }) => {
+  console.log('ContentProvider rendering');
   const [heroContent, setHeroContent] = useState<HeroContent>({
     title: "Strategic transformation from within",
     subtitle: "We generate clarity, direction and ownership — within 24–48 hours"
