@@ -3,11 +3,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import CaseStudyCard from "./CaseStudyCard";
-import { useNavigate } from "react-router-dom";
 import { useContent } from "@/contexts/ContentContext";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import CaseStudyPage from "./CaseStudyPage";
 
 const CaseStudiesSection = () => {
-  const navigate = useNavigate();
   const { caseStudies } = useContent();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -28,19 +28,6 @@ const CaseStudiesSection = () => {
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
     );
-  };
-
-  const handleCaseStudyClick = (id: string) => {
-    // Map case study IDs to their specific route names
-    const routeMap: { [key: string]: string } = {
-      "1": "/techcorp-case-study",
-      "2": "/growthco-case-study", 
-      "3": "/manufacturex-case-study",
-      "4": "/ichilov-case-study"
-    };
-    
-    const route = routeMap[id] || `/case-study/${id}`;
-    navigate(route);
   };
 
   return (
@@ -84,11 +71,19 @@ const CaseStudiesSection = () => {
         {/* Case Studies Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCaseStudies.map(caseStudy => (
-            <CaseStudyCard
-              key={caseStudy.id}
-              caseStudy={caseStudy}
-              onClick={() => handleCaseStudyClick(caseStudy.id)}
-            />
+            <Dialog key={caseStudy.id}>
+              <DialogTrigger asChild>
+                <div>
+                  <CaseStudyCard
+                    caseStudy={caseStudy}
+                    onClick={() => {}}
+                  />
+                </div>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto">
+                <CaseStudyPage caseStudyId={caseStudy.id} />
+              </DialogContent>
+            </Dialog>
           ))}
         </div>
 
