@@ -17,9 +17,9 @@ const AboutSection = () => {
           className="w-48 h-auto mx-auto mb-12"
         />
         
-        <h2 className="text-4xl font-bold mb-8">Change from within the system</h2>
+        <h2 className="text-4xl font-title font-bold mb-8">Change from within the system</h2>
         
-        <div className="space-y-6 text-lg text-muted-foreground mb-12 max-w-3xl mx-auto">
+        <div className="space-y-6 text-lg font-body text-muted-foreground mb-12 max-w-3xl mx-auto">
           <p>
             We are not consultants. We are not facilitators. We embed inside organizations 
             to activate clarity, ownership, and momentum that drives aligned action.
@@ -40,20 +40,20 @@ const AboutSection = () => {
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="text-center">
-            <h3 className="text-xl font-semibold mb-4 text-primary">Clarity</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-xl font-title font-semibold mb-4 text-primary">Clarity</h3>
+            <p className="font-body text-muted-foreground">
               Structured communication that cuts through complexity and drives aligned understanding.
             </p>
           </div>
           <div className="text-center">
-            <h3 className="text-xl font-semibold mb-4 text-primary">Engagement</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-xl font-title font-semibold mb-4 text-primary">Engagement</h3>
+            <p className="font-body text-muted-foreground">
               Activating people within the system to own solutions and drive change forward.
             </p>
           </div>
           <div className="text-center">
-            <h3 className="text-xl font-semibold mb-4 text-primary">Momentum</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-xl font-title font-semibold mb-4 text-primary">Momentum</h3>
+            <p className="font-body text-muted-foreground">
               Creating urgency and direction that leads to immediate execution and results.
             </p>
           </div>

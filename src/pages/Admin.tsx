@@ -31,6 +31,17 @@ const Admin = () => {
 
   const [newTag, setNewTag] = useState("");
 
+  const [clientLogos, setClientLogos] = useState([
+    { id: 1, name: "TechCorp", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=TechCorp" },
+    { id: 2, name: "InnovateCo", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=InnovateCo" },
+    { id: 3, name: "GlobalTech", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=GlobalTech" },
+    { id: 4, name: "DataFlow", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=DataFlow" },
+    { id: 5, name: "CloudSync", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=CloudSync" },
+    { id: 6, name: "NextGen", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=NextGen" }
+  ]);
+
+  const [newLogo, setNewLogo] = useState({ name: "", url: "" });
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
@@ -50,6 +61,18 @@ const Admin = () => {
     setAvailableTags(availableTags.filter(tag => tag !== tagToRemove));
   };
 
+  const addNewLogo = () => {
+    if (newLogo.name.trim() && newLogo.url.trim()) {
+      const newId = Math.max(...clientLogos.map(logo => logo.id)) + 1;
+      setClientLogos([...clientLogos, { id: newId, ...newLogo }]);
+      setNewLogo({ name: "", url: "" });
+    }
+  };
+
+  const removeLogo = (logoId: number) => {
+    setClientLogos(clientLogos.filter(logo => logo.id !== logoId));
+  };
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
@@ -59,9 +82,10 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="content" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="content">Page Content</TabsTrigger>
             <TabsTrigger value="case-studies">Case Studies</TabsTrigger>
+            <TabsTrigger value="logos">Client Logos</TabsTrigger>
             <TabsTrigger value="tags">Manage Tags</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
@@ -205,6 +229,61 @@ const Admin = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="logos" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Manage Client Logos</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="logo-name">Logo Name</Label>
+                    <Input
+                      id="logo-name"
+                      placeholder="Company name"
+                      value={newLogo.name}
+                      onChange={(e) => setNewLogo({...newLogo, name: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="logo-url">Logo URL</Label>
+                    <Input
+                      id="logo-url"
+                      placeholder="https://example.com/logo.png"
+                      value={newLogo.url}
+                      onChange={(e) => setNewLogo({...newLogo, url: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <Button onClick={addNewLogo}>
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add Logo
+                </Button>
+                
+                <div className="space-y-4">
+                  <h4 className="font-medium">Current Client Logos</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {clientLogos.map((logo) => (
+                      <div key={logo.id} className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center gap-4">
+                          <img src={logo.url} alt={logo.name} className="w-16 h-8 object-contain" />
+                          <span className="font-medium">{logo.name}</span>
+                        </div>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => removeLogo(logo.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
