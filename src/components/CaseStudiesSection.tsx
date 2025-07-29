@@ -4,39 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import CaseStudyCard from "./CaseStudyCard";
 import { useNavigate } from "react-router-dom";
+import { useContent } from "@/contexts/ContentContext";
 
 const CaseStudiesSection = () => {
   const navigate = useNavigate();
+  const { caseStudies } = useContent();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-  // Sample case studies data
-  const caseStudies = [
-    {
-      id: "1",
-      title: "Revenue Growth Through Strategic Alignment",
-      summary: "Transformed internal processes to achieve 40% revenue increase within 6 months through strategic clarity and team alignment.",
-      company: "TechCorp",
-      industry: "Technology",
-      tags: ["revenue-growth", "alignment", "process-optimization"]
-    },
-    {
-      id: "2", 
-      title: "Market Expansion Strategy Implementation",
-      summary: "Enabled rapid market entry into 3 new regions through organizational restructuring and strategic focus.",
-      company: "GrowthCo",
-      industry: "SaaS",
-      tags: ["market-expansion", "strategy", "restructuring"]
-    },
-    {
-      id: "3",
-      title: "Operational Excellence in Manufacturing",
-      summary: "Reduced operational costs by 25% while improving quality metrics through systematic process improvements.",
-      company: "ManufactureX",
-      industry: "Manufacturing",
-      tags: ["operational-excellence", "cost-reduction", "quality"]
-    }
-  ];
 
   const allTags = Array.from(new Set(caseStudies.flatMap(cs => cs.tags)));
 

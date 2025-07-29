@@ -21,17 +21,30 @@ interface ClientLogo {
   url: string;
 }
 
+interface CaseStudy {
+  id: string;
+  title: string;
+  summary: string;
+  image?: string;
+  tags: string[];
+  company: string;
+  industry: string;
+  fileName?: string;
+}
+
 interface ContentContextType {
   heroContent: HeroContent;
   aboutContent: AboutContent;
   ctaContent: CTAContent;
   clientLogos: ClientLogo[];
   availableTags: string[];
+  caseStudies: CaseStudy[];
   updateHeroContent: (content: HeroContent) => void;
   updateAboutContent: (content: AboutContent) => void;
   updateCTAContent: (content: CTAContent) => void;
   updateClientLogos: (logos: ClientLogo[]) => void;
   updateAvailableTags: (tags: string[]) => void;
+  updateCaseStudies: (caseStudies: CaseStudy[]) => void;
 }
 
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
@@ -98,6 +111,38 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     ])
   );
 
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(() =>
+    getInitialState('caseStudies', [
+      {
+        id: "1",
+        title: "Revenue Growth Through Strategic Alignment",
+        summary: "Transformed internal processes to achieve 40% revenue increase within 6 months through strategic clarity and team alignment.",
+        company: "TechCorp",
+        industry: "Technology",
+        tags: ["revenue-growth", "alignment", "process-optimization"],
+        fileName: "techcorp-case-study.docx"
+      },
+      {
+        id: "2",
+        title: "Market Expansion Strategy Implementation", 
+        summary: "Enabled rapid market entry into 3 new regions through organizational restructuring and strategic focus.",
+        company: "GrowthCo",
+        industry: "SaaS",
+        tags: ["market-expansion", "strategy", "restructuring"],
+        fileName: "growthco-case-study.docx"
+      },
+      {
+        id: "3",
+        title: "Operational Excellence in Manufacturing",
+        summary: "Reduced operational costs by 25% while improving quality metrics through systematic process improvements.",
+        company: "ManufactureX",
+        industry: "Manufacturing", 
+        tags: ["operational-excellence", "cost-reduction", "quality"],
+        fileName: "manufacturex-case-study.docx"
+      }
+    ])
+  );
+
   const updateHeroContent = (content: HeroContent) => {
     setHeroContent(content);
     localStorage.setItem('heroContent', JSON.stringify(content));
@@ -123,17 +168,24 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('availableTags', JSON.stringify(tags));
   };
 
+  const updateCaseStudies = (studies: CaseStudy[]) => {
+    setCaseStudies(studies);
+    localStorage.setItem('caseStudies', JSON.stringify(studies));
+  };
+
   const value = {
     heroContent,
     aboutContent,
     ctaContent,
     clientLogos,
     availableTags,
+    caseStudies,
     updateHeroContent,
     updateAboutContent,
     updateCTAContent,
     updateClientLogos,
-    updateAvailableTags
+    updateAvailableTags,
+    updateCaseStudies
   };
 
   console.log('ContentProvider value:', value);
