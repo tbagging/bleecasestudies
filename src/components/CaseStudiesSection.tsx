@@ -4,21 +4,47 @@ import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import CaseStudyCard from "./CaseStudyCard";
 import { useNavigate } from "react-router-dom";
-import { useContent } from "@/contexts/ContentContext";
 
 const CaseStudiesSection = () => {
   const navigate = useNavigate();
-  const { caseStudies } = useContent();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const allTags = Array.from(new Set(caseStudies.flatMap(cs => cs.tags || [])));
+  // Sample case studies data
+  const caseStudies = [
+    {
+      id: "1",
+      title: "Revenue Growth Through Strategic Alignment",
+      summary: "Transformed internal processes to achieve 40% revenue increase within 6 months through strategic clarity and team alignment.",
+      company: "TechCorp",
+      industry: "Technology",
+      tags: ["revenue-growth", "alignment", "process-optimization"]
+    },
+    {
+      id: "2", 
+      title: "Market Expansion Strategy Implementation",
+      summary: "Enabled rapid market entry into 3 new regions through organizational restructuring and strategic focus.",
+      company: "GrowthCo",
+      industry: "SaaS",
+      tags: ["market-expansion", "strategy", "restructuring"]
+    },
+    {
+      id: "3",
+      title: "Operational Excellence in Manufacturing",
+      summary: "Reduced operational costs by 25% while improving quality metrics through systematic process improvements.",
+      company: "ManufactureX",
+      industry: "Manufacturing",
+      tags: ["operational-excellence", "cost-reduction", "quality"]
+    }
+  ];
+
+  const allTags = Array.from(new Set(caseStudies.flatMap(cs => cs.tags)));
 
   const filteredCaseStudies = caseStudies.filter(cs => {
     const matchesSearch = cs.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (cs.summary || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         cs.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cs.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => (cs.tags || []).includes(tag));
+    const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => cs.tags.includes(tag));
     return matchesSearch && matchesTags;
   });
 
@@ -30,7 +56,7 @@ const CaseStudiesSection = () => {
     );
   };
 
-  const handleCaseStudyClick = (id: string | number) => {
+  const handleCaseStudyClick = (id: string) => {
     navigate(`/case-study/${id}`);
   };
 
@@ -77,14 +103,7 @@ const CaseStudiesSection = () => {
           {filteredCaseStudies.map(caseStudy => (
             <CaseStudyCard
               key={caseStudy.id}
-              caseStudy={{
-                id: caseStudy.id.toString(),
-                title: caseStudy.title,
-                summary: caseStudy.summary || "Case study details coming soon.",
-                company: caseStudy.company,
-                industry: caseStudy.industry,
-                tags: caseStudy.tags || []
-              }}
+              caseStudy={caseStudy}
               onClick={() => handleCaseStudyClick(caseStudy.id)}
             />
           ))}
