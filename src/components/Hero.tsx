@@ -1,17 +1,9 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import bleeLogoMain from "@/assets/blee-logo-main.png";
-
-interface HeroContent {
-  title: string;
-  subtitle: string;
-}
+import { useContent } from "@/contexts/ContentContext";
 
 const Hero = () => {
-  const [content, setContent] = useState<HeroContent>({
-    title: "Strategic transformation from within",
-    subtitle: "We generate clarity, direction and ownership — within 24–48 hours"
-  });
+  const { heroContent, ctaContent } = useContent();
 
   const handleEmailCTA = () => {
     const subject = "Strategic Transformation Discussion";
@@ -28,10 +20,10 @@ const Hero = () => {
           className="w-64 h-auto mx-auto mb-12"
         />
         <h1 className="text-5xl md:text-7xl font-title font-bold mb-8 leading-tight">
-          {content.title}
+          {heroContent.title}
         </h1>
         <p className="text-xl md:text-2xl font-body mb-12 opacity-90 leading-relaxed max-w-3xl mx-auto">
-          {content.subtitle}
+          {heroContent.subtitle}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
@@ -40,7 +32,7 @@ const Hero = () => {
             variant="secondary"
             className="text-lg px-8 py-4"
           >
-            Let's talk
+            {ctaContent.primary}
           </Button>
           <Button 
             onClick={handleEmailCTA}
@@ -48,7 +40,7 @@ const Hero = () => {
             variant="outline"
             className="text-lg px-8 py-4 border-white/30 text-white hover:bg-white/10"
           >
-            Request full case studies
+            {ctaContent.secondary}
           </Button>
         </div>
       </div>

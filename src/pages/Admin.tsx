@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useContent } from "@/contexts/ContentContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,36 +10,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Download, Edit, Trash2, Plus } from "lucide-react";
 
 const Admin = () => {
-  const [heroContent, setHeroContent] = useState({
-    title: "Strategic transformation from within",
-    subtitle: "We generate clarity, direction and ownership — within 24–48 hours"
-  });
+  const { 
+    heroContent, 
+    aboutContent, 
+    ctaContent, 
+    clientLogos, 
+    availableTags,
+    updateHeroContent,
+    updateAboutContent,
+    updateCTAContent,
+    updateClientLogos,
+    updateAvailableTags
+  } = useContent();
 
-  const [aboutContent, setAboutContent] = useState({
-    heading: "Change from within the system",
-    description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives aligned action."
-  });
-
-  const [ctaContent, setCTAContent] = useState({
-    primary: "Let's talk",
-    secondary: "Request full case studies"
-  });
-
-  const [availableTags, setAvailableTags] = useState([
-    "revenue-growth", "alignment", "process-optimization", "market-expansion", 
-    "strategy", "restructuring", "operational-excellence", "cost-reduction", "quality"
-  ]);
-
+  const [localHeroContent, setLocalHeroContent] = useState(heroContent);
+  const [localAboutContent, setLocalAboutContent] = useState(aboutContent);
+  const [localCTAContent, setLocalCTAContent] = useState(ctaContent);
   const [newTag, setNewTag] = useState("");
-
-  const [clientLogos, setClientLogos] = useState([
-    { id: 1, name: "TechCorp", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=TechCorp" },
-    { id: 2, name: "InnovateCo", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=InnovateCo" },
-    { id: 3, name: "GlobalTech", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=GlobalTech" },
-    { id: 4, name: "DataFlow", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=DataFlow" },
-    { id: 5, name: "CloudSync", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=CloudSync" },
-    { id: 6, name: "NextGen", url: "https://via.placeholder.com/120x60/34767E/ffffff?text=NextGen" }
-  ]);
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "" });
 
@@ -50,27 +38,39 @@ const Admin = () => {
     }
   };
 
+  const saveHeroContent = () => {
+    updateHeroContent(localHeroContent);
+  };
+
+  const saveAboutContent = () => {
+    updateAboutContent(localAboutContent);
+  };
+
+  const saveCTAContent = () => {
+    updateCTAContent(localCTAContent);
+  };
+
   const addNewTag = () => {
     if (newTag.trim() && !availableTags.includes(newTag.trim())) {
-      setAvailableTags([...availableTags, newTag.trim()]);
+      updateAvailableTags([...availableTags, newTag.trim()]);
       setNewTag("");
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    setAvailableTags(availableTags.filter(tag => tag !== tagToRemove));
+    updateAvailableTags(availableTags.filter(tag => tag !== tagToRemove));
   };
 
   const addNewLogo = () => {
     if (newLogo.name.trim() && newLogo.url.trim()) {
       const newId = Math.max(...clientLogos.map(logo => logo.id)) + 1;
-      setClientLogos([...clientLogos, { id: newId, ...newLogo }]);
+      updateClientLogos([...clientLogos, { id: newId, ...newLogo }]);
       setNewLogo({ name: "", url: "" });
     }
   };
 
   const removeLogo = (logoId: number) => {
-    setClientLogos(clientLogos.filter(logo => logo.id !== logoId));
+    updateClientLogos(clientLogos.filter(logo => logo.id !== logoId));
   };
 
   return (
@@ -101,19 +101,19 @@ const Admin = () => {
                   <Label htmlFor="hero-title">Title</Label>
                   <Input
                     id="hero-title"
-                    value={heroContent.title}
-                    onChange={(e) => setHeroContent({...heroContent, title: e.target.value})}
+                    value={localHeroContent.title}
+                    onChange={(e) => setLocalHeroContent({...localHeroContent, title: e.target.value})}
                   />
                 </div>
                 <div>
                   <Label htmlFor="hero-subtitle">Subtitle</Label>
                   <Textarea
                     id="hero-subtitle"
-                    value={heroContent.subtitle}
-                    onChange={(e) => setHeroContent({...heroContent, subtitle: e.target.value})}
+                    value={localHeroContent.subtitle}
+                    onChange={(e) => setLocalHeroContent({...localHeroContent, subtitle: e.target.value})}
                   />
                 </div>
-                <Button>Save Changes</Button>
+                <Button onClick={saveHeroContent}>Save Changes</Button>
               </CardContent>
             </Card>
 
@@ -127,8 +127,8 @@ const Admin = () => {
                   <Label htmlFor="about-heading">Heading</Label>
                   <Input
                     id="about-heading"
-                    value={aboutContent.heading}
-                    onChange={(e) => setAboutContent({...aboutContent, heading: e.target.value})}
+                    value={localAboutContent.heading}
+                    onChange={(e) => setLocalAboutContent({...localAboutContent, heading: e.target.value})}
                   />
                 </div>
                 <div>
@@ -136,11 +136,11 @@ const Admin = () => {
                   <Textarea
                     id="about-description"
                     rows={4}
-                    value={aboutContent.description}
-                    onChange={(e) => setAboutContent({...aboutContent, description: e.target.value})}
+                    value={localAboutContent.description}
+                    onChange={(e) => setLocalAboutContent({...localAboutContent, description: e.target.value})}
                   />
                 </div>
-                <Button>Save Changes</Button>
+                <Button onClick={saveAboutContent}>Save Changes</Button>
               </CardContent>
             </Card>
 
@@ -154,19 +154,19 @@ const Admin = () => {
                   <Label htmlFor="cta-primary">Primary CTA Text</Label>
                   <Input
                     id="cta-primary"
-                    value={ctaContent.primary}
-                    onChange={(e) => setCTAContent({...ctaContent, primary: e.target.value})}
+                    value={localCTAContent.primary}
+                    onChange={(e) => setLocalCTAContent({...localCTAContent, primary: e.target.value})}
                   />
                 </div>
                 <div>
                   <Label htmlFor="cta-secondary">Secondary CTA Text</Label>
                   <Input
                     id="cta-secondary"
-                    value={ctaContent.secondary}
-                    onChange={(e) => setCTAContent({...ctaContent, secondary: e.target.value})}
+                    value={localCTAContent.secondary}
+                    onChange={(e) => setLocalCTAContent({...localCTAContent, secondary: e.target.value})}
                   />
                 </div>
-                <Button>Save Changes</Button>
+                <Button onClick={saveCTAContent}>Save Changes</Button>
               </CardContent>
             </Card>
           </TabsContent>

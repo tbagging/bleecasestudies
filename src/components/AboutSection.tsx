@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import bleeLogoTagline from "@/assets/blee-logo-tagline.png";
+import { useContent } from "@/contexts/ContentContext";
 
 const AboutSection = () => {
+  const { aboutContent } = useContent();
   const handleEmailCTA = () => {
     const subject = "Strategic Transformation Discussion";
     const body = "I'm interested in learning more about BLEE's approach to organizational transformation.";
@@ -17,12 +19,11 @@ const AboutSection = () => {
           className="w-48 h-auto mx-auto mb-12"
         />
         
-        <h2 className="text-4xl font-title font-bold mb-8">Change from within the system</h2>
+        <h2 className="text-4xl font-title font-bold mb-8">{aboutContent.heading}</h2>
         
         <div className="space-y-6 text-lg font-body text-muted-foreground mb-12 max-w-3xl mx-auto">
           <p>
-            We are not consultants. We are not facilitators. We embed inside organizations 
-            to activate clarity, ownership, and momentum that drives aligned action.
+            {aboutContent.description}
           </p>
           
           <p>
