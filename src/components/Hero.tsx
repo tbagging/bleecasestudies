@@ -15,7 +15,7 @@ const Hero = () => {
     <section className="min-h-screen flex items-center justify-center bg-primary text-primary-foreground">
       <div className="text-center max-w-4xl mx-auto px-6">
         <img 
-          src={bleeLogoMain} 
+          src="/lovable-uploads/1c39af01-0e9b-42cd-8833-e7e47da9bbd7.png" 
           alt="BLEE" 
           className="w-64 h-auto mx-auto mb-12"
         />
