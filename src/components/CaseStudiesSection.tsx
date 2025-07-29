@@ -31,7 +31,16 @@ const CaseStudiesSection = () => {
   };
 
   const handleCaseStudyClick = (id: string) => {
-    navigate(`/case-study/${id}`);
+    // Map case study IDs to their specific route names
+    const routeMap: { [key: string]: string } = {
+      "1": "/techcorp-case-study",
+      "2": "/growthco-case-study", 
+      "3": "/manufacturex-case-study",
+      "4": "/ichilov-case-study"
+    };
+    
+    const route = routeMap[id] || `/case-study/${id}`;
+    navigate(route);
   };
 
   return (
