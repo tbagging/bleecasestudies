@@ -139,6 +139,15 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         industry: "Manufacturing", 
         tags: ["operational-excellence", "cost-reduction", "quality"],
         fileName: "manufacturex-case-study.docx"
+      },
+      {
+        id: "4",
+        title: "Ichilov Internal Hackathon",
+        summary: "The hackathon aimed to surface commercial-grade ideas, build in-house entrepreneurial momentum, and forge at least one concrete industry collaboration.",
+        company: "Ichilov Hospital",
+        industry: "Healthcare",
+        tags: ["innovation", "collaboration", "entrepreneurship", "healthcare"],
+        fileName: "ichilov-hackathon-case-study.docx"
       }
     ])
   );
