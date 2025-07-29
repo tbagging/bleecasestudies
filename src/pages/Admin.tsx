@@ -48,7 +48,7 @@ const Admin = () => {
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
   const [editingCaseStudy, setEditingCaseStudy] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "" });
+  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "", summary: "" });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -151,20 +151,21 @@ const Admin = () => {
     setEditForm({
       title: caseStudy.title,
       company: caseStudy.company,
-      industry: caseStudy.industry
+      industry: caseStudy.industry,
+      summary: caseStudy.summary || ""
     });
   };
 
   const cancelEditing = () => {
     setEditingCaseStudy(null);
-    setEditForm({ title: "", company: "", industry: "" });
+    setEditForm({ title: "", company: "", industry: "", summary: "" });
   };
 
   const saveEdit = () => {
     if (editingCaseStudy) {
       updateCaseStudies(caseStudies.map(cs => 
         cs.id === editingCaseStudy 
-          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry }
+          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary }
           : cs
       ));
       
@@ -340,6 +341,15 @@ const Admin = () => {
                                 onChange={(e) => setEditForm({...editForm, industry: e.target.value})}
                               />
                             </div>
+                          </div>
+                          <div>
+                            <Label htmlFor={`edit-summary-${caseStudy.id}`}>Summary</Label>
+                            <Textarea
+                              id={`edit-summary-${caseStudy.id}`}
+                              value={editForm.summary}
+                              onChange={(e) => setEditForm({...editForm, summary: e.target.value})}
+                              rows={3}
+                            />
                           </div>
                           <div className="flex gap-2 justify-end">
                             <Button variant="outline" size="sm" onClick={cancelEditing}>
