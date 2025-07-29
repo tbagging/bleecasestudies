@@ -45,15 +45,31 @@ const Admin = () => {
   const [newTag, setNewTag] = useState("");
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
+  const [caseStudies, setCaseStudies] = useState([
+    { id: 1, title: "Revenue Growth Through Strategic Alignment", company: "TechCorp", industry: "Technology", fileName: "techcorp-case-study.docx" },
+    { id: 2, title: "Digital Transformation Success", company: "RetailCorp", industry: "Retail", fileName: "retailcorp-case-study.docx" },
+    { id: 3, title: "Market Expansion Strategy", company: "StartupInc", industry: "SaaS", fileName: "startupinc-case-study.docx" }
+  ]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-      console.log("Uploading case study:", file.name);
-      // Handle .docx upload
+      const fileName = file.name.replace('.docx', '');
+      const newId = Math.max(...caseStudies.map(cs => cs.id)) + 1;
+      
+      const newCaseStudy = {
+        id: newId,
+        title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        company: "New Company",
+        industry: "Unknown",
+        fileName: file.name
+      };
+      
+      setCaseStudies([...caseStudies, newCaseStudy]);
+      
       toast({
         title: "Case study uploaded",
-        description: `"${file.name}" has been uploaded successfully.`,
+        description: `"${file.name}" has been uploaded and added to the list.`,
       });
     }
   };
@@ -263,11 +279,12 @@ const Admin = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[1, 2, 3].map((id) => (
-                    <div key={id} className="flex items-center justify-between p-4 border rounded-lg">
+                  {caseStudies.map((caseStudy) => (
+                    <div key={caseStudy.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div>
-                        <h4 className="font-medium">Revenue Growth Through Strategic Alignment</h4>
-                        <p className="text-sm text-muted-foreground">TechCorp • Technology</p>
+                        <h4 className="font-medium">{caseStudy.title}</h4>
+                        <p className="text-sm text-muted-foreground">{caseStudy.company} • {caseStudy.industry}</p>
+                        <p className="text-xs text-muted-foreground">{caseStudy.fileName}</p>
                       </div>
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm">
@@ -278,7 +295,7 @@ const Admin = () => {
                           <Download className="w-4 h-4 mr-1" />
                           PDF
                         </Button>
-                        <Button variant="destructive" size="sm">
+                        <Button variant="destructive" size="sm" onClick={() => setCaseStudies(caseStudies.filter(cs => cs.id !== caseStudy.id))}>
                           <Trash2 className="w-4 h-4 mr-1" />
                           Delete
                         </Button>
