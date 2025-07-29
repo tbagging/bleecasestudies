@@ -51,6 +51,9 @@ const Admin = () => {
     { id: 3, title: "Market Expansion Strategy", company: "StartupInc", industry: "SaaS", fileName: "startupinc-case-study.docx" }
   ]);
 
+  const [editingCaseStudy, setEditingCaseStudy] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "" });
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
@@ -143,6 +146,37 @@ const Admin = () => {
       title: "Client logo removed",
       description: `"${logoName}" has been removed from client logos.`,
     });
+  };
+
+  const startEditing = (caseStudy: any) => {
+    setEditingCaseStudy(caseStudy.id);
+    setEditForm({
+      title: caseStudy.title,
+      company: caseStudy.company,
+      industry: caseStudy.industry
+    });
+  };
+
+  const cancelEditing = () => {
+    setEditingCaseStudy(null);
+    setEditForm({ title: "", company: "", industry: "" });
+  };
+
+  const saveEdit = () => {
+    if (editingCaseStudy) {
+      setCaseStudies(caseStudies.map(cs => 
+        cs.id === editingCaseStudy 
+          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry }
+          : cs
+      ));
+      
+      toast({
+        title: "Case study updated",
+        description: "Your changes have been saved successfully.",
+      });
+      
+      cancelEditing();
+    }
   };
 
   return (
@@ -280,26 +314,67 @@ const Admin = () => {
               <CardContent>
                 <div className="space-y-4">
                   {caseStudies.map((caseStudy) => (
-                    <div key={caseStudy.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <h4 className="font-medium">{caseStudy.title}</h4>
-                        <p className="text-sm text-muted-foreground">{caseStudy.company} • {caseStudy.industry}</p>
-                        <p className="text-xs text-muted-foreground">{caseStudy.fileName}</p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          <Edit className="w-4 h-4 mr-1" />
-                          Edit
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Download className="w-4 h-4 mr-1" />
-                          PDF
-                        </Button>
-                        <Button variant="destructive" size="sm" onClick={() => setCaseStudies(caseStudies.filter(cs => cs.id !== caseStudy.id))}>
-                          <Trash2 className="w-4 h-4 mr-1" />
-                          Delete
-                        </Button>
-                      </div>
+                    <div key={caseStudy.id} className="p-4 border rounded-lg space-y-4">
+                      {editingCaseStudy === caseStudy.id ? (
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor={`edit-title-${caseStudy.id}`}>Title</Label>
+                            <Input
+                              id={`edit-title-${caseStudy.id}`}
+                              value={editForm.title}
+                              onChange={(e) => setEditForm({...editForm, title: e.target.value})}
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label htmlFor={`edit-company-${caseStudy.id}`}>Company</Label>
+                              <Input
+                                id={`edit-company-${caseStudy.id}`}
+                                value={editForm.company}
+                                onChange={(e) => setEditForm({...editForm, company: e.target.value})}
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor={`edit-industry-${caseStudy.id}`}>Industry</Label>
+                              <Input
+                                id={`edit-industry-${caseStudy.id}`}
+                                value={editForm.industry}
+                                onChange={(e) => setEditForm({...editForm, industry: e.target.value})}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex gap-2 justify-end">
+                            <Button variant="outline" size="sm" onClick={cancelEditing}>
+                              Cancel
+                            </Button>
+                            <Button size="sm" onClick={saveEdit}>
+                              Save
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-medium">{caseStudy.title}</h4>
+                            <p className="text-sm text-muted-foreground">{caseStudy.company} • {caseStudy.industry}</p>
+                            <p className="text-xs text-muted-foreground">{caseStudy.fileName}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm" onClick={() => startEditing(caseStudy)}>
+                              <Edit className="w-4 h-4 mr-1" />
+                              Edit
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Download className="w-4 h-4 mr-1" />
+                              PDF
+                            </Button>
+                            <Button variant="destructive" size="sm" onClick={() => setCaseStudies(caseStudies.filter(cs => cs.id !== caseStudy.id))}>
+                              <Trash2 className="w-4 h-4 mr-1" />
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
