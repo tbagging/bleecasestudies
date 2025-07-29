@@ -9,8 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Download, Edit, Trash2, Plus } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Admin = () => {
+  const { toast } = useToast();
   const { 
     heroContent, 
     aboutContent, 
@@ -54,25 +56,45 @@ const Admin = () => {
 
   const saveHeroContent = () => {
     updateHeroContent(localHeroContent);
+    toast({
+      title: "Hero section updated",
+      description: "Your changes have been saved successfully.",
+    });
   };
 
   const saveAboutContent = () => {
     updateAboutContent(localAboutContent);
+    toast({
+      title: "About section updated",
+      description: "Your changes have been saved successfully.",
+    });
   };
 
   const saveCTAContent = () => {
     updateCTAContent(localCTAContent);
+    toast({
+      title: "CTA buttons updated",
+      description: "Your changes have been saved successfully.",
+    });
   };
 
   const addNewTag = () => {
     if (newTag.trim() && !availableTags.includes(newTag.trim())) {
       updateAvailableTags([...availableTags, newTag.trim()]);
       setNewTag("");
+      toast({
+        title: "Tag added",
+        description: `"${newTag.trim()}" has been added to available tags.`,
+      });
     }
   };
 
   const removeTag = (tagToRemove: string) => {
     updateAvailableTags(availableTags.filter(tag => tag !== tagToRemove));
+    toast({
+      title: "Tag removed",
+      description: `"${tagToRemove}" has been removed from available tags.`,
+    });
   };
 
   const addNewLogo = () => {
@@ -80,11 +102,20 @@ const Admin = () => {
       const newId = Math.max(...clientLogos.map(logo => logo.id)) + 1;
       updateClientLogos([...clientLogos, { id: newId, ...newLogo }]);
       setNewLogo({ name: "", url: "" });
+      toast({
+        title: "Client logo added",
+        description: `"${newLogo.name}" has been added to client logos.`,
+      });
     }
   };
 
   const removeLogo = (logoId: number) => {
+    const logoName = clientLogos.find(logo => logo.id === logoId)?.name;
     updateClientLogos(clientLogos.filter(logo => logo.id !== logoId));
+    toast({
+      title: "Client logo removed",
+      description: `"${logoName}" has been removed from client logos.`,
+    });
   };
 
   return (
