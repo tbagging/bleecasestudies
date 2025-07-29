@@ -51,6 +51,10 @@ const Admin = () => {
     if (file && file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
       console.log("Uploading case study:", file.name);
       // Handle .docx upload
+      toast({
+        title: "Case study uploaded",
+        description: `"${file.name}" has been uploaded successfully.`,
+      });
     }
   };
 
