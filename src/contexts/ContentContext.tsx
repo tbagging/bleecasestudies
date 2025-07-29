@@ -37,14 +37,19 @@ interface ContentContextType {
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
 
 export const useContent = () => {
+  console.log('useContent hook called');
   const context = useContext(ContentContext);
+  console.log('useContent context:', context);
   if (!context) {
+    console.error('useContent: No context found! Provider not wrapping component');
     throw new Error('useContent must be used within a ContentProvider');
   }
   return context;
 };
 
 export const ContentProvider = ({ children }: { children: ReactNode }) => {
+  console.log('ContentProvider rendering');
+  
   const getInitialState = <T,>(key: string, defaultValue: T): T => {
     try {
       const saved = localStorage.getItem(key);
@@ -118,19 +123,23 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('availableTags', JSON.stringify(tags));
   };
 
+  const value = {
+    heroContent,
+    aboutContent,
+    ctaContent,
+    clientLogos,
+    availableTags,
+    updateHeroContent,
+    updateAboutContent,
+    updateCTAContent,
+    updateClientLogos,
+    updateAvailableTags
+  };
+
+  console.log('ContentProvider value:', value);
+
   return (
-    <ContentContext.Provider value={{
-      heroContent,
-      aboutContent,
-      ctaContent,
-      clientLogos,
-      availableTags,
-      updateHeroContent,
-      updateAboutContent,
-      updateCTAContent,
-      updateClientLogos,
-      updateAvailableTags
-    }}>
+    <ContentContext.Provider value={value}>
       {children}
     </ContentContext.Provider>
   );
