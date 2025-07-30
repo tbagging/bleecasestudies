@@ -48,7 +48,25 @@ const Admin = () => {
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
   const [editingCaseStudy, setEditingCaseStudy] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "", summary: "", tags: [] as string[], image: "", imageFile: null as File | null, fileName: "", newFile: null as File | null });
+  const [editForm, setEditForm] = useState({ 
+    title: "", 
+    company: "", 
+    industry: "", 
+    summary: "", 
+    tags: [] as string[], 
+    image: "", 
+    imageFile: null as File | null, 
+    fileName: "", 
+    newFile: null as File | null,
+    content: {
+      background: "",
+      challenge: [] as string[],
+      process: [] as { phase: string; description: string }[],
+      results: [] as { metric: string; value: string; description: string }[],
+      companySize: "",
+      timeline: ""
+    }
+  });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -157,13 +175,39 @@ const Admin = () => {
       image: caseStudy.image || "",
       imageFile: null,
       fileName: caseStudy.fileName || "",
-      newFile: null
+      newFile: null,
+      content: caseStudy.content || {
+        background: "",
+        challenge: [],
+        process: [],
+        results: [],
+        companySize: "",
+        timeline: ""
+      }
     });
   };
 
   const cancelEditing = () => {
     setEditingCaseStudy(null);
-    setEditForm({ title: "", company: "", industry: "", summary: "", tags: [], image: "", imageFile: null, fileName: "", newFile: null });
+    setEditForm({ 
+      title: "", 
+      company: "", 
+      industry: "", 
+      summary: "", 
+      tags: [], 
+      image: "", 
+      imageFile: null, 
+      fileName: "", 
+      newFile: null,
+      content: {
+        background: "",
+        challenge: [],
+        process: [],
+        results: [],
+        companySize: "",
+        timeline: ""
+      }
+    });
   };
 
   const saveEdit = () => {
@@ -173,7 +217,7 @@ const Admin = () => {
       
       updateCaseStudies(caseStudies.map(cs => 
         cs.id === editingCaseStudy 
-          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, fileName: finalFileName }
+          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, fileName: finalFileName, content: editForm.content }
           : cs
       ));
       
@@ -571,6 +615,202 @@ const Admin = () => {
                               )}
                             </div>
                           </div>
+                          
+                          {/* Content Editing Section */}
+                          <div className="space-y-6 border-t pt-6">
+                            <h4 className="font-medium text-lg">Case Study Content</h4>
+                            
+                            {/* Company Details */}
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor={`company-size-${caseStudy.id}`}>Company Size</Label>
+                                <Input
+                                  id={`company-size-${caseStudy.id}`}
+                                  value={editForm.content.companySize}
+                                  onChange={(e) => setEditForm({...editForm, content: {...editForm.content, companySize: e.target.value}})}
+                                  placeholder="e.g., 500-1000 employees"
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor={`timeline-${caseStudy.id}`}>Project Timeline</Label>
+                                <Input
+                                  id={`timeline-${caseStudy.id}`}
+                                  value={editForm.content.timeline}
+                                  onChange={(e) => setEditForm({...editForm, content: {...editForm.content, timeline: e.target.value}})}
+                                  placeholder="e.g., 6 months"
+                                />
+                              </div>
+                            </div>
+                            
+                            {/* Background */}
+                            <div>
+                              <Label htmlFor={`background-${caseStudy.id}`}>Background</Label>
+                              <Textarea
+                                id={`background-${caseStudy.id}`}
+                                value={editForm.content.background}
+                                onChange={(e) => setEditForm({...editForm, content: {...editForm.content, background: e.target.value}})}
+                                rows={4}
+                                placeholder="Describe the company background and context..."
+                              />
+                            </div>
+                            
+                            {/* Challenge */}
+                            <div>
+                              <Label>Challenges</Label>
+                              <div className="space-y-2">
+                                {editForm.content.challenge.map((item, index) => (
+                                  <div key={index} className="flex gap-2">
+                                    <Input
+                                      value={item}
+                                      onChange={(e) => {
+                                        const newChallenge = [...editForm.content.challenge];
+                                        newChallenge[index] = e.target.value;
+                                        setEditForm({...editForm, content: {...editForm.content, challenge: newChallenge}});
+                                      }}
+                                      placeholder={`Challenge ${index + 1}`}
+                                    />
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        const newChallenge = editForm.content.challenge.filter((_, i) => i !== index);
+                                        setEditForm({...editForm, content: {...editForm.content, challenge: newChallenge}});
+                                      }}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                ))}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setEditForm({...editForm, content: {...editForm.content, challenge: [...editForm.content.challenge, ""]}});
+                                  }}
+                                >
+                                  <Plus className="w-4 h-4 mr-1" />
+                                  Add Challenge
+                                </Button>
+                              </div>
+                            </div>
+                            
+                            {/* Process */}
+                            <div>
+                              <Label>Process Steps</Label>
+                              <div className="space-y-3">
+                                {editForm.content.process.map((phase, index) => (
+                                  <div key={index} className="border rounded-lg p-3 space-y-2">
+                                    <div className="flex gap-2 items-start">
+                                      <div className="flex-1 space-y-2">
+                                        <Input
+                                          value={phase.phase}
+                                          onChange={(e) => {
+                                            const newProcess = [...editForm.content.process];
+                                            newProcess[index].phase = e.target.value;
+                                            setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
+                                          }}
+                                          placeholder="Phase name"
+                                        />
+                                        <Textarea
+                                          value={phase.description}
+                                          onChange={(e) => {
+                                            const newProcess = [...editForm.content.process];
+                                            newProcess[index].description = e.target.value;
+                                            setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
+                                          }}
+                                          placeholder="Phase description"
+                                          rows={2}
+                                        />
+                                      </div>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                          const newProcess = editForm.content.process.filter((_, i) => i !== index);
+                                          setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
+                                        }}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                ))}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setEditForm({...editForm, content: {...editForm.content, process: [...editForm.content.process, {phase: "", description: ""}]}});
+                                  }}
+                                >
+                                  <Plus className="w-4 h-4 mr-1" />
+                                  Add Process Step
+                                </Button>
+                              </div>
+                            </div>
+                            
+                            {/* Results */}
+                            <div>
+                              <Label>Key Results</Label>
+                              <div className="space-y-3">
+                                {editForm.content.results.map((result, index) => (
+                                  <div key={index} className="border rounded-lg p-3 space-y-2">
+                                    <div className="flex gap-2 items-start">
+                                      <div className="flex-1 space-y-2">
+                                        <Input
+                                          value={result.metric}
+                                          onChange={(e) => {
+                                            const newResults = [...editForm.content.results];
+                                            newResults[index].metric = e.target.value;
+                                            setEditForm({...editForm, content: {...editForm.content, results: newResults}});
+                                          }}
+                                          placeholder="Metric (e.g., 40%)"
+                                        />
+                                        <Input
+                                          value={result.value}
+                                          onChange={(e) => {
+                                            const newResults = [...editForm.content.results];
+                                            newResults[index].value = e.target.value;
+                                            setEditForm({...editForm, content: {...editForm.content, results: newResults}});
+                                          }}
+                                          placeholder="Value (e.g., Increase in efficiency)"
+                                        />
+                                        <Input
+                                          value={result.description}
+                                          onChange={(e) => {
+                                            const newResults = [...editForm.content.results];
+                                            newResults[index].description = e.target.value;
+                                            setEditForm({...editForm, content: {...editForm.content, results: newResults}});
+                                          }}
+                                          placeholder="Description"
+                                        />
+                                      </div>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                          const newResults = editForm.content.results.filter((_, i) => i !== index);
+                                          setEditForm({...editForm, content: {...editForm.content, results: newResults}});
+                                        }}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                ))}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setEditForm({...editForm, content: {...editForm.content, results: [...editForm.content.results, {metric: "", value: "", description: ""}]}});
+                                  }}
+                                >
+                                  <Plus className="w-4 h-4 mr-1" />
+                                  Add Result
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                          
                           <div className="flex gap-2 justify-end">
                             <Button variant="outline" size="sm" onClick={cancelEditing}>
                               Cancel
