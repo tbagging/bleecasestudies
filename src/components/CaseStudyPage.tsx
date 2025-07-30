@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Building, TrendingUp, Users, Target } from "lucide-react";
+import { Building, TrendingUp, Users, Target } from "lucide-react";
 import { useContent } from "@/contexts/ContentContext";
 
 interface CaseStudyPageProps {
@@ -12,35 +10,7 @@ interface CaseStudyPageProps {
 
 const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
   const { caseStudies } = useContent();
-  const [email, setEmail] = useState("");
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const caseStudy = caseStudies.find(cs => cs.id === caseStudyId);
-
-  console.log('CaseStudyPage - caseStudyId:', caseStudyId);
-  console.log('CaseStudyPage - caseStudies:', caseStudies);
-  console.log('CaseStudyPage - found caseStudy:', caseStudy);
-  console.log('CaseStudyPage - caseStudy.content:', caseStudy?.content);
-
-  useEffect(() => {
-    const unlockedEmail = localStorage.getItem("unlockedEmail");
-    if (unlockedEmail) {
-      setIsUnlocked(true);
-    }
-  }, []);
-
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    localStorage.setItem("unlockedEmail", email);
-    setIsUnlocked(true);
-    setIsSubmitting(false);
-  };
 
   if (!caseStudy) {
     return (
@@ -48,75 +18,6 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Case Study Not Found</h1>
           <p className="text-muted-foreground">This case study could not be found.</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isUnlocked) {
-    return (
-      <div className="p-6">
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div>
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2 mb-4">
-                  <Mail className="h-5 w-5 text-primary" />
-                  <span className="text-sm font-medium text-primary">Unlock Full Case Study</span>
-                </div>
-                <CardTitle className="text-2xl mb-4">
-                  Get the complete {caseStudy.company} story
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Enter your email to access the full case study with detailed implementation insights and measurable results.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleEmailSubmit} className="space-y-4">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full"
-                  />
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Unlocking..." : "Unlock Case Study"}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 rounded-lg"></div>
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start mb-4">
-                  <span className="text-sm font-medium text-primary">{caseStudy.company}</span>
-                  <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
-                </div>
-                <CardTitle className="text-xl mb-2">
-                  {caseStudy.title}
-                </CardTitle>
-                <CardDescription>
-                  {caseStudy.summary}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {caseStudy.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">#{tag}</Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </div>
     );
