@@ -71,6 +71,68 @@ const Admin = () => {
     }
   });
 
+  // Helper function to extract company name from title
+  const extractCompanyName = (fileName: string): string => {
+    let title = fileName.replace(/\.(docx|pdf)$/i, '');
+    
+    // Remove common case study terms
+    title = title.replace(/case[\s-_]?study/gi, '').trim();
+    
+    // Handle common patterns like "CompanyName - Description" or "Description - CompanyName"
+    const parts = title.split(/[-_]/);
+    if (parts.length > 1) {
+      // Take the first part if it looks like a company name (shorter, capitalized)
+      const firstPart = parts[0].trim();
+      const lastPart = parts[parts.length - 1].trim();
+      
+      // Prefer shorter parts that are likely company names
+      if (firstPart.length <= 20 && firstPart.length > 0) {
+        return firstPart.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      }
+      if (lastPart.length <= 20 && lastPart.length > 0) {
+        return lastPart.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      }
+    }
+    
+    // If no clear pattern, take the first 20 characters
+    const cleaned = title.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    return cleaned.length <= 20 ? cleaned : cleaned.substring(0, 20).trim();
+  };
+
+  // Helper function to determine industry from content
+  const determineIndustry = (content: any): string => {
+    const text = `${content.background || ''} ${content.challenge || ''} ${content.clientSnapshot || ''}`.toLowerCase();
+    
+    const industryKeywords = {
+      'Healthcare': ['hospital', 'medical', 'healthcare', 'patient', 'clinic', 'doctor', 'nurse', 'treatment', 'health'],
+      'Technology': ['software', 'tech', 'digital', 'app', 'platform', 'ai', 'algorithm', 'code', 'programming', 'saas'],
+      'Finance': ['bank', 'financial', 'investment', 'money', 'trading', 'loan', 'credit', 'payment', 'fintech'],
+      'Manufacturing': ['manufacturing', 'factory', 'production', 'assembly', 'quality control', 'supply chain', 'logistics'],
+      'Retail': ['retail', 'store', 'customer', 'sales', 'shopping', 'ecommerce', 'inventory', 'merchandise'],
+      'Education': ['education', 'school', 'university', 'student', 'learning', 'teaching', 'academic', 'curriculum'],
+      'Real Estate': ['real estate', 'property', 'housing', 'building', 'construction', 'architecture', 'development'],
+      'Energy': ['energy', 'oil', 'gas', 'renewable', 'solar', 'wind', 'power', 'utility', 'electricity'],
+      'Consulting': ['consulting', 'advisory', 'strategy', 'transformation', 'optimization', 'efficiency'],
+      'Transportation': ['transportation', 'logistics', 'shipping', 'delivery', 'fleet', 'automotive', 'aviation'],
+    };
+
+    let bestMatch = 'Unknown';
+    let maxScore = 0;
+
+    for (const [industry, keywords] of Object.entries(industryKeywords)) {
+      const score = keywords.reduce((count, keyword) => {
+        return count + (text.includes(keyword) ? 1 : 0);
+      }, 0);
+      
+      if (score > maxScore) {
+        maxScore = score;
+        bestMatch = industry;
+      }
+    }
+
+    return maxScore > 0 ? bestMatch : 'Unknown';
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -97,12 +159,16 @@ const Admin = () => {
         // Parse the file content
         const parsedContent = await parseFile(file);
         
+        // Extract company name and determine industry
+        const extractedCompany = extractCompanyName(file.name);
+        const determinedIndustry = determineIndustry(parsedContent);
+        
         const newCaseStudy = {
           id: newId,
           title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
           summary: "Add case study summary here...",
-          company: "New Company",
-          industry: "Unknown", 
+          company: extractedCompany,
+          industry: determinedIndustry,
           tags: [],
           fileName: file.name,
           content: {
@@ -122,12 +188,15 @@ const Admin = () => {
         console.error('Error parsing file:', error);
         
         // Fallback: create case study without parsed content
+        // Still extract company name from filename even without content
+        const extractedCompany = extractCompanyName(file.name);
+        
         const newCaseStudy = {
           id: newId,
           title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
           summary: "Add case study summary here...",
-          company: "New Company",
-          industry: "Unknown", 
+          company: extractedCompany,
+          industry: "Unknown", // Can't determine without content
           tags: [],
           fileName: file.name,
           content: {
