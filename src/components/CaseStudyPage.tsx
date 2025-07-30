@@ -48,7 +48,14 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 h-full flex items-center justify-center">
           <div className="text-center text-white max-w-4xl mx-auto px-6">
-            <div className="flex justify-center items-center gap-2 mb-4">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              {caseStudy.logo && (
+                <img 
+                  src={caseStudy.logo} 
+                  alt={`${caseStudy.company} logo`}
+                  className="w-12 h-12 rounded object-contain bg-white/10 p-2"
+                />
+              )}
               <Building className="h-6 w-6" />
               <span className="text-lg font-medium">{caseStudy.company}</span>
               <span className="text-sm opacity-80">{caseStudy.industry}</span>

@@ -37,6 +37,7 @@ interface CaseStudy {
   title: string;
   summary: string;
   image?: string;
+  logo?: string;
   tags: string[];
   company: string;
   industry: string;
@@ -277,8 +278,17 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         // Replace broken blob URLs with the uploaded image for Ichilov case study
         if (study.title.includes('Ichilov') || study.id === '1753885202670') {
           needsUpdate = true;
-          return { ...study, image: '/lovable-uploads/239c36f2-0835-4bc0-b05f-b3c041eac83b.png' };
+          return { 
+            ...study, 
+            image: '/lovable-uploads/239c36f2-0835-4bc0-b05f-b3c041eac83b.png',
+            logo: '/lovable-uploads/394793e4-713d-43ad-856e-e83734ec8087.png'
+          };
         }
+      }
+      // Also add logo to Ichilov case study if it doesn't have one
+      if ((study.title.includes('Ichilov') || study.id === '1753885202670') && !study.logo) {
+        needsUpdate = true;
+        return { ...study, logo: '/lovable-uploads/394793e4-713d-43ad-856e-e83734ec8087.png' };
       }
       return study;
     });

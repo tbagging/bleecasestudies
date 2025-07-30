@@ -6,6 +6,7 @@ interface CaseStudy {
   title: string;
   summary: string;
   image?: string;
+  logo?: string;
   tags: string[];
   company: string;
   industry: string;
@@ -33,7 +34,16 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
       )}
       <CardHeader>
         <div className="flex justify-between items-start mb-2">
-          <span className="text-sm font-medium text-primary">{caseStudy.company}</span>
+          <div className="flex items-center gap-2">
+            {caseStudy.logo && (
+              <img 
+                src={caseStudy.logo} 
+                alt={`${caseStudy.company} logo`}
+                className="w-8 h-8 rounded object-contain"
+              />
+            )}
+            <span className="text-sm font-medium text-primary">{caseStudy.company}</span>
+          </div>
           <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
         </div>
         <CardTitle className="text-xl group-hover:text-primary transition-colors">
