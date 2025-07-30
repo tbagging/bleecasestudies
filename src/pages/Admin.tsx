@@ -133,6 +133,81 @@ const Admin = () => {
     return maxScore > 0 ? bestMatch : 'Unknown';
   };
 
+  // Helper function to generate summary from content
+  const generateSummary = (content: any, company: string): string => {
+    const background = content.background || '';
+    const challenge = content.challenge || '';
+    const clientSnapshot = content.clientSnapshot || '';
+    
+    if (!background && !challenge && !clientSnapshot) {
+      return '';
+    }
+    
+    // Extract key information for first sentence
+    let firstSentence = '';
+    if (background) {
+      const firstPart = background.split('.')[0];
+      firstSentence = firstPart ? `${company} ${firstPart.toLowerCase()}.` : '';
+    } else if (clientSnapshot) {
+      const firstPart = clientSnapshot.split('.')[0];
+      firstSentence = firstPart ? `${company} ${firstPart.toLowerCase()}.` : '';
+    }
+    
+    // Extract key information for second sentence
+    let secondSentence = '';
+    if (challenge) {
+      const challengePart = challenge.split('.')[0];
+      secondSentence = challengePart ? `The main challenge was ${challengePart.toLowerCase()}.` : '';
+    } else if (content.results && content.results.length > 0) {
+      const firstResult = content.results[0];
+      secondSentence = firstResult ? `This resulted in ${firstResult.description || firstResult.metric}.` : '';
+    }
+    
+    return [firstSentence, secondSentence].filter(Boolean).join(' ');
+  };
+
+  // Helper function to generate hashtags from content
+  const generateHashtags = (content: any, industry: string): string[] => {
+    const text = `${content.background || ''} ${content.challenge || ''} ${content.clientSnapshot || ''}`.toLowerCase();
+    
+    const hashtagKeywords = {
+      // Industry-based hashtags
+      'Healthcare': ['#healthcare', '#medical', '#hospital'],
+      'Technology': ['#technology', '#software', '#digital'],
+      'Finance': ['#finance', '#fintech', '#banking'],
+      'Manufacturing': ['#manufacturing', '#production', '#industry'],
+      'Retail': ['#retail', '#ecommerce', '#sales'],
+      'Education': ['#education', '#learning', '#academic'],
+      'Real Estate': ['#realestate', '#property', '#construction'],
+      'Energy': ['#energy', '#power', '#utilities'],
+      'Consulting': ['#consulting', '#strategy', '#transformation'],
+      'Transportation': ['#transportation', '#logistics', '#automotive'],
+    };
+    
+    // Common business hashtags based on content keywords
+    const contentHashtags = [];
+    if (text.includes('efficiency') || text.includes('optimization')) contentHashtags.push('#efficiency');
+    if (text.includes('automation') || text.includes('automated')) contentHashtags.push('#automation');
+    if (text.includes('customer') || text.includes('client')) contentHashtags.push('#customerexperience');
+    if (text.includes('data') || text.includes('analytics')) contentHashtags.push('#dataanalytics');
+    if (text.includes('process') || text.includes('workflow')) contentHashtags.push('#processimprovement');
+    if (text.includes('cost') || text.includes('saving')) contentHashtags.push('#costsaving');
+    if (text.includes('revenue') || text.includes('growth')) contentHashtags.push('#growth');
+    if (text.includes('integration') || text.includes('system')) contentHashtags.push('#systemintegration');
+    
+    // Start with industry hashtags
+    const industryTags = hashtagKeywords[industry] || [];
+    
+    // Add content-based hashtags
+    const allTags = [...industryTags, ...contentHashtags];
+    
+    // Always add generic business hashtags
+    allTags.push('#casestudy', '#success');
+    
+    // Return unique hashtags, limited to 6
+    return [...new Set(allTags)].slice(0, 6);
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -163,13 +238,17 @@ const Admin = () => {
         const extractedCompany = extractCompanyName(file.name);
         const determinedIndustry = determineIndustry(parsedContent);
         
+        // Generate summary and hashtags
+        const generatedSummary = generateSummary(parsedContent, extractedCompany);
+        const generatedHashtags = generateHashtags(parsedContent, determinedIndustry);
+        
         const newCaseStudy = {
           id: newId,
           title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-          summary: "", // Leave empty, no placeholder text
+          summary: generatedSummary,
           company: extractedCompany,
           industry: determinedIndustry,
-          tags: [],
+          tags: generatedHashtags,
           fileName: file.name,
           content: {
             heroImage: "",
@@ -194,10 +273,10 @@ const Admin = () => {
         const newCaseStudy = {
           id: newId,
           title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-          summary: "", // Leave empty, no placeholder text
+          summary: "", // No content to generate summary from
           company: extractedCompany,
           industry: "Unknown", // Can't determine without content
-          tags: [],
+          tags: ["#casestudy"], // Basic tag when no content available
           fileName: file.name,
           content: {
             heroImage: "",
