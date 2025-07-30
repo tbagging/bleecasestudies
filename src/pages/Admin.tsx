@@ -545,15 +545,6 @@ const Admin = () => {
                             </div>
                           </div>
                           <div>
-                            <Label htmlFor={`edit-summary-${caseStudy.id}`}>Summary</Label>
-                            <Textarea
-                              id={`edit-summary-${caseStudy.id}`}
-                              value={editForm.summary}
-                              onChange={(e) => setEditForm({...editForm, summary: e.target.value})}
-                              rows={3}
-                            />
-                          </div>
-                          <div>
                             <Label>Case Study File</Label>
                             <div className="space-y-2">
                               {(editForm.fileName || editForm.newFile) ? (
