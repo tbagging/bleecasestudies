@@ -108,15 +108,10 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {caseStudy.content?.challenge && caseStudy.content.challenge.length > 0 ? (
-              <ul className="space-y-3 text-muted-foreground">
-                {caseStudy.content.challenge.map((item, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                    <span className="whitespace-pre-wrap">{item}</span>
-                  </li>
-                ))}
-              </ul>
+            {caseStudy.content?.challenge ? (
+              <div className="text-muted-foreground whitespace-pre-wrap">
+                {caseStudy.content.challenge}
+              </div>
             ) : (
               <p className="text-muted-foreground">Challenge details from the uploaded case study document will be displayed here.</p>
             )}

@@ -24,7 +24,7 @@ interface ClientLogo {
 interface CaseStudyContent {
   clientSnapshot: string;
   background: string;
-  challenge: string[];
+  challenge: string;
   process: { phase: string; description: string }[];
   results: { metric: string; value: string; description: string }[];
   companySize?: string;
@@ -135,12 +135,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         content: {
           clientSnapshot: "TechCorp is a mid-sized technology company with 150+ employees, operating in the competitive B2B software market. Despite having strong products and talented teams, they faced significant internal alignment challenges.",
           background: "TechCorp faced stagnating revenue growth despite having a strong product and talented team. Internal processes were fragmented, teams were working in silos, and strategic priorities were unclear across departments.",
-          challenge: [
-            "Disconnected teams working without shared strategic vision",
-            "Inefficient processes causing delays and resource waste",
-            "Lack of clear accountability and ownership across departments",
-            "Revenue plateau despite market opportunities"
-          ],
+          challenge: "TechCorp faced multiple interconnected challenges: Disconnected teams were working without a shared strategic vision, creating silos that prevented effective collaboration. Inefficient processes were causing delays and resource waste, while a lack of clear accountability and ownership across departments led to confusion and missed opportunities. Despite having strong market opportunities, the company was experiencing a revenue plateau due to these internal barriers.",
           process: [
             { phase: "Month 1-2: Strategic Clarity Workshop", description: "Facilitated intensive alignment sessions to establish clear strategic priorities and shared vision." },
             { phase: "Month 3-4: Process Optimization", description: "Redesigned key workflows and implemented new accountability frameworks." },
@@ -166,11 +161,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         content: {
           clientSnapshot: "GrowthCo is a fast-growing SaaS company with 200+ employees, having achieved strong success in their home market and now seeking rapid international expansion across multiple regions.",
           background: "GrowthCo had achieved strong success in their home market but struggled to expand internationally. Their existing organizational structure and processes were optimized for a single market, creating barriers to effective multi-regional operations and customer acquisition.",
-          challenge: [
-            "Organizational structure not designed for multi-regional operations",
-            "Lack of localized market knowledge and customer insights",
-            "Resource allocation challenges across multiple time zones"
-          ],
+          challenge: "GrowthCo faced significant expansion challenges: Their organizational structure was not designed for multi-regional operations, creating bottlenecks in decision-making and execution. The company lacked localized market knowledge and customer insights necessary for effective international expansion. Additionally, resource allocation challenges across multiple time zones were hampering coordination and creating inefficiencies in their expansion efforts.",
           process: [
             { phase: "Month 1-2: Market Analysis & Strategy Design", description: "Deep dive into target markets and designed region-specific go-to-market strategies." },
             { phase: "Month 3-4: Organizational Restructuring", description: "Redesigned team structure and processes to support multi-regional operations." },
@@ -196,11 +187,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         content: {
           clientSnapshot: "ManufactureX is a large-scale manufacturing company with 500+ employees, operating in a highly competitive market where cost efficiency and quality standards are critical for success.",
           background: "ManufactureX was facing increasing pressure from competitors with lower costs while maintaining high quality standards. Their existing processes had grown organically over time, creating inefficiencies and quality inconsistencies.",
-          challenge: [
-            "Rising operational costs impacting competitiveness",
-            "Quality inconsistencies affecting customer satisfaction",
-            "Outdated processes preventing scalability"
-          ],
+          challenge: "ManufactureX was confronting critical operational challenges: Rising operational costs were significantly impacting their competitiveness in an already tight market. Quality inconsistencies were affecting customer satisfaction and threatening long-term relationships. Additionally, outdated processes that had grown organically over time were preventing scalability and creating barriers to growth and efficiency improvements.",
           process: [
             { phase: "Month 1-2: Process Analysis", description: "Comprehensive audit of all operational processes and quality control systems." },
             { phase: "Month 3-4: System Redesign", description: "Implemented lean manufacturing principles and new quality frameworks." },
@@ -226,11 +213,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         content: {
           clientSnapshot: "Ichilov Hospital is Israel's largest medical center with 2000+ employees, serving as a leading healthcare institution seeking to foster innovation culture and develop commercial partnerships within the medical technology ecosystem.",
           background: "Ichilov Hospital sought to foster innovation culture and entrepreneurial thinking among their staff while identifying opportunities for industry partnerships and commercial development.",
-          challenge: [
-            "Limited culture of innovation and entrepreneurship",
-            "Lack of structured approach to idea development",
-            "Need for industry partnerships and commercial viability"
-          ],
+          challenge: "Ichilov Hospital faced innovation development challenges: There was a limited culture of innovation and entrepreneurship among staff, with most employees focused on day-to-day healthcare delivery rather than commercial innovation. The hospital lacked a structured approach to idea development and commercialization. Additionally, there was a clear need to establish industry partnerships and ensure commercial viability of internal innovations to create sustainable value.",
           process: [
             { phase: "Week 1-2: Preparation & Setup", description: "Designed hackathon framework and recruited cross-functional teams." },
             { phase: "Week 3: Intensive Hackathon", description: "48-hour intensive innovation session with mentorship and industry experts." },

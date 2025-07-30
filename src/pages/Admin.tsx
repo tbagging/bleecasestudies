@@ -62,7 +62,7 @@ const Admin = () => {
     content: {
       clientSnapshot: "",
       background: "",
-      challenge: [] as string[],
+      challenge: '',
       process: [] as { phase: string; description: string }[],
       results: [] as { metric: string; value: string; description: string }[],
       companySize: "",
@@ -91,7 +91,7 @@ const Admin = () => {
           content: {
             clientSnapshot: parsedContent.clientSnapshot || "",
             background: parsedContent.background || "",
-            challenge: parsedContent.challenge || [],
+            challenge: parsedContent.challenge || '',
             process: parsedContent.process || [],
             results: parsedContent.results || [],
             companySize: parsedContent.companySize || "",
@@ -216,7 +216,7 @@ const Admin = () => {
       content: caseStudy.content || {
         clientSnapshot: "",
         background: "",
-        challenge: [],
+        challenge: '',
         process: [],
         results: [],
         companySize: "",
@@ -240,7 +240,7 @@ const Admin = () => {
       content: {
         clientSnapshot: "",
         background: "",
-        challenge: [],
+        challenge: '',
         process: [],
         results: [],
         companySize: "",
@@ -300,7 +300,7 @@ const Admin = () => {
           content: {
             clientSnapshot: parsedContent.clientSnapshot || editForm.content.clientSnapshot,
             background: parsedContent.background || "",
-            challenge: parsedContent.challenge || [],
+            challenge: parsedContent.challenge || '',
             process: parsedContent.process || [],
             results: parsedContent.results || [],
             companySize: parsedContent.companySize || "",
@@ -736,42 +736,14 @@ const Admin = () => {
                             
                             {/* Challenge */}
                             <div>
-                              <Label>Challenges</Label>
-                              <div className="space-y-2">
-                                {editForm.content.challenge.map((item, index) => (
-                                  <div key={index} className="flex gap-2">
-                                    <Input
-                                      value={item}
-                                      onChange={(e) => {
-                                        const newChallenge = [...editForm.content.challenge];
-                                        newChallenge[index] = e.target.value;
-                                        setEditForm({...editForm, content: {...editForm.content, challenge: newChallenge}});
-                                      }}
-                                      placeholder={`Challenge ${index + 1}`}
-                                    />
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => {
-                                        const newChallenge = editForm.content.challenge.filter((_, i) => i !== index);
-                                        setEditForm({...editForm, content: {...editForm.content, challenge: newChallenge}});
-                                      }}
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                  </div>
-                                ))}
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => {
-                                    setEditForm({...editForm, content: {...editForm.content, challenge: [...editForm.content.challenge, ""]}});
-                                  }}
-                                >
-                                  <Plus className="w-4 h-4 mr-1" />
-                                  Add Challenge
-                                </Button>
-                              </div>
+                              <Label htmlFor={`challenge-${caseStudy.id}`}>Challenge</Label>
+                              <Textarea
+                                id={`challenge-${caseStudy.id}`}
+                                value={editForm.content.challenge}
+                                onChange={(e) => setEditForm({...editForm, content: {...editForm.content, challenge: e.target.value}})}
+                                rows={6}
+                                placeholder="Describe the main challenges faced by the client..."
+                              />
                             </div>
                             
                             {/* Process */}
