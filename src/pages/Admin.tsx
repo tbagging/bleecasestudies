@@ -360,7 +360,11 @@ const Admin = () => {
     // Split by comma or space and clean up tags
     const tagsToAdd = newTag
       .split(/[,\s]+/)
-      .map(tag => tag.trim())
+      .map(tag => {
+        // Remove existing # if present, then ensure consistent format
+        const cleanTag = tag.trim().replace(/^#+/, '');
+        return cleanTag;
+      })
       .filter(tag => tag.length > 0)
       .filter(tag => !availableTags.includes(tag));
     
@@ -1272,7 +1276,7 @@ const Admin = () => {
                 <div className="space-y-3">
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Add tags (separate multiple tags with commas or spaces)"
+                      placeholder="Add tags (separate multiple with commas or spaces, # optional)"
                       value={newTag}
                       onChange={(e) => setNewTag(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && addNewTag()}
@@ -1291,8 +1295,8 @@ const Admin = () => {
                   <h4 className="font-medium">Available Tags</h4>
                   <div className="flex flex-wrap gap-2">
                     {availableTags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-sm">
-                        #{tag}
+                       <Badge key={tag} variant="secondary" className="text-sm">
+                         {tag.startsWith('#') ? tag : `#${tag}`}
                         <button
                           onClick={() => removeTag(tag)}
                           className="ml-2 text-destructive hover:text-destructive/80"
