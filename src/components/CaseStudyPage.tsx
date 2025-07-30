@@ -70,11 +70,11 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             </div>
             <div>
               <h4 className="font-semibold mb-2">Company Size</h4>
-              <p className="text-muted-foreground">{caseStudy.content.companySize || "Not specified"}</p>
+              <p className="text-muted-foreground">{caseStudy.content?.companySize || "Not specified"}</p>
             </div>
             <div>
               <h4 className="font-semibold mb-2">Project Timeline</h4>
-              <p className="text-muted-foreground">{caseStudy.content.timeline || "Not specified"}</p>
+              <p className="text-muted-foreground">{caseStudy.content?.timeline || "Not specified"}</p>
             </div>
           </CardContent>
         </Card>
@@ -85,9 +85,9 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             <CardTitle>Background</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              {caseStudy.content.background}
-            </p>
+            <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              {caseStudy.content?.background || "Background information from the uploaded case study document will be displayed here."}
+            </div>
           </CardContent>
         </Card>
 
@@ -100,14 +100,18 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-3 text-muted-foreground">
-              {caseStudy.content.challenge.map((item, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+            {caseStudy.content?.challenge && caseStudy.content.challenge.length > 0 ? (
+              <ul className="space-y-3 text-muted-foreground">
+                {caseStudy.content.challenge.map((item, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span>
+                    <span className="whitespace-pre-wrap">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-muted-foreground">Challenge details from the uploaded case study document will be displayed here.</p>
+            )}
           </CardContent>
         </Card>
 
@@ -120,14 +124,18 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {caseStudy.content.process.map((phase, index) => (
-                <div key={index} className="border-l-4 border-primary pl-4">
-                  <h4 className="font-semibold mb-2">{phase.phase}</h4>
-                  <p className="text-muted-foreground">{phase.description}</p>
-                </div>
-              ))}
-            </div>
+            {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
+              <div className="space-y-4">
+                {caseStudy.content.process.map((phase, index) => (
+                  <div key={index} className="border-l-4 border-primary pl-4">
+                    <h4 className="font-semibold mb-2">{phase.phase}</h4>
+                    <p className="text-muted-foreground whitespace-pre-wrap">{phase.description}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground">Process details from the uploaded case study document will be displayed here.</p>
+            )}
           </CardContent>
         </Card>
 
@@ -140,15 +148,19 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-3 gap-6">
-              {caseStudy.content.results.map((result, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-3xl font-bold text-primary mb-2">{result.metric}</div>
-                  <div className="font-medium mb-1">{result.value}</div>
-                  <div className="text-sm text-muted-foreground">{result.description}</div>
-                </div>
-              ))}
-            </div>
+            {caseStudy.content?.results && caseStudy.content.results.length > 0 ? (
+              <div className="grid md:grid-cols-3 gap-6">
+                {caseStudy.content.results.map((result, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-3xl font-bold text-primary mb-2">{result.metric}</div>
+                    <div className="font-medium mb-1">{result.value}</div>
+                    <div className="text-sm text-muted-foreground">{result.description}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground">Results and metrics from the uploaded case study document will be displayed here.</p>
+            )}
           </CardContent>
         </Card>
 
