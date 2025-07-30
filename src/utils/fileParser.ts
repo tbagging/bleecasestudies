@@ -29,6 +29,7 @@ export async function parseDocxFile(file: File): Promise<string> {
 
 export async function extractImagesFromDocx(file: File): Promise<string[]> {
   try {
+    console.log('Starting image extraction from DOCX file:', file.name);
     const arrayBuffer = await file.arrayBuffer();
     const images: string[] = [];
     
@@ -36,10 +37,13 @@ export async function extractImagesFromDocx(file: File): Promise<string[]> {
       { arrayBuffer },
       {
         convertImage: mammoth.images.imgElement(function(image) {
+          console.log('Found image in document:', image);
           return image.read("base64").then(function(imageBuffer) {
+            console.log('Reading image buffer, length:', imageBuffer.length);
             const base64 = imageBuffer;
             const dataUrl = `data:${image.contentType};base64,${base64}`;
             images.push(dataUrl);
+            console.log('Added image to array, total images:', images.length);
             return {
               src: dataUrl
             };
@@ -48,6 +52,7 @@ export async function extractImagesFromDocx(file: File): Promise<string[]> {
       }
     );
     
+    console.log('Image extraction completed. Found', images.length, 'images');
     return images;
   } catch (error) {
     console.error('Error extracting images from DOCX file:', error);
@@ -380,14 +385,21 @@ export async function parseFile(file: File): Promise<ParsedCaseStudyContent> {
   if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
     text = await parseDocxFile(file);
     images = await extractImagesFromDocx(file);
+    console.log('DOCX parsing complete. Text length:', text.length, 'Images found:', images.length);
   } else if (file.type === 'application/pdf') {
     text = await parsePdfFile(file);
+    console.log('PDF parsing complete. Text length:', text.length);
   } else {
     throw new Error('Unsupported file type');
   }
   
   const content = extractStructuredContent(text);
   content.images = images;
+  console.log('Final parsed content:', {
+    hasImages: content.images.length > 0,
+    imageCount: content.images.length,
+    firstImagePrefix: content.images[0] ? content.images[0].substring(0, 50) + '...' : 'none'
+  });
   
   return content;
 }
