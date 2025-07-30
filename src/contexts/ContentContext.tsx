@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect, useCallback, useRef } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface HeroContent {
   title: string;
@@ -29,7 +29,6 @@ interface CaseStudyContent {
   results: { metric: string; value: string; description: string }[];
   companySize?: string;
   timeline?: string;
-  images?: string[];
 }
 
 interface CaseStudy {
@@ -37,7 +36,6 @@ interface CaseStudy {
   title: string;
   summary: string;
   image?: string;
-  logo?: string;
   tags: string[];
   company: string;
   industry: string;
@@ -258,50 +256,10 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('availableTags', JSON.stringify(tags));
   };
 
-  const updateCaseStudies = useCallback((studies: CaseStudy[]) => {
+  const updateCaseStudies = (studies: CaseStudy[]) => {
     setCaseStudies(studies);
     localStorage.setItem('caseStudies', JSON.stringify(studies));
-  }, []);
-
-  // Use ref to track if we've already fixed the images to prevent infinite loops
-  const hasFixedImages = useRef(false);
-
-  // Check and fix broken images on initialization
-  useEffect(() => {
-    if (hasFixedImages.current) return;
-    
-    const currentStudies = caseStudies;
-    let needsUpdate = false;
-    
-    const fixedStudies = currentStudies.filter(study => {
-      // Remove the duplicate default Ichilov case study if it exists
-      if (study.id === "4" && study.title.includes('Ichilov Internal Hackathon')) {
-        return false;
-      }
-      return true;
-    }).map(study => {
-      // Fix the Ichilov case study with all proper data
-      if (study.title.includes('Ichilov') || study.id === '1753885202670') {
-        needsUpdate = true;
-        return { 
-          ...study, 
-          company: 'Ichilov Hospital',
-          industry: 'Healthcare',
-          summary: 'Launched "NextCare @ Home" hackathon to accelerate internal innovation and foster commercial partnerships across healthcare domains.',
-          image: '/lovable-uploads/239c36f2-0835-4bc0-b05f-b3c041eac83b.png',
-          logo: '/lovable-uploads/394793e4-713d-43ad-856e-e83734ec8087.png',
-          tags: ['innovation', 'collaboration', 'entrepreneurship', 'healthcare']
-        };
-      }
-      return study;
-    });
-    
-    if (needsUpdate) {
-      console.log('Fixing broken image URLs');
-      hasFixedImages.current = true;
-      updateCaseStudies(fixedStudies);
-    }
-  }, [caseStudies, updateCaseStudies]);
+  };
 
   const value = {
     heroContent,

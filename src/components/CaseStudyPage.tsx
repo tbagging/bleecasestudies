@@ -35,48 +35,25 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section with Background Image */}
-      <div 
-        className="relative h-96 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: caseStudy.content?.images?.[0] 
-            ? `url(${caseStudy.content.images[0]})` 
-            : 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-foreground)) 100%)'
-        }}
-      >
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 h-full flex items-center justify-center">
-          <div className="text-center text-white max-w-4xl mx-auto px-6">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              {caseStudy.logo && (
-                <img 
-                  src={caseStudy.logo} 
-                  alt={`${caseStudy.company} logo`}
-                  className="w-12 h-12 rounded object-contain bg-white/10 p-2"
-                />
-              )}
-              <Building className="h-6 w-6" />
-              <span className="text-lg font-medium">{caseStudy.company}</span>
-              <span className="text-sm opacity-80">{caseStudy.industry}</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{caseStudy.title}</h1>
-            <p className="text-lg md:text-xl opacity-90 max-w-3xl mx-auto">
-              {caseStudy.summary}
-            </p>
-            <div className="flex justify-center flex-wrap gap-2 mt-6">
-              {caseStudy.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="bg-white/20 text-white border-white/30">
-                  #{tag}
-                </Badge>
-              ))}
-            </div>
+    <div className="p-6">
+      <div className="space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <div className="flex justify-center items-center gap-2 mb-4">
+            <Building className="h-6 w-6 text-primary" />
+            <span className="text-lg font-medium text-primary">{caseStudy.company}</span>
+            <span className="text-sm text-muted-foreground">{caseStudy.industry}</span>
+          </div>
+          <h1 className="text-3xl font-bold mb-4">{caseStudy.title}</h1>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            {caseStudy.summary}
+          </p>
+          <div className="flex justify-center flex-wrap gap-2 mt-6">
+            {caseStudy.tags.map((tag) => (
+              <Badge key={tag} variant="secondary">#{tag}</Badge>
+            ))}
           </div>
         </div>
-      </div>
-
-      <div className="p-6">
-        <div className="space-y-8 max-w-6xl mx-auto">
 
         {/* Client Snapshot */}
         <Card>
@@ -190,28 +167,6 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           </CardContent>
         </Card>
 
-        {/* Images from Document */}
-        {caseStudy.content?.images && caseStudy.content.images.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Case Study Images</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {caseStudy.content.images.map((image, index) => (
-                  <div key={index} className="rounded-lg overflow-hidden border">
-                    <img 
-                      src={image} 
-                      alt={`Case study image ${index + 1}`}
-                      className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* CTA */}
         <div className="text-center py-8">
           <h3 className="text-2xl font-bold mb-4">Ready to transform your organization?</h3>
@@ -221,7 +176,6 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           >
             Let's talk
           </Button>
-        </div>
         </div>
       </div>
     </div>

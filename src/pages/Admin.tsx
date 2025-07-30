@@ -66,8 +66,7 @@ const Admin = () => {
       process: [] as { phase: string; description: string }[],
       results: [] as { metric: string; value: string; description: string }[],
       companySize: "",
-      timeline: "",
-      images: [] as string[]
+      timeline: ""
     }
   });
 
@@ -89,7 +88,6 @@ const Admin = () => {
           industry: "Unknown", 
           tags: [],
           fileName: file.name,
-          image: parsedContent.images && parsedContent.images.length > 0 ? parsedContent.images[0] : undefined,
           content: {
             clientSnapshot: parsedContent.clientSnapshot || "",
             background: parsedContent.background || "",
@@ -97,8 +95,7 @@ const Admin = () => {
             process: parsedContent.process || [],
             results: parsedContent.results || [],
             companySize: parsedContent.companySize || "",
-            timeline: parsedContent.timeline || "",
-            images: parsedContent.images || []
+            timeline: parsedContent.timeline || ""
           }
         };
         
@@ -223,8 +220,7 @@ const Admin = () => {
         process: [],
         results: [],
         companySize: "",
-        timeline: "",
-        images: []
+        timeline: ""
       }
     });
   };
@@ -248,8 +244,7 @@ const Admin = () => {
         process: [],
         results: [],
         companySize: "",
-        timeline: "",
-        images: []
+        timeline: ""
       }
     });
   };
@@ -302,7 +297,6 @@ const Admin = () => {
         setEditForm({
           ...editForm, 
           newFile: file,
-          image: parsedContent.images && parsedContent.images.length > 0 ? parsedContent.images[0] : editForm.image,
           content: {
             clientSnapshot: parsedContent.clientSnapshot || editForm.content.clientSnapshot,
             background: parsedContent.background || "",
@@ -310,8 +304,7 @@ const Admin = () => {
             process: parsedContent.process || [],
             results: parsedContent.results || [],
             companySize: parsedContent.companySize || "",
-            timeline: parsedContent.timeline || "",
-            images: parsedContent.images || []
+            timeline: parsedContent.timeline || ""
           }
         });
         
