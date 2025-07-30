@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useCallback, useRef } from 'react';
 
 interface HeroContent {
   title: string;
@@ -257,13 +257,18 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('availableTags', JSON.stringify(tags));
   };
 
-  const updateCaseStudies = (studies: CaseStudy[]) => {
+  const updateCaseStudies = useCallback((studies: CaseStudy[]) => {
     setCaseStudies(studies);
     localStorage.setItem('caseStudies', JSON.stringify(studies));
-  };
+  }, []);
+
+  // Use ref to track if we've already fixed the images to prevent infinite loops
+  const hasFixedImages = useRef(false);
 
   // Check and fix broken images on initialization
   useEffect(() => {
+    if (hasFixedImages.current) return;
+    
     const currentStudies = caseStudies;
     let needsUpdate = false;
     
@@ -280,9 +285,10 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     
     if (needsUpdate) {
       console.log('Fixing broken image URLs');
+      hasFixedImages.current = true;
       updateCaseStudies(fixedStudies);
     }
-  }, []);
+  }, [caseStudies, updateCaseStudies]);
 
   const value = {
     heroContent,
