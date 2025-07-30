@@ -60,6 +60,7 @@ const Admin = () => {
     fileName: "", 
     newFile: null as File | null,
     content: {
+      heroImage: "",
       clientSnapshot: "",
       background: "",
       challenge: '',
@@ -89,6 +90,7 @@ const Admin = () => {
           tags: [],
           fileName: file.name,
           content: {
+            heroImage: "",
             clientSnapshot: parsedContent.clientSnapshot || "",
             background: parsedContent.background || "",
             challenge: parsedContent.challenge || '',
@@ -214,6 +216,7 @@ const Admin = () => {
       fileName: caseStudy.fileName || "",
       newFile: null,
       content: caseStudy.content || {
+        heroImage: "",
         clientSnapshot: "",
         background: "",
         challenge: '',
@@ -238,6 +241,7 @@ const Admin = () => {
       fileName: "", 
       newFile: null,
       content: {
+        heroImage: "",
         clientSnapshot: "",
         background: "",
         challenge: '',
@@ -280,6 +284,18 @@ const Admin = () => {
     }
   };
 
+  const handleHeroImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      const heroImageUrl = URL.createObjectURL(file);
+      setEditForm({...editForm, content: {...editForm.content, heroImage: heroImageUrl}});
+      toast({
+        title: "Hero image uploaded",
+        description: "Case study hero image has been uploaded successfully.",
+      });
+    }
+  };
+
   const toggleTag = (tag: string) => {
     const newTags = editForm.tags.includes(tag)
       ? editForm.tags.filter(t => t !== tag)
@@ -298,6 +314,7 @@ const Admin = () => {
           ...editForm, 
           newFile: file,
           content: {
+            heroImage: editForm.content.heroImage,
             clientSnapshot: parsedContent.clientSnapshot || editForm.content.clientSnapshot,
             background: parsedContent.background || "",
             challenge: parsedContent.challenge || '',
@@ -670,6 +687,49 @@ const Admin = () => {
                                       </Badge>
                                     ))}
                                   </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
+                          {/* Hero Image Upload */}
+                          <div>
+                            <Label>Hero Image</Label>
+                            <div className="space-y-2">
+                              <div className="border-2 border-dashed border-muted rounded-lg p-4 text-center">
+                                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                                <p className="text-sm font-medium mb-1">Upload hero image for case study</p>
+                                <p className="text-xs text-muted-foreground mb-3">
+                                  PNG, JPG or SVG up to 2MB
+                                </p>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleHeroImageUpload}
+                                  className="hidden"
+                                  id={`hero-image-upload-${caseStudy.id}`}
+                                />
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  asChild
+                                >
+                                  <label htmlFor={`hero-image-upload-${caseStudy.id}`} className="cursor-pointer">
+                                    Choose Hero Image
+                                  </label>
+                                </Button>
+                              </div>
+                              {editForm.content.heroImage && (
+                                <div className="mt-2 p-2 border rounded">
+                                  <img src={editForm.content.heroImage} alt="Hero image preview" className="w-full h-32 object-cover rounded" />
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="mt-2 w-full"
+                                    onClick={() => setEditForm({...editForm, content: {...editForm.content, heroImage: ""}})}
+                                  >
+                                    Remove Hero Image
+                                  </Button>
                                 </div>
                               )}
                             </div>

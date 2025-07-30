@@ -37,6 +37,17 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
   return (
     <div className="p-6">
       <div className="space-y-8">
+        {/* Hero Image */}
+        {caseStudy.content?.heroImage && (
+          <div className="w-full h-64 md:h-80 rounded-lg overflow-hidden">
+            <img 
+              src={caseStudy.content.heroImage} 
+              alt={`${caseStudy.title} hero image`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
         {/* Header */}
         <div className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">

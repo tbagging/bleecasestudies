@@ -22,6 +22,7 @@ interface ClientLogo {
 }
 
 interface CaseStudyContent {
+  heroImage?: string;
   clientSnapshot: string;
   background: string;
   challenge: string;
