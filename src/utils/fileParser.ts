@@ -88,6 +88,16 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
   if (processMatch) {
     const processText = processMatch[1].trim();
     
+    // Skip introductory sentences and find actual process steps
+    const introductoryPhrases = [
+      'the process included',
+      'our process consisted of',
+      'we followed',
+      'the methodology',
+      'our approach',
+      'process overview'
+    ];
+    
     // Look for actual phase names with descriptions
     const phasePatterns = [
       // Pattern for "Phase Name:" followed by description
@@ -106,77 +116,158 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
         steps = matches.map(match => ({
           phase: match[1].trim(),
           description: match[2].trim()
-        }));
+        })).filter(step => {
+          // Filter out introductory sentences
+          const isIntroductory = introductoryPhrases.some(phrase => 
+            step.phase.toLowerCase().includes(phrase)
+          );
+          return !isIntroductory && step.phase.length >= 3 && step.phase.length <= 50;
+        });
         break;
       }
     }
     
     // Fallback: split by numbered items or bullet points if no patterns match
     if (steps.length === 0) {
-      const fallbackSteps = processText
-        .split(/(?:\n|^)(?:\d+\.|[•\-\*])\s*/)
-        .filter(item => item.trim().length > 15)
-        .map((item, index) => {
-          const lines = item.trim().split('\n');
-          const phase = lines[0].includes(':') ? lines[0].split(':')[0] : `Phase ${index + 1}`;
-          const description = lines[0].includes(':') ? lines.slice(0).join('\n').split(':').slice(1).join(':').trim() : item.trim();
-          return { phase: phase.trim(), description };
-        })
-        .slice(0, 6);
-      steps = fallbackSteps;
+      const processLines = processText.split(/\n/).map(line => line.trim()).filter(line => line.length > 0);
+      
+      for (const line of processLines) {
+        // Skip introductory sentences
+        const isIntroductory = introductoryPhrases.some(phrase => 
+          line.toLowerCase().includes(phrase)
+        );
+        
+        if (isIntroductory || line.length > 80) {
+          continue;
+        }
+        
+        // Look for numbered, bulleted, or titled items
+        const stepPatterns = [
+          /^\d+\.\s*([^.]+?)(?:\s*[:.]\s|$)/,  // "1. Step name"
+          /^•\s*([^.]+?)(?:\s*[:.]\s|$)/,      // "• Step name"
+          /^-\s*([^.]+?)(?:\s*[:.]\s|$)/,      // "- Step name"
+          /^([A-Z][^.!?]*?):\s/,              // "Step Name: description"
+          /^([A-Z][a-zA-Z\s&]{3,25})$/        // Standalone phase names
+        ];
+        
+        for (const pattern of stepPatterns) {
+          const match = line.match(pattern);
+          if (match) {
+            const stepName = (match[1] || match[0]).trim();
+            if (stepName && stepName.length >= 3 && stepName.length <= 50) {
+              const restOfLine = line.replace(match[0], '').trim();
+              steps.push({
+                phase: stepName,
+                description: restOfLine || stepName
+              });
+              break;
+            }
+          }
+        }
+      }
     }
     
-    content.process = steps;
+    content.process = steps.slice(0, 6);
     console.log('Found Process steps:', steps.length, steps.map(s => s.phase));
   }
 
-  // Extract Key Stats section
+  // Extract Key Stats section - Enhanced table detection
   const keyStatsMatch = cleanText.match(/Key Stats[:\n](.*?)$/is);
   if (keyStatsMatch) {
     const statsText = keyStatsMatch[1].trim();
+    const lines = statsText.split('\n').map(l => l.trim()).filter(l => l.length > 3);
     
-    // Look for table-like structures with metrics, values, and descriptions
-    const tableRows = statsText.split(/\n+/).filter(line => line.trim().length > 5);
-    
-    // Try to detect table format (metric | value | description)
+    // Try to detect table-like structures (common in DOCX extractions)
+    const tableRows = [];
     const results: { metric: string; value: string; description: string }[] = [];
     
-    for (const row of tableRows.slice(0, 4)) {
-      // Look for table separators (|, tabs, multiple spaces)
-      const cells = row.split(/\s*[\|\t]\s*|\s{3,}/).filter(cell => cell.trim().length > 0);
+    // First pass: look for table rows with separators
+    for (const line of lines) {
+      // Look for lines that might be table rows (contain tabs or multiple spaces)
+      if (line.includes('\t') || /\s{3,}/.test(line)) {
+        const cells = line.split(/\t|\s{3,}/).filter(cell => cell.trim());
+        if (cells.length >= 2) {
+          tableRows.push(cells);
+        }
+      }
       
-      if (cells.length >= 3) {
-        // Table format with 3+ columns
-        results.push({
-          metric: cells[0].trim(),
-          value: cells[1].trim(),
-          description: cells.slice(2).join(' ').trim()
-        });
-      } else if (cells.length === 2) {
-        // Two column format
-        results.push({
-          metric: cells[0].trim(),
-          value: cells[1].trim(),
-          description: cells[1].trim()
-        });
-      } else {
-        // Single line format - try to extract metric and value
-        const metricMatch = row.match(/(\d+%|\d+x|\$[\d,]+|\d+\s*(?:million|thousand|hours|days|months|weeks))/i);
-        if (metricMatch) {
-          const metric = metricMatch[0];
-          const description = row.replace(metricMatch[0], '').trim();
-          results.push({
-            metric,
-            value: metric,
-            description: description || 'Key improvement achieved'
-          });
-        } else {
-          // Fallback: treat as description with generic metric
-          results.push({
-            metric: `Result ${results.length + 1}`,
-            value: row.substring(0, 30).trim() + '...',
-            description: row.trim()
-          });
+      // Also look for structured patterns like "Metric | Value | Description"
+      const structuredMatch = line.match(/^([^|]+)\|([^|]+)\|(.+)$/);
+      if (structuredMatch) {
+        tableRows.push([
+          structuredMatch[1].trim(),
+          structuredMatch[2].trim(),
+          structuredMatch[3].trim()
+        ]);
+      }
+    }
+    
+    // Process table rows if found
+    if (tableRows.length > 0) {
+      for (const row of tableRows) {
+        if (row.length >= 2) {
+          const metric = row[0];
+          const value = row[1];
+          const description = row[2] || `${metric}: ${value}`;
+          
+          // Skip header rows
+          if (!metric.toLowerCase().includes('metric') && 
+              !metric.toLowerCase().includes('result') &&
+              (value.includes('%') || value.includes('$') || value.includes('x') || /\d/.test(value))) {
+            results.push({
+              metric: metric.trim(),
+              value: value.trim(),
+              description: description.trim()
+            });
+          }
+        }
+      }
+    } else {
+      // Fallback to pattern matching for unstructured text
+      const metricPatterns = [
+        /(\d+%)\s+(.+?)(?:\s+(.{10,}))?$/,                    // "50% improvement description"
+        /(\$[\d,]+)\s+(.+?)(?:\s+(.{10,}))?$/,                // "$50,000 savings description"
+        /(\d+x)\s+(.+?)(?:\s+(.{10,}))?$/,                    // "2x increase description"
+        /(.+?):\s*(\d+%|\$[\d,]+|\d+x|\d+)\s*(.*)$/,          // "Metric: 50% description"
+        /(\d+)\s*(increase|decrease|improvement|reduction|growth)\s*in\s*(.+)/i
+      ];
+      
+      for (const line of lines) {
+        // Skip obvious header or introductory lines
+        if (line.toLowerCase().includes('key results') || 
+            line.toLowerCase().includes('metrics') ||
+            line.length < 10) {
+          continue;
+        }
+        
+        for (const pattern of metricPatterns) {
+          const match = line.match(pattern);
+          if (match) {
+            let metric, value, description;
+            
+            if (pattern.source.includes('increase|decrease')) {
+              value = match[1];
+              metric = match[3];
+              description = `${match[1]} ${match[2]} in ${match[3]}`;
+            } else if (pattern.source.includes(':')) {
+              metric = match[1];
+              value = match[2];
+              description = match[3] || line;
+            } else {
+              value = match[1];
+              metric = match[2] || match[1];
+              description = match[3] || line;
+            }
+            
+            if (metric && value && metric.length <= 50) {
+              results.push({
+                metric: metric.trim(),
+                value: value.trim(),
+                description: (description || line).trim()
+              });
+              break;
+            }
+          }
         }
       }
     }
