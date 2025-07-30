@@ -22,15 +22,6 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
       className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
       onClick={onClick}
     >
-      {caseStudy.image && (
-        <div className="h-48 bg-muted rounded-t-lg overflow-hidden">
-          <img 
-            src={caseStudy.image} 
-            alt={caseStudy.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-      )}
       <CardHeader>
         <div className="flex justify-between items-start mb-2">
           <span className="text-sm font-medium text-primary">{caseStudy.company}</span>
