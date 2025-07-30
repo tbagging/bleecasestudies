@@ -171,162 +171,154 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
     console.log('Found Process steps:', steps.length, steps.map(s => s.phase));
   }
 
-  // Extract Key Stats section - Enhanced table detection
-  const keyStatsMatch = cleanText.match(/Key Stats[:\n](.*?)$/is);
-  if (keyStatsMatch) {
-    const statsText = keyStatsMatch[1].trim();
-    console.log('Raw Key Stats text:', statsText.substring(0, 300));
-    
+  // Extract Key Stats section - Enhanced detection
+  console.log('Looking for results section in text...');
+  
+  // Try multiple section name patterns
+  const resultSectionPatterns = [
+    /Key Stats[:\n](.*?)(?=\n\s*(?:[A-Z][^:\n]*:|$))/is,
+    /Results[:\n](.*?)(?=\n\s*(?:[A-Z][^:\n]*:|$))/is,
+    /Outcomes[:\n](.*?)(?=\n\s*(?:[A-Z][^:\n]*:|$))/is,
+    /Impact[:\n](.*?)(?=\n\s*(?:[A-Z][^:\n]*:|$))/is,
+    /Metrics[:\n](.*?)(?=\n\s*(?:[A-Z][^:\n]*:|$))/is,
+    /Key Results[:\n](.*?)(?=\n\s*(?:[A-Z][^:\n]*:|$))/is
+  ];
+  
+  let statsText = '';
+  let sectionFound = '';
+  
+  for (const pattern of resultSectionPatterns) {
+    const match = cleanText.match(pattern);
+    if (match) {
+      statsText = match[1].trim();
+      sectionFound = pattern.source.split('[')[0];
+      console.log(`Found ${sectionFound} section:`, statsText.substring(0, 200));
+      break;
+    }
+  }
+  
+  if (statsText) {
     const lines = statsText.split('\n').map(l => l.trim()).filter(l => l.length > 3);
-    console.log('Key Stats lines:', lines.slice(0, 10));
+    console.log('Processing lines:', lines.slice(0, 10));
     
-    // Try to detect table-like structures (common in DOCX extractions)
-    const tableRows = [];
     const results: { metric: string; value: string; description: string }[] = [];
     
-    // First pass: look for table rows with separators
-    for (const line of lines) {
-      // Look for lines that might be table rows (contain tabs or multiple spaces)
-      if (line.includes('\t') || /\s{3,}/.test(line)) {
-        const cells = line.split(/\t|\s{3,}/).filter(cell => cell.trim());
-        if (cells.length >= 2) {
-          tableRows.push(cells);
-          console.log('Found table row:', cells);
-        }
+    // Enhanced pattern matching for different formats
+    const patterns = [
+      // Table-like formats with separators
+      /^([^|\t]+)[\|\t]+([^|\t]+)[\|\t]+(.+)$/,
+      
+      // "Metric: Value Description" format
+      /^([^:]+?):\s*(\d+%|\$[\d,]+|\d+x|\d+(?:\.\d+)?[kmb]?)\s*(.*)$/i,
+      
+      // "Value Metric Description" format
+      /^(\d+%|\$[\d,]+|\d+x|\d+(?:\.\d+)?[kmb]?)\s+([^.]+?)(?:\s+(.+))?$/,
+      
+      // "Metric - Value Description" format
+      /^([^-]+?)\s*[-–]\s*(\d+%|\$[\d,]+|\d+x|\d+(?:\.\d+)?[kmb]?)\s*(.*)$/,
+      
+      // "Value improvement/increase in Metric" format
+      /^(\d+%|\$[\d,]+|\d+x|\d+(?:\.\d+)?[kmb]?)\s*(improvement|increase|growth|reduction|decrease)\s*(?:in\s*)?(.+)$/i,
+      
+      // Lines that start with numbers/percentages/currency
+      /^(\d+%|\$[\d,]+|\d+x)\s*(.+)$/,
+      
+      // Multi-space separated (common in DOCX table exports)
+      /^([^\s]+(?:\s+[^\s]+)*?)\s{3,}(\d+%|\$[\d,]+|\d+x|\d+(?:\.\d+)?[kmb]?)\s{3,}(.+)$/,
+    ];
+    
+    for (let i = 0; i < lines.length && results.length < 4; i++) {
+      const line = lines[i];
+      
+      // Skip obvious headers
+      if (line.toLowerCase().includes('metric') && line.toLowerCase().includes('value')) {
+        console.log('Skipping header line:', line);
+        continue;
       }
       
-      // Also look for structured patterns like "Metric | Value | Description"
-      const structuredMatch = line.match(/^([^|]+)\|([^|]+)\|(.+)$/);
-      if (structuredMatch) {
-        tableRows.push([
-          structuredMatch[1].trim(),
-          structuredMatch[2].trim(),
-          structuredMatch[3].trim()
-        ]);
-        console.log('Found structured row:', structuredMatch.slice(1));
+      if (line.toLowerCase().includes('key stats') || 
+          line.toLowerCase().includes('results') ||
+          line.length < 5) {
+        continue;
+      }
+      
+      console.log(`Testing line ${i}:`, line);
+      
+      for (const [index, pattern] of patterns.entries()) {
+        const match = line.match(pattern);
+        if (match) {
+          console.log(`Pattern ${index} matched:`, match);
+          
+          let metric, value, description;
+          
+          if (index === 0) { // Table format
+            metric = match[1].trim();
+            value = match[2].trim();
+            description = match[3].trim();
+          } else if (index === 1) { // "Metric: Value Description"
+            metric = match[1].trim();
+            value = match[2].trim();
+            description = match[3].trim() || `${metric}: ${value}`;
+          } else if (index === 2) { // "Value Metric Description"
+            value = match[1].trim();
+            metric = match[2].trim();
+            description = match[3]?.trim() || `${value} ${metric}`;
+          } else if (index === 3) { // "Metric - Value Description"
+            metric = match[1].trim();
+            value = match[2].trim();
+            description = match[3].trim() || `${metric}: ${value}`;
+          } else if (index === 4) { // "Value improvement in Metric"
+            value = match[1].trim();
+            metric = match[3].trim();
+            description = `${value} ${match[2]} in ${metric}`;
+          } else if (index === 5) { // "Value something"
+            value = match[1].trim();
+            metric = match[2].trim().split(' ').slice(0, 3).join(' ');
+            description = match[2].trim();
+          } else if (index === 6) { // Multi-space separated
+            metric = match[1].trim();
+            value = match[2].trim();
+            description = match[3].trim();
+          }
+          
+          // Validate the result
+          if (value && metric && metric.length <= 100 && value.length <= 50) {
+            results.push({
+              metric: metric,
+              value: value,
+              description: description || `${metric}: ${value}`
+            });
+            console.log('Added result:', { metric, value, description });
+            break;
+          }
+        }
       }
     }
     
-    console.log('Total table rows found:', tableRows.length);
-    
-    // Process table rows if found
-    if (tableRows.length > 0) {
-      for (const row of tableRows) {
-        if (row.length >= 2) {
-          const metric = row[0];
-          const value = row[1];
-          const description = row[2] || `${metric}: ${value}`;
-          
-          // Skip header rows
-          if (!metric.toLowerCase().includes('metric') && 
-              !metric.toLowerCase().includes('result') &&
-              !metric.toLowerCase().includes('outcome') &&
-              (value.includes('%') || value.includes('$') || value.includes('x') || /\d/.test(value))) {
-            results.push({
-              metric: metric.trim(),
-              value: value.trim(),
-              description: description.trim()
-            });
-            console.log('Added result:', { metric, value, description });
-          }
-        }
-      }
-    } else {
-      console.log('No table rows found, trying pattern matching...');
-      // Fallback to pattern matching for unstructured text
-      const metricPatterns = [
-        /(\d+%)\s+(.+?)(?:\s+(.{10,}))?$/,                    // "50% improvement description"
-        /(\$[\d,]+)\s+(.+?)(?:\s+(.{10,}))?$/,                // "$50,000 savings description"
-        /(\d+x)\s+(.+?)(?:\s+(.{10,}))?$/,                    // "2x increase description"
-        /(.+?):\s*(\d+%|\$[\d,]+|\d+x|\d+)\s*(.*)$/,          // "Metric: 50% description"
-        /(\d+)\s*(increase|decrease|improvement|reduction|growth)\s*in\s*(.+)/i,
-        /(.+?)\s*[-–]\s*(\d+%|\$[\d,]+|\d+x|\d+[^%$x]*)/,     // "Description - 50%"
-        /^(.+?)\s+(\d+%|\$[\d,]+|\d+x)(.*)$/                  // "Description 50% more text"
-      ];
-      
-      for (const line of lines) {
-        // Skip obvious header or introductory lines
-        if (line.toLowerCase().includes('key results') || 
-            line.toLowerCase().includes('metrics') ||
-            line.toLowerCase().includes('outcomes') ||
-            line.length < 5) {
-          continue;
-        }
-        
-        console.log('Testing line for patterns:', line);
-        
-        for (const pattern of metricPatterns) {
-          const match = line.match(pattern);
-          if (match) {
-            console.log('Pattern matched:', match);
-            let metric, value, description;
-            
-            if (pattern.source.includes('increase|decrease')) {
-              value = match[1];
-              metric = match[3];
-              description = `${match[1]} ${match[2]} in ${match[3]}`;
-            } else if (pattern.source.includes(':')) {
-              metric = match[1];
-              value = match[2];
-              description = match[3] || line;
-            } else if (pattern.source.includes('[-–]')) {
-              metric = match[1];
-              value = match[2];
-              description = line;
-            } else {
-              metric = match[1];
-              value = match[2];
-              description = match[3] || line;
-            }
-            
-            if (metric && value && metric.length <= 100) {
-              results.push({
-                metric: metric.trim(),
-                value: value.trim(),
-                description: (description || line).trim()
-              });
-              console.log('Added result from pattern:', { metric, value, description });
-              break;
-            }
-          }
+    // If no patterns worked, try a simple fallback
+    if (results.length === 0) {
+      console.log('No patterns matched, trying simple extraction...');
+      for (const line of lines.slice(0, 8)) {
+        // Look for any numbers/percentages in the line
+        const numberMatch = line.match(/(\d+%|\$[\d,]+|\d+x|\d+)/);
+        if (numberMatch && line.length > 10 && line.length < 200) {
+          const value = numberMatch[1];
+          const remaining = line.replace(numberMatch[1], '').trim();
+          results.push({
+            metric: remaining.substring(0, 50) || 'Key Result',
+            value: value,
+            description: line
+          });
+          console.log('Added fallback result:', line);
+          if (results.length >= 3) break;
         }
       }
     }
     
     content.results = results.slice(0, 3);
-    console.log('Final Key Stats results:', content.results.length, content.results);
+    console.log('Final results extracted:', content.results);
   } else {
-    console.log('No Key Stats section found in text');
-    // Try alternative section names
-    const alternativeMatches = [
-      cleanText.match(/Results[:\n](.*?)$/is),
-      cleanText.match(/Outcomes[:\n](.*?)$/is),
-      cleanText.match(/Impact[:\n](.*?)$/is),
-      cleanText.match(/Metrics[:\n](.*?)$/is)
-    ];
-    
-    for (const altMatch of alternativeMatches) {
-      if (altMatch) {
-        console.log('Found alternative results section:', altMatch[0].substring(0, 50));
-        // Use the same parsing logic as above but with alternative section
-        const statsText = altMatch[1].trim();
-        const lines = statsText.split('\n').map(l => l.trim()).filter(l => l.length > 3);
-        
-        for (const line of lines.slice(0, 5)) {
-          const simpleMatch = line.match(/(.+?)\s*[-–:]\s*(\d+%|\$[\d,]+|\d+x|\d+)/);
-          if (simpleMatch) {
-            content.results.push({
-              metric: simpleMatch[1].trim(),
-              value: simpleMatch[2].trim(),
-              description: line
-            });
-          }
-        }
-        break;
-      }
-    }
-    
-    console.log('Alternative parsing results:', content.results.length);
+    console.log('No results section found at all');
   }
 
   // Extract company size and timeline if mentioned anywhere
