@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building, TrendingUp, Users, Target } from "lucide-react";
+import { Building, TrendingUp, Users, Target, Eye } from "lucide-react";
 import { useContent } from "@/contexts/ContentContext";
 
 interface CaseStudyPageProps {
@@ -90,7 +90,10 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         {/* Overview/Background */}
         <Card>
           <CardHeader>
-            <CardTitle>Overview</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5" />
+              Overview
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
