@@ -12,7 +12,7 @@ const AboutSection = () => {
   };
   return <section className="py-20 bg-background">
       <div className="max-w-4xl mx-auto px-6 text-center">
-        <img src={bleeLogoTagline} alt="BLEE - beyond hackathons" className="w-48 h-auto mx-auto mb-12" />
+        <img src="/lovable-uploads/b3ee8b18-3ea9-48fa-a1db-fb95bb3c136a.png" alt="BLEE - beyond hackathons" className="w-48 h-auto mx-auto mb-12" />
         
         <h2 className="text-4xl font-title font-bold mb-8">{aboutContent.heading}</h2>
         
