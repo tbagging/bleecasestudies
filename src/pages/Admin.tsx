@@ -143,27 +143,31 @@ const Admin = () => {
       return '';
     }
     
-    // Extract key information for first sentence
-    let firstSentence = '';
+    // Extract key information for a concise single sentence
+    let summary = '';
     if (background) {
       const firstPart = background.split('.')[0];
-      firstSentence = firstPart ? `${company} ${firstPart.toLowerCase()}.` : '';
+      if (firstPart) {
+        summary = `${company} ${firstPart.toLowerCase()}.`;
+      }
     } else if (clientSnapshot) {
       const firstPart = clientSnapshot.split('.')[0];
-      firstSentence = firstPart ? `${company} ${firstPart.toLowerCase()}.` : '';
-    }
-    
-    // Extract key information for second sentence
-    let secondSentence = '';
-    if (challenge) {
+      if (firstPart) {
+        summary = `${company} ${firstPart.toLowerCase()}.`;
+      }
+    } else if (challenge) {
       const challengePart = challenge.split('.')[0];
-      secondSentence = challengePart ? `The main challenge was ${challengePart.toLowerCase()}.` : '';
-    } else if (content.results && content.results.length > 0) {
-      const firstResult = content.results[0];
-      secondSentence = firstResult ? `This resulted in ${firstResult.description || firstResult.metric}.` : '';
+      if (challengePart) {
+        summary = `${company} faced ${challengePart.toLowerCase()}.`;
+      }
     }
     
-    return [firstSentence, secondSentence].filter(Boolean).join(' ');
+    // Keep it to maximum 150 characters for brevity
+    if (summary.length > 150) {
+      summary = summary.substring(0, 147) + '...';
+    }
+    
+    return summary;
   };
 
   // Helper function to generate hashtags from content
@@ -776,13 +780,30 @@ const Admin = () => {
                             </div>
                           </div>
                           <div>
-                            <Label htmlFor={`edit-summary-${caseStudy.id}`}>Summary</Label>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Label htmlFor={`edit-summary-${caseStudy.id}`}>Summary</Label>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const newSummary = generateSummary(editForm.content, editForm.company);
+                                  setEditForm({...editForm, summary: newSummary});
+                                  toast({
+                                    title: "Summary regenerated",
+                                    description: "A new summary has been generated from the case study content.",
+                                  });
+                                }}
+                              >
+                                Regenerate
+                              </Button>
+                            </div>
                             <Textarea
                               id={`edit-summary-${caseStudy.id}`}
                               value={editForm.summary || ""}
                               onChange={(e) => setEditForm({...editForm, summary: e.target.value})}
                               rows={2}
-                              placeholder="Two-sentence summary of the case study..."
+                              placeholder="Brief one-sentence summary of the case study..."
                             />
                           </div>
                           <div>
