@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Download, Edit, Trash2, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { parseFile } from "@/utils/fileParser";
 
 const Admin = () => {
   const { toast } = useToast();
@@ -68,28 +69,62 @@ const Admin = () => {
     }
   });
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type === "application/pdf")) {
       const fileName = file.name.replace(/\.(docx|pdf)$/, '');
       const newId = String(Date.now()); // Use timestamp as string ID
       
-      const newCaseStudy = {
-        id: newId,
-        title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        summary: "Add case study summary here...",
-        company: "New Company",
-        industry: "Unknown", 
-        tags: [],
-        fileName: file.name
-      };
-      
-      updateCaseStudies([...caseStudies, newCaseStudy]);
-      
-      toast({
-        title: "Case study uploaded",
-        description: `"${file.name}" has been uploaded and added to the list.`,
-      });
+      try {
+        // Parse the file content
+        const parsedContent = await parseFile(file);
+        
+        const newCaseStudy = {
+          id: newId,
+          title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          summary: "Add case study summary here...",
+          company: "New Company",
+          industry: "Unknown", 
+          tags: [],
+          fileName: file.name,
+          content: {
+            background: parsedContent.background || "",
+            challenge: parsedContent.challenge || [],
+            process: parsedContent.process || [],
+            results: parsedContent.results || [],
+            companySize: parsedContent.companySize || "",
+            timeline: parsedContent.timeline || ""
+          }
+        };
+        
+        updateCaseStudies([...caseStudies, newCaseStudy]);
+        
+        toast({
+          title: "Case study uploaded and parsed",
+          description: `"${file.name}" has been uploaded and content has been extracted automatically.`,
+        });
+      } catch (error) {
+        console.error('Error parsing file:', error);
+        
+        // Fallback: create case study without parsed content
+        const newCaseStudy = {
+          id: newId,
+          title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          summary: "Add case study summary here...",
+          company: "New Company",
+          industry: "Unknown", 
+          tags: [],
+          fileName: file.name
+        };
+        
+        updateCaseStudies([...caseStudies, newCaseStudy]);
+        
+        toast({
+          title: "Case study uploaded",
+          description: `"${file.name}" has been uploaded. Please edit the content manually as automatic parsing failed.`,
+          variant: "destructive"
+        });
+      }
     }
   };
 
@@ -248,14 +283,42 @@ const Admin = () => {
     setEditForm({...editForm, tags: newTags});
   };
 
-  const handleCaseStudyFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCaseStudyFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type === "application/pdf")) {
-      setEditForm({...editForm, newFile: file});
-      toast({
-        title: "File uploaded",
-        description: "New case study file has been uploaded successfully.",
-      });
+      try {
+        // Parse the new file content
+        const parsedContent = await parseFile(file);
+        
+        setEditForm({
+          ...editForm, 
+          newFile: file,
+          content: {
+            background: parsedContent.background || "",
+            challenge: parsedContent.challenge || [],
+            process: parsedContent.process || [],
+            results: parsedContent.results || [],
+            companySize: parsedContent.companySize || "",
+            timeline: parsedContent.timeline || ""
+          }
+        });
+        
+        toast({
+          title: "File uploaded and parsed",
+          description: "New case study file has been uploaded and content extracted successfully.",
+        });
+      } catch (error) {
+        console.error('Error parsing file:', error);
+        
+        // Fallback: just set the file without parsing
+        setEditForm({...editForm, newFile: file});
+        
+        toast({
+          title: "File uploaded",
+          description: "New case study file has been uploaded. Please edit the content manually as automatic parsing failed.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
