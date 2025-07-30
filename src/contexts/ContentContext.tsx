@@ -22,6 +22,7 @@ interface ClientLogo {
 }
 
 interface CaseStudyContent {
+  clientSnapshot: string;
   background: string;
   challenge: string[];
   process: { phase: string; description: string }[];
@@ -132,6 +133,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         tags: ["revenue-growth", "alignment", "process-optimization"],
         fileName: "techcorp-case-study.docx",
         content: {
+          clientSnapshot: "TechCorp is a mid-sized technology company with 150+ employees, operating in the competitive B2B software market. Despite having strong products and talented teams, they faced significant internal alignment challenges.",
           background: "TechCorp faced stagnating revenue growth despite having a strong product and talented team. Internal processes were fragmented, teams were working in silos, and strategic priorities were unclear across departments.",
           challenge: [
             "Disconnected teams working without shared strategic vision",
@@ -162,6 +164,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         tags: ["market-expansion", "strategy", "restructuring"],
         fileName: "growthco-case-study.docx",
         content: {
+          clientSnapshot: "GrowthCo is a fast-growing SaaS company with 200+ employees, having achieved strong success in their home market and now seeking rapid international expansion across multiple regions.",
           background: "GrowthCo had achieved strong success in their home market but struggled to expand internationally. Their existing organizational structure and processes were optimized for a single market, creating barriers to effective multi-regional operations and customer acquisition.",
           challenge: [
             "Organizational structure not designed for multi-regional operations",
@@ -191,6 +194,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         tags: ["operational-excellence", "cost-reduction", "quality"],
         fileName: "manufacturex-case-study.docx",
         content: {
+          clientSnapshot: "ManufactureX is a large-scale manufacturing company with 500+ employees, operating in a highly competitive market where cost efficiency and quality standards are critical for success.",
           background: "ManufactureX was facing increasing pressure from competitors with lower costs while maintaining high quality standards. Their existing processes had grown organically over time, creating inefficiencies and quality inconsistencies.",
           challenge: [
             "Rising operational costs impacting competitiveness",
@@ -220,6 +224,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         tags: ["innovation", "collaboration", "entrepreneurship", "healthcare"],
         fileName: "ichilov-hackathon-case-study.docx",
         content: {
+          clientSnapshot: "Ichilov Hospital is Israel's largest medical center with 2000+ employees, serving as a leading healthcare institution seeking to foster innovation culture and develop commercial partnerships within the medical technology ecosystem.",
           background: "Ichilov Hospital sought to foster innovation culture and entrepreneurial thinking among their staff while identifying opportunities for industry partnerships and commercial development.",
           challenge: [
             "Limited culture of innovation and entrepreneurship",

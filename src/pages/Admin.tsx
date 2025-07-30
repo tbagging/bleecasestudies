@@ -60,6 +60,7 @@ const Admin = () => {
     fileName: "", 
     newFile: null as File | null,
     content: {
+      clientSnapshot: "",
       background: "",
       challenge: [] as string[],
       process: [] as { phase: string; description: string }[],
@@ -88,6 +89,7 @@ const Admin = () => {
           tags: [],
           fileName: file.name,
           content: {
+            clientSnapshot: parsedContent.clientSnapshot || "",
             background: parsedContent.background || "",
             challenge: parsedContent.challenge || [],
             process: parsedContent.process || [],
@@ -212,6 +214,7 @@ const Admin = () => {
       fileName: caseStudy.fileName || "",
       newFile: null,
       content: caseStudy.content || {
+        clientSnapshot: "",
         background: "",
         challenge: [],
         process: [],
@@ -235,6 +238,7 @@ const Admin = () => {
       fileName: "", 
       newFile: null,
       content: {
+        clientSnapshot: "",
         background: "",
         challenge: [],
         process: [],
@@ -294,6 +298,7 @@ const Admin = () => {
           ...editForm, 
           newFile: file,
           content: {
+            clientSnapshot: parsedContent.clientSnapshot || editForm.content.clientSnapshot,
             background: parsedContent.background || "",
             challenge: parsedContent.challenge || [],
             process: parsedContent.process || [],
@@ -705,9 +710,21 @@ const Admin = () => {
                               </div>
                             </div>
                             
-                            {/* Background */}
+                            {/* Client Snapshot */}
                             <div>
-                              <Label htmlFor={`background-${caseStudy.id}`}>Background</Label>
+                              <Label htmlFor={`client-snapshot-${caseStudy.id}`}>Client Snapshot</Label>
+                              <Textarea
+                                id={`client-snapshot-${caseStudy.id}`}
+                                value={editForm.content.clientSnapshot}
+                                onChange={(e) => setEditForm({...editForm, content: {...editForm.content, clientSnapshot: e.target.value}})}
+                                rows={3}
+                                placeholder="Client details, company size, industry specifics..."
+                              />
+                            </div>
+                            
+                            {/* Overview/Background */}
+                            <div>
+                              <Label htmlFor={`background-${caseStudy.id}`}>Overview</Label>
                               <Textarea
                                 id={`background-${caseStudy.id}`}
                                 value={editForm.content.background}

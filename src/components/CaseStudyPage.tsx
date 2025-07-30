@@ -63,30 +63,38 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
               Client Snapshot
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid md:grid-cols-3 gap-6">
-            <div>
-              <h4 className="font-semibold mb-2">Industry</h4>
-              <p className="text-muted-foreground">{caseStudy.industry}</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Company Size</h4>
-              <p className="text-muted-foreground">{caseStudy.content?.companySize || "Not specified"}</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Project Timeline</h4>
-              <p className="text-muted-foreground">{caseStudy.content?.timeline || "Not specified"}</p>
-            </div>
+          <CardContent>
+            {caseStudy.content?.clientSnapshot ? (
+              <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap mb-4">
+                {caseStudy.content.clientSnapshot}
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-2">Industry</h4>
+                  <p className="text-muted-foreground">{caseStudy.industry}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Company Size</h4>
+                  <p className="text-muted-foreground">{caseStudy.content?.companySize || "Not specified"}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Project Timeline</h4>
+                  <p className="text-muted-foreground">{caseStudy.content?.timeline || "Not specified"}</p>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* Background */}
+        {/* Overview/Background */}
         <Card>
           <CardHeader>
-            <CardTitle>Background</CardTitle>
+            <CardTitle>Overview</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-              {caseStudy.content?.background || "Background information from the uploaded case study document will be displayed here."}
+              {caseStudy.content?.background || "Overview information from the uploaded case study document will be displayed here."}
             </div>
           </CardContent>
         </Card>
@@ -120,7 +128,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              Our Process
+              The Process
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -144,7 +152,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              Key Results
+              Key Stats
             </CardTitle>
           </CardHeader>
           <CardContent>
