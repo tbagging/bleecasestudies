@@ -395,10 +395,10 @@ const Admin = () => {
           <p className="text-muted-foreground">Manage your landing page content and case studies</p>
         </div>
 
-        <Tabs defaultValue="content" className="space-y-6">
+        <Tabs defaultValue="case-studies" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="content">Page Content</TabsTrigger>
             <TabsTrigger value="case-studies">Case Studies</TabsTrigger>
+            <TabsTrigger value="content">Page Content</TabsTrigger>
             <TabsTrigger value="logos">Client Logos</TabsTrigger>
             <TabsTrigger value="tags">Manage Tags</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
