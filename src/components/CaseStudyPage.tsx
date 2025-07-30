@@ -153,13 +153,13 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           <CardContent>
             {caseStudy.content?.results && caseStudy.content.results.length > 0 ? (
               <div className="grid md:grid-cols-3 gap-6">
-                {caseStudy.content.results.map((result, index) => (
-                  <div key={index} className="text-center">
-                    <div className="text-3xl font-bold text-primary mb-2">{result.value}</div>
-                    <div className="font-medium mb-1">{result.metric}</div>
-                    <div className="text-sm text-muted-foreground">{result.description}</div>
-                  </div>
-                ))}
+                 {caseStudy.content.results.map((result, index) => (
+                   <div key={index} className="text-center">
+                     <div className="text-4xl font-bold text-primary mb-3">{result.value}</div>
+                     <div className="text-lg font-semibold text-primary mb-2">{result.metric}</div>
+                     <div className="text-sm text-muted-foreground">{result.description}</div>
+                   </div>
+                 ))}
               </div>
             ) : (
               <p className="text-muted-foreground">Results and metrics from the uploaded case study document will be displayed here.</p>
