@@ -72,10 +72,26 @@ const Admin = () => {
   });
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type === "application/pdf")) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    
+    const validFiles = Array.from(files).filter(file => 
+      file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || 
+      file.type === "application/pdf"
+    );
+    
+    if (validFiles.length === 0) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select Word documents (.docx) or PDF files only.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const uploadPromises = validFiles.map(async (file) => {
       const fileName = file.name.replace(/\.(docx|pdf)$/, '');
-      const newId = String(Date.now()); // Use timestamp as string ID
+      const newId = String(Date.now() + Math.random()); // Ensure unique IDs
       
       try {
         // Parse the file content
@@ -101,12 +117,7 @@ const Admin = () => {
           }
         };
         
-        updateCaseStudies([...caseStudies, newCaseStudy]);
-        
-        toast({
-          title: "Case study uploaded and parsed",
-          description: `"${file.name}" has been uploaded and content has been extracted automatically.`,
-        });
+        return { success: true, caseStudy: newCaseStudy, fileName: file.name };
       } catch (error) {
         console.error('Error parsing file:', error);
         
@@ -118,17 +129,49 @@ const Admin = () => {
           company: "New Company",
           industry: "Unknown", 
           tags: [],
-          fileName: file.name
+          fileName: file.name,
+          content: {
+            heroImage: "",
+            clientSnapshot: "",
+            background: "",
+            challenge: '',
+            process: [],
+            results: [],
+            companySize: "",
+            timeline: ""
+          }
         };
         
-        updateCaseStudies([...caseStudies, newCaseStudy]);
-        
-        toast({
-          title: "Case study uploaded",
-          description: `"${file.name}" has been uploaded. Please edit the content manually as automatic parsing failed.`,
-          variant: "destructive"
-        });
+        return { success: false, caseStudy: newCaseStudy, fileName: file.name, error: error };
       }
+    });
+    
+    const results = await Promise.all(uploadPromises);
+    const newCaseStudies = results.map(result => result.caseStudy);
+    const successCount = results.filter(result => result.success).length;
+    const failureCount = results.length - successCount;
+    
+    // Update case studies with all new ones
+    updateCaseStudies([...caseStudies, ...newCaseStudies]);
+    
+    // Show appropriate toast messages
+    if (successCount > 0 && failureCount === 0) {
+      toast({
+        title: `${successCount} case ${successCount === 1 ? 'study' : 'studies'} uploaded successfully`,
+        description: "All files have been uploaded and content has been extracted automatically.",
+      });
+    } else if (successCount > 0 && failureCount > 0) {
+      toast({
+        title: `${successCount} case ${successCount === 1 ? 'study' : 'studies'} uploaded successfully, ${failureCount} failed`,
+        description: "Some files were uploaded successfully, others need manual content editing.",
+        variant: "destructive"
+      });
+    } else {
+      toast({
+        title: "Upload completed with issues",
+        description: "Files were uploaded but automatic parsing failed. Please edit content manually.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -494,22 +537,23 @@ const Admin = () => {
               <CardContent>
                 <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center">
                   <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-lg font-medium mb-2">Upload Case Study</p>
-                  <p className="text-muted-foreground mb-4">
-                    Select a Word document (.docx) or PDF containing your case study
-                  </p>
-                  <input
-                    type="file"
-                    accept=".docx,.pdf"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    id="case-study-upload"
-                  />
-                  <Button asChild>
-                    <label htmlFor="case-study-upload" className="cursor-pointer">
-                      Choose File
-                    </label>
-                  </Button>
+                   <p className="text-lg font-medium mb-2">Upload Case Studies</p>
+                   <p className="text-muted-foreground mb-4">
+                     Select one or more Word documents (.docx) or PDFs containing your case studies
+                   </p>
+                   <input
+                     type="file"
+                     accept=".docx,.pdf"
+                     onChange={handleFileUpload}
+                     className="hidden"
+                     id="case-study-upload"
+                     multiple
+                   />
+                   <Button asChild>
+                     <label htmlFor="case-study-upload" className="cursor-pointer">
+                       Choose Files
+                     </label>
+                   </Button>
                 </div>
               </CardContent>
             </Card>
