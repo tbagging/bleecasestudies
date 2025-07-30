@@ -1121,6 +1121,9 @@ const Admin = () => {
                             <h4 className="font-medium">{caseStudy.title}</h4>
                             <p className="text-sm text-muted-foreground">{caseStudy.company} • {caseStudy.industry}</p>
                             <p className="text-xs text-muted-foreground">{caseStudy.fileName}</p>
+                            {caseStudy.summary && (
+                              <p className="text-sm text-muted-foreground mt-1">{caseStudy.summary}</p>
+                            )}
                           </div>
                           <div className="flex gap-2">
                             <Button variant="outline" size="sm" onClick={() => startEditing(caseStudy)}>
