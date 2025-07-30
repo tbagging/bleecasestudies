@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface HeroContent {
   title: string;
@@ -262,25 +262,27 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('caseStudies', JSON.stringify(studies));
   };
 
-  // Fix any case studies with broken blob URLs
-  const fixBrokenImageUrls = () => {
-    const updatedStudies = caseStudies.map(study => {
-      if (study.image && study.image.includes('blob:')) {
-        // Replace broken blob URLs with the uploaded image
-        if (study.title.includes('Ichilov Tech Hackathon')) {
+  // Check and fix broken images on initialization
+  useEffect(() => {
+    const currentStudies = caseStudies;
+    let needsUpdate = false;
+    
+    const fixedStudies = currentStudies.map(study => {
+      if (study.image && (study.image.includes('blob:') || study.image.includes('80e4dac5-4016-41cd-a177-ae2ea5ac2f62'))) {
+        // Replace broken blob URLs with the uploaded image for Ichilov case study
+        if (study.title.includes('Ichilov') || study.id === '1753885202670') {
+          needsUpdate = true;
           return { ...study, image: '/lovable-uploads/239c36f2-0835-4bc0-b05f-b3c041eac83b.png' };
         }
       }
       return study;
     });
     
-    if (JSON.stringify(updatedStudies) !== JSON.stringify(caseStudies)) {
-      updateCaseStudies(updatedStudies);
+    if (needsUpdate) {
+      console.log('Fixing broken image URLs');
+      updateCaseStudies(fixedStudies);
     }
-  };
-
-  // Run the fix on every render
-  fixBrokenImageUrls();
+  }, []);
 
   const value = {
     heroContent,
