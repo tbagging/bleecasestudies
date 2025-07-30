@@ -13,6 +13,7 @@ export interface ParsedCaseStudyContent {
   results: { metric: string; value: string; description: string }[];
   companySize?: string;
   timeline?: string;
+  images: string[];
 }
 
 export async function parseDocxFile(file: File): Promise<string> {
@@ -23,6 +24,34 @@ export async function parseDocxFile(file: File): Promise<string> {
   } catch (error) {
     console.error('Error parsing DOCX file:', error);
     throw new Error('Failed to parse DOCX file');
+  }
+}
+
+export async function extractImagesFromDocx(file: File): Promise<string[]> {
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const images: string[] = [];
+    
+    const result = await mammoth.convertToHtml(
+      { arrayBuffer },
+      {
+        convertImage: mammoth.images.imgElement(function(image) {
+          return image.read("base64").then(function(imageBuffer) {
+            const base64 = imageBuffer;
+            const dataUrl = `data:${image.contentType};base64,${base64}`;
+            images.push(dataUrl);
+            return {
+              src: dataUrl
+            };
+          });
+        })
+      }
+    );
+    
+    return images;
+  } catch (error) {
+    console.error('Error extracting images from DOCX file:', error);
+    return [];
   }
 }
 
@@ -54,7 +83,8 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
     background: '',
     challenge: '',
     process: [],
-    results: []
+    results: [],
+    images: []
   };
 
   console.log('Parsing text:', text.substring(0, 500) + '...');
@@ -345,14 +375,19 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
 
 export async function parseFile(file: File): Promise<ParsedCaseStudyContent> {
   let text: string;
+  let images: string[] = [];
   
   if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
     text = await parseDocxFile(file);
+    images = await extractImagesFromDocx(file);
   } else if (file.type === 'application/pdf') {
     text = await parsePdfFile(file);
   } else {
     throw new Error('Unsupported file type');
   }
   
-  return extractStructuredContent(text);
+  const content = extractStructuredContent(text);
+  content.images = images;
+  
+  return content;
 }

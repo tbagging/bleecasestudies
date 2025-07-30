@@ -29,6 +29,7 @@ interface CaseStudyContent {
   results: { metric: string; value: string; description: string }[];
   companySize?: string;
   timeline?: string;
+  images?: string[];
 }
 
 interface CaseStudy {
