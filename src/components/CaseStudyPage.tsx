@@ -35,25 +35,41 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
   }
 
   return (
-    <div className="p-6">
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <Building className="h-6 w-6 text-primary" />
-            <span className="text-lg font-medium text-primary">{caseStudy.company}</span>
-            <span className="text-sm text-muted-foreground">{caseStudy.industry}</span>
-          </div>
-          <h1 className="text-3xl font-bold mb-4">{caseStudy.title}</h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            {caseStudy.summary}
-          </p>
-          <div className="flex justify-center flex-wrap gap-2 mt-6">
-            {caseStudy.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">#{tag}</Badge>
-            ))}
+    <div className="min-h-screen">
+      {/* Hero Section with Background Image */}
+      <div 
+        className="relative h-96 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: caseStudy.content?.images?.[0] 
+            ? `url(${caseStudy.content.images[0]})` 
+            : 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-foreground)) 100%)'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 h-full flex items-center justify-center">
+          <div className="text-center text-white max-w-4xl mx-auto px-6">
+            <div className="flex justify-center items-center gap-2 mb-4">
+              <Building className="h-6 w-6" />
+              <span className="text-lg font-medium">{caseStudy.company}</span>
+              <span className="text-sm opacity-80">{caseStudy.industry}</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{caseStudy.title}</h1>
+            <p className="text-lg md:text-xl opacity-90 max-w-3xl mx-auto">
+              {caseStudy.summary}
+            </p>
+            <div className="flex justify-center flex-wrap gap-2 mt-6">
+              {caseStudy.tags.map((tag) => (
+                <Badge key={tag} variant="secondary" className="bg-white/20 text-white border-white/30">
+                  #{tag}
+                </Badge>
+              ))}
+            </div>
           </div>
         </div>
+      </div>
+
+      <div className="p-6">
+        <div className="space-y-8 max-w-6xl mx-auto">
 
         {/* Client Snapshot */}
         <Card>
@@ -198,6 +214,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           >
             Let's talk
           </Button>
+        </div>
         </div>
       </div>
     </div>
