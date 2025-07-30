@@ -166,7 +166,7 @@ const Admin = () => {
         const newCaseStudy = {
           id: newId,
           title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-          summary: "Add case study summary here...",
+          summary: "", // Leave empty, no placeholder text
           company: extractedCompany,
           industry: determinedIndustry,
           tags: [],
@@ -175,7 +175,7 @@ const Admin = () => {
             heroImage: "",
             clientSnapshot: parsedContent.clientSnapshot || "",
             background: parsedContent.background || "",
-            challenge: parsedContent.challenge || '',
+            challenge: parsedContent.challenge || "",
             process: parsedContent.process || [],
             results: parsedContent.results || [],
             companySize: parsedContent.companySize || "",
@@ -194,7 +194,7 @@ const Admin = () => {
         const newCaseStudy = {
           id: newId,
           title: fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-          summary: "Add case study summary here...",
+          summary: "", // Leave empty, no placeholder text
           company: extractedCompany,
           industry: "Unknown", // Can't determine without content
           tags: [],
@@ -203,7 +203,7 @@ const Admin = () => {
             heroImage: "",
             clientSnapshot: "",
             background: "",
-            challenge: '',
+            challenge: "",
             process: [],
             results: [],
             companySize: "",
