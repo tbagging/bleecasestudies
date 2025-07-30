@@ -48,7 +48,7 @@ const Admin = () => {
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
   const [editingCaseStudy, setEditingCaseStudy] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "", summary: "", tags: [] as string[], image: "", imageFile: null as File | null });
+  const [editForm, setEditForm] = useState({ title: "", company: "", industry: "", summary: "", tags: [] as string[], image: "", imageFile: null as File | null, fileName: "", newFile: null as File | null });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -155,22 +155,25 @@ const Admin = () => {
       summary: caseStudy.summary || "",
       tags: caseStudy.tags || [],
       image: caseStudy.image || "",
-      imageFile: null
+      imageFile: null,
+      fileName: caseStudy.fileName || "",
+      newFile: null
     });
   };
 
   const cancelEditing = () => {
     setEditingCaseStudy(null);
-    setEditForm({ title: "", company: "", industry: "", summary: "", tags: [], image: "", imageFile: null });
+    setEditForm({ title: "", company: "", industry: "", summary: "", tags: [], image: "", imageFile: null, fileName: "", newFile: null });
   };
 
   const saveEdit = () => {
     if (editingCaseStudy) {
       const finalImage = editForm.imageFile ? URL.createObjectURL(editForm.imageFile) : editForm.image;
+      const finalFileName = editForm.newFile ? editForm.newFile.name : editForm.fileName;
       
       updateCaseStudies(caseStudies.map(cs => 
         cs.id === editingCaseStudy 
-          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage }
+          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, fileName: finalFileName }
           : cs
       ));
       
@@ -199,6 +202,25 @@ const Admin = () => {
       ? editForm.tags.filter(t => t !== tag)
       : [...editForm.tags, tag];
     setEditForm({...editForm, tags: newTags});
+  };
+
+  const handleCaseStudyFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type === "application/pdf")) {
+      setEditForm({...editForm, newFile: file});
+      toast({
+        title: "File uploaded",
+        description: "New case study file has been uploaded successfully.",
+      });
+    }
+  };
+
+  const removeCaseStudyFile = () => {
+    setEditForm({...editForm, fileName: "", newFile: null});
+    toast({
+      title: "File removed",
+      description: "Case study file has been removed.",
+    });
   };
 
   return (
@@ -373,6 +395,65 @@ const Admin = () => {
                               onChange={(e) => setEditForm({...editForm, summary: e.target.value})}
                               rows={3}
                             />
+                          </div>
+                          <div>
+                            <Label>Case Study File</Label>
+                            <div className="space-y-2">
+                              {(editForm.fileName || editForm.newFile) ? (
+                                <div className="p-3 border rounded-lg bg-muted/30">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-8 h-8 bg-primary/10 rounded flex items-center justify-center">
+                                        <Upload className="w-4 h-4 text-primary" />
+                                      </div>
+                                      <div>
+                                        <p className="text-sm font-medium">
+                                          {editForm.newFile ? editForm.newFile.name : editForm.fileName}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                          {editForm.newFile ? "New file (unsaved)" : "Current file"}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      onClick={removeCaseStudyFile}
+                                    >
+                                      <Trash2 className="w-4 h-4 mr-1" />
+                                      Remove
+                                    </Button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="text-center text-muted-foreground py-4">
+                                  No file attached
+                                </div>
+                              )}
+                              <div className="border-2 border-dashed border-muted rounded-lg p-4 text-center">
+                                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                                <p className="text-sm font-medium mb-1">Upload new case study file</p>
+                                <p className="text-xs text-muted-foreground mb-3">
+                                  .docx or .pdf files only
+                                </p>
+                                <input
+                                  type="file"
+                                  accept=".docx,.pdf"
+                                  onChange={handleCaseStudyFileUpload}
+                                  className="hidden"
+                                  id={`case-study-file-upload-${caseStudy.id}`}
+                                />
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  asChild
+                                >
+                                  <label htmlFor={`case-study-file-upload-${caseStudy.id}`} className="cursor-pointer">
+                                    Choose File
+                                  </label>
+                                </Button>
+                              </div>
+                            </div>
                           </div>
                           <div>
                             <Label>Case Study Photo</Label>
