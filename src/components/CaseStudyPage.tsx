@@ -158,7 +158,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
               <div className="grid md:grid-cols-3 gap-6">
                  {caseStudy.content.results.map((result, index) => (
                    <div key={index} className="text-center">
-                     <div className="text-xl font-bold text-muted-foreground mb-2">{result.metric}</div>
+                     <div className="text-2xl font-bold text-primary mb-2">{result.metric}</div>
                      <div className="text-2xl font-bold text-foreground mb-2">{result.value}</div>
                      <div className="text-sm text-muted-foreground">{result.description}</div>
                    </div>
