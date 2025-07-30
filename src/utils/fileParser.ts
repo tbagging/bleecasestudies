@@ -175,7 +175,10 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
   const keyStatsMatch = cleanText.match(/Key Stats[:\n](.*?)$/is);
   if (keyStatsMatch) {
     const statsText = keyStatsMatch[1].trim();
+    console.log('Raw Key Stats text:', statsText.substring(0, 300));
+    
     const lines = statsText.split('\n').map(l => l.trim()).filter(l => l.length > 3);
+    console.log('Key Stats lines:', lines.slice(0, 10));
     
     // Try to detect table-like structures (common in DOCX extractions)
     const tableRows = [];
@@ -188,6 +191,7 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
         const cells = line.split(/\t|\s{3,}/).filter(cell => cell.trim());
         if (cells.length >= 2) {
           tableRows.push(cells);
+          console.log('Found table row:', cells);
         }
       }
       
@@ -199,8 +203,11 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
           structuredMatch[2].trim(),
           structuredMatch[3].trim()
         ]);
+        console.log('Found structured row:', structuredMatch.slice(1));
       }
     }
+    
+    console.log('Total table rows found:', tableRows.length);
     
     // Process table rows if found
     if (tableRows.length > 0) {
@@ -213,36 +220,45 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
           // Skip header rows
           if (!metric.toLowerCase().includes('metric') && 
               !metric.toLowerCase().includes('result') &&
+              !metric.toLowerCase().includes('outcome') &&
               (value.includes('%') || value.includes('$') || value.includes('x') || /\d/.test(value))) {
             results.push({
               metric: metric.trim(),
               value: value.trim(),
               description: description.trim()
             });
+            console.log('Added result:', { metric, value, description });
           }
         }
       }
     } else {
+      console.log('No table rows found, trying pattern matching...');
       // Fallback to pattern matching for unstructured text
       const metricPatterns = [
         /(\d+%)\s+(.+?)(?:\s+(.{10,}))?$/,                    // "50% improvement description"
         /(\$[\d,]+)\s+(.+?)(?:\s+(.{10,}))?$/,                // "$50,000 savings description"
         /(\d+x)\s+(.+?)(?:\s+(.{10,}))?$/,                    // "2x increase description"
         /(.+?):\s*(\d+%|\$[\d,]+|\d+x|\d+)\s*(.*)$/,          // "Metric: 50% description"
-        /(\d+)\s*(increase|decrease|improvement|reduction|growth)\s*in\s*(.+)/i
+        /(\d+)\s*(increase|decrease|improvement|reduction|growth)\s*in\s*(.+)/i,
+        /(.+?)\s*[-–]\s*(\d+%|\$[\d,]+|\d+x|\d+[^%$x]*)/,     // "Description - 50%"
+        /^(.+?)\s+(\d+%|\$[\d,]+|\d+x)(.*)$/                  // "Description 50% more text"
       ];
       
       for (const line of lines) {
         // Skip obvious header or introductory lines
         if (line.toLowerCase().includes('key results') || 
             line.toLowerCase().includes('metrics') ||
-            line.length < 10) {
+            line.toLowerCase().includes('outcomes') ||
+            line.length < 5) {
           continue;
         }
+        
+        console.log('Testing line for patterns:', line);
         
         for (const pattern of metricPatterns) {
           const match = line.match(pattern);
           if (match) {
+            console.log('Pattern matched:', match);
             let metric, value, description;
             
             if (pattern.source.includes('increase|decrease')) {
@@ -253,18 +269,23 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
               metric = match[1];
               value = match[2];
               description = match[3] || line;
+            } else if (pattern.source.includes('[-–]')) {
+              metric = match[1];
+              value = match[2];
+              description = line;
             } else {
-              value = match[1];
-              metric = match[2] || match[1];
+              metric = match[1];
+              value = match[2];
               description = match[3] || line;
             }
             
-            if (metric && value && metric.length <= 50) {
+            if (metric && value && metric.length <= 100) {
               results.push({
                 metric: metric.trim(),
                 value: value.trim(),
                 description: (description || line).trim()
               });
+              console.log('Added result from pattern:', { metric, value, description });
               break;
             }
           }
@@ -273,7 +294,39 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
     }
     
     content.results = results.slice(0, 3);
-    console.log('Found Key Stats:', content.results.length, content.results.map(r => r.metric));
+    console.log('Final Key Stats results:', content.results.length, content.results);
+  } else {
+    console.log('No Key Stats section found in text');
+    // Try alternative section names
+    const alternativeMatches = [
+      cleanText.match(/Results[:\n](.*?)$/is),
+      cleanText.match(/Outcomes[:\n](.*?)$/is),
+      cleanText.match(/Impact[:\n](.*?)$/is),
+      cleanText.match(/Metrics[:\n](.*?)$/is)
+    ];
+    
+    for (const altMatch of alternativeMatches) {
+      if (altMatch) {
+        console.log('Found alternative results section:', altMatch[0].substring(0, 50));
+        // Use the same parsing logic as above but with alternative section
+        const statsText = altMatch[1].trim();
+        const lines = statsText.split('\n').map(l => l.trim()).filter(l => l.length > 3);
+        
+        for (const line of lines.slice(0, 5)) {
+          const simpleMatch = line.match(/(.+?)\s*[-–:]\s*(\d+%|\$[\d,]+|\d+x|\d+)/);
+          if (simpleMatch) {
+            content.results.push({
+              metric: simpleMatch[1].trim(),
+              value: simpleMatch[2].trim(),
+              description: line
+            });
+          }
+        }
+        break;
+      }
+    }
+    
+    console.log('Alternative parsing results:', content.results.length);
   }
 
   // Extract company size and timeline if mentioned anywhere
