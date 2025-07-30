@@ -355,14 +355,32 @@ const Admin = () => {
   };
 
   const addNewTag = () => {
-    if (newTag.trim() && !availableTags.includes(newTag.trim())) {
-      updateAvailableTags([...availableTags, newTag.trim()]);
-      setNewTag("");
+    if (!newTag.trim()) return;
+    
+    // Split by comma or space and clean up tags
+    const tagsToAdd = newTag
+      .split(/[,\s]+/)
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0)
+      .filter(tag => !availableTags.includes(tag));
+    
+    if (tagsToAdd.length === 0) {
       toast({
-        title: "Tag added",
-        description: `"${newTag.trim()}" has been added to available tags.`,
+        title: "No new tags",
+        description: "All tags already exist or no valid tags provided.",
+        variant: "destructive"
       });
+      return;
     }
+    
+    updateAvailableTags([...availableTags, ...tagsToAdd]);
+    setNewTag("");
+    
+    const tagCount = tagsToAdd.length;
+    toast({
+      title: `${tagCount} tag${tagCount > 1 ? 's' : ''} added`,
+      description: `"${tagsToAdd.join('", "')}" ${tagCount > 1 ? 'have' : 'has'} been added to available tags.`,
+    });
   };
 
   const removeTag = (tagToRemove: string) => {
@@ -1251,17 +1269,22 @@ const Admin = () => {
                 <CardTitle>Manage Hashtags</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add new tag"
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addNewTag()}
-                  />
-                  <Button onClick={addNewTag}>
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add
-                  </Button>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Add tags (separate multiple tags with commas or spaces)"
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && addNewTag()}
+                    />
+                    <Button onClick={addNewTag}>
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Tip: You can add multiple tags at once by separating them with commas or spaces (e.g., "tag1, tag2, tag3")
+                  </p>
                 </div>
                 
                 <div className="space-y-4">
