@@ -223,6 +223,41 @@ const Admin = () => {
     });
   };
 
+  // Function to clean up duplicate case studies
+  const cleanupDuplicates = () => {
+    console.log('Current case studies:', caseStudies);
+    
+    // Find all Ichilov case studies
+    const ichilovCases = caseStudies.filter(cs => 
+      cs.company === "Ichilov Hospital" || cs.title.toLowerCase().includes("ichilov")
+    );
+    
+    console.log('Found Ichilov cases:', ichilovCases);
+    
+    if (ichilovCases.length > 1) {
+      // Keep the one with complete content structure (the hardcoded one)
+      const validIchilov = ichilovCases.find(cs => cs.content && cs.content.background);
+      const filteredCaseStudies = caseStudies.filter(cs => {
+        if (cs.company === "Ichilov Hospital" || cs.title.toLowerCase().includes("ichilov")) {
+          return cs.id === validIchilov?.id;
+        }
+        return true;
+      });
+      
+      console.log('Cleaning up duplicates, keeping:', validIchilov);
+      updateCaseStudies(filteredCaseStudies);
+      toast({
+        title: "Duplicates removed",
+        description: "Duplicate Ichilov case studies have been cleaned up.",
+      });
+    } else {
+      toast({
+        title: "No duplicates found",
+        description: "No duplicate case studies were found.",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
@@ -353,7 +388,17 @@ const Admin = () => {
             {/* Existing Case Studies */}
             <Card>
               <CardHeader>
-                <CardTitle>Existing Case Studies</CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle>Existing Case Studies</CardTitle>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={cleanupDuplicates}
+                    className="text-sm"
+                  >
+                    Clean Duplicates
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
