@@ -273,22 +273,25 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     const currentStudies = caseStudies;
     let needsUpdate = false;
     
-    const fixedStudies = currentStudies.map(study => {
-      if (study.image && (study.image.includes('blob:') || study.image.includes('80e4dac5-4016-41cd-a177-ae2ea5ac2f62'))) {
-        // Replace broken blob URLs with the uploaded image for Ichilov case study
-        if (study.title.includes('Ichilov') || study.id === '1753885202670') {
-          needsUpdate = true;
-          return { 
-            ...study, 
-            image: '/lovable-uploads/239c36f2-0835-4bc0-b05f-b3c041eac83b.png',
-            logo: '/lovable-uploads/394793e4-713d-43ad-856e-e83734ec8087.png'
-          };
-        }
+    const fixedStudies = currentStudies.filter(study => {
+      // Remove the duplicate default Ichilov case study if it exists
+      if (study.id === "4" && study.title.includes('Ichilov Internal Hackathon')) {
+        return false;
       }
-      // Also add logo to Ichilov case study if it doesn't have one
-      if ((study.title.includes('Ichilov') || study.id === '1753885202670') && !study.logo) {
+      return true;
+    }).map(study => {
+      // Fix the Ichilov case study with all proper data
+      if (study.title.includes('Ichilov') || study.id === '1753885202670') {
         needsUpdate = true;
-        return { ...study, logo: '/lovable-uploads/394793e4-713d-43ad-856e-e83734ec8087.png' };
+        return { 
+          ...study, 
+          company: 'Ichilov Hospital',
+          industry: 'Healthcare',
+          summary: 'Launched "NextCare @ Home" hackathon to accelerate internal innovation and foster commercial partnerships across healthcare domains.',
+          image: '/lovable-uploads/239c36f2-0835-4bc0-b05f-b3c041eac83b.png',
+          logo: '/lovable-uploads/394793e4-713d-43ad-856e-e83734ec8087.png',
+          tags: ['innovation', 'collaboration', 'entrepreneurship', 'healthcare']
+        };
       }
       return study;
     });
