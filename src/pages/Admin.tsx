@@ -57,6 +57,8 @@ const Admin = () => {
     tags: [] as string[], 
     image: "", 
     imageFile: null as File | null, 
+    logo: "",
+    logoFile: null as File | null,
     fileName: "", 
     newFile: null as File | null,
     content: {
@@ -430,6 +432,8 @@ const Admin = () => {
       tags: caseStudy.tags || [],
       image: caseStudy.image || "",
       imageFile: null,
+      logo: caseStudy.logo || "",
+      logoFile: null,
       fileName: caseStudy.fileName || "",
       newFile: null,
       content: caseStudy.content || {
@@ -455,6 +459,8 @@ const Admin = () => {
       tags: [], 
       image: "", 
       imageFile: null, 
+      logo: "",
+      logoFile: null,
       fileName: "", 
       newFile: null,
       content: {
@@ -473,11 +479,12 @@ const Admin = () => {
   const saveEdit = () => {
     if (editingCaseStudy) {
       const finalImage = editForm.imageFile ? URL.createObjectURL(editForm.imageFile) : editForm.image;
+      const finalLogo = editForm.logoFile ? URL.createObjectURL(editForm.logoFile) : editForm.logo;
       const finalFileName = editForm.newFile ? editForm.newFile.name : editForm.fileName;
       
       updateCaseStudies(caseStudies.map(cs => 
         cs.id === editingCaseStudy 
-          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, fileName: finalFileName, content: editForm.content }
+          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, logo: finalLogo, fileName: finalFileName, content: editForm.content }
           : cs
       ));
       
@@ -497,6 +504,23 @@ const Admin = () => {
       toast({
         title: "Photo uploaded",
         description: "Case study photo has been uploaded successfully.",
+      });
+    }
+  };
+
+  const handleCaseStudyLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      setEditForm({...editForm, logoFile: file, logo: URL.createObjectURL(file)});
+      toast({
+        title: "Logo uploaded",
+        description: "Case study logo has been uploaded successfully.",
+      });
+    } else {
+      toast({
+        title: "Invalid file type",
+        description: "Please select a valid image file.",
+        variant: "destructive",
       });
     }
   };
@@ -901,6 +925,47 @@ const Admin = () => {
                                     onClick={() => setEditForm({...editForm, image: "", imageFile: null})}
                                   >
                                     Remove Image
+                                  </Button>
+                                </div>
+                              )}
+                             </div>
+                          </div>
+                          <div>
+                            <Label>Company Logo</Label>
+                            <div className="space-y-2">
+                              <div className="border-2 border-dashed border-muted rounded-lg p-4 text-center">
+                                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                                <p className="text-sm font-medium mb-1">Upload company logo</p>
+                                <p className="text-xs text-muted-foreground mb-3">
+                                  PNG, JPG or SVG up to 2MB
+                                </p>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleCaseStudyLogoUpload}
+                                  className="hidden"
+                                  id={`case-study-logo-upload-${caseStudy.id}`}
+                                />
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  asChild
+                                >
+                                  <label htmlFor={`case-study-logo-upload-${caseStudy.id}`} className="cursor-pointer">
+                                    Choose Logo
+                                  </label>
+                                </Button>
+                              </div>
+                              {editForm.logo && (
+                                <div className="mt-2 p-2 border rounded">
+                                  <img src={editForm.logo} alt="Company logo preview" className="w-16 h-16 object-contain mx-auto rounded" />
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="mt-2 w-full"
+                                    onClick={() => setEditForm({...editForm, logo: "", logoFile: null})}
+                                  >
+                                    Remove Logo
                                   </Button>
                                 </div>
                               )}

@@ -37,6 +37,7 @@ interface CaseStudy {
   title: string;
   summary: string;
   image?: string;
+  logo?: string;
   tags: string[];
   company: string;
   industry: string;

@@ -51,7 +51,15 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         {/* Header */}
         <div className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
-            <Building className="h-6 w-6 text-primary" />
+            {caseStudy.logo ? (
+              <img 
+                src={caseStudy.logo} 
+                alt={`${caseStudy.company} logo`}
+                className="h-8 w-8 object-contain"
+              />
+            ) : (
+              <Building className="h-6 w-6 text-primary" />
+            )}
             <span className="text-lg font-medium text-primary">{caseStudy.company}</span>
             <span className="text-sm text-muted-foreground">{caseStudy.industry}</span>
           </div>
