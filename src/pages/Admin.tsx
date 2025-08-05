@@ -331,8 +331,18 @@ const Admin = () => {
 
   const handleLogoFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      setNewLogo({...newLogo, file, url: URL.createObjectURL(file)});
+    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewLogo({...newLogo, file, url: reader.result as string});
+      };
+      reader.readAsDataURL(file);
+    } else if (file && file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 2MB.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -478,8 +488,8 @@ const Admin = () => {
 
   const saveEdit = () => {
     if (editingCaseStudy) {
-      const finalImage = editForm.imageFile ? URL.createObjectURL(editForm.imageFile) : editForm.image;
-      const finalLogo = editForm.logoFile ? URL.createObjectURL(editForm.logoFile) : editForm.logo;
+      const finalImage = editForm.image;
+      const finalLogo = editForm.logo;
       const finalFileName = editForm.newFile ? editForm.newFile.name : editForm.fileName;
       
       updateCaseStudies(caseStudies.map(cs => 
@@ -499,22 +509,42 @@ const Admin = () => {
 
   const handleCaseStudyImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      setEditForm({...editForm, imageFile: file, image: URL.createObjectURL(file)});
+    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditForm({...editForm, imageFile: file, image: reader.result as string});
+      };
+      reader.readAsDataURL(file);
       toast({
         title: "Photo uploaded",
         description: "Case study photo has been uploaded successfully.",
+      });
+    } else if (file && file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 2MB.",
+        variant: "destructive"
       });
     }
   };
 
   const handleCaseStudyLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      setEditForm({...editForm, logoFile: file, logo: URL.createObjectURL(file)});
+    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditForm({...editForm, logoFile: file, logo: reader.result as string});
+      };
+      reader.readAsDataURL(file);
       toast({
         title: "Logo uploaded",
         description: "Case study logo has been uploaded successfully.",
+      });
+    } else if (file && file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 2MB.",
+        variant: "destructive"
       });
     } else {
       toast({
@@ -527,12 +557,21 @@ const Admin = () => {
 
   const handleHeroImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      const heroImageUrl = URL.createObjectURL(file);
-      setEditForm({...editForm, content: {...editForm.content, heroImage: heroImageUrl}});
+    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditForm({...editForm, content: {...editForm.content, heroImage: reader.result as string}});
+      };
+      reader.readAsDataURL(file);
       toast({
         title: "Hero image uploaded",
         description: "Case study hero image has been uploaded successfully.",
+      });
+    } else if (file && file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 2MB.",
+        variant: "destructive"
       });
     }
   };
