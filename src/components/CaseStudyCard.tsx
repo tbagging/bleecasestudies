@@ -31,6 +31,9 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
                 src={caseStudy.logo} 
                 alt={`${caseStudy.company} logo`}
                 className="w-6 h-6 object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
               />
             )}
             <span className="text-sm font-medium text-primary">{caseStudy.company}</span>
