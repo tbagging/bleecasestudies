@@ -7,6 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Lock, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+const cleanTitle = (title: string) => {
+  return title.replace(/\bcase study\b/gi, '').trim();
+};
+
 const CaseStudy = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -121,7 +125,7 @@ const CaseStudy = () => {
           <div className="mt-12 max-w-3xl mx-auto">
             <div className="text-center mb-8">
               <span className="text-sm font-medium text-primary">{caseStudy.company} • {caseStudy.industry}</span>
-              <h1 className="text-4xl font-bold mt-2 mb-4">{caseStudy.title}</h1>
+              <h1 className="text-4xl font-bold mt-2 mb-4">{cleanTitle(caseStudy.title)}</h1>
               <p className="text-xl text-muted-foreground">{caseStudy.summary}</p>
             </div>
             
@@ -162,7 +166,7 @@ const CaseStudy = () => {
 
         <div className="text-center mb-12">
           <span className="text-sm font-medium text-primary">{caseStudy.company} • {caseStudy.industry}</span>
-          <h1 className="text-4xl font-bold mt-2 mb-4">{caseStudy.title}</h1>
+          <h1 className="text-4xl font-bold mt-2 mb-4">{cleanTitle(caseStudy.title)}</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">{caseStudy.summary}</p>
         </div>
         

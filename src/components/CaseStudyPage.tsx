@@ -4,6 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Building, TrendingUp, Users, Target, Eye } from "lucide-react";
 import { useContent } from "@/contexts/ContentContext";
 
+const cleanTitle = (title: string) => {
+  return title.replace(/\bcase study\b/gi, '').trim();
+};
+
 interface CaseStudyPageProps {
   caseStudyId: string;
 }
@@ -69,7 +73,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             
             
           </div>
-          <h1 className="text-3xl font-bold mb-4">{caseStudy.title}</h1>
+          <h1 className="text-3xl font-bold mb-4">{cleanTitle(caseStudy.title)}</h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             {caseStudy.summary}
           </p>

@@ -1,6 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+const cleanTitle = (title: string) => {
+  return title.replace(/\bcase study\b/gi, '').trim();
+};
+
 interface CaseStudy {
   id: string;
   title: string;
@@ -37,7 +41,7 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
           </div>
         )}
         <CardTitle className="text-xl group-hover:text-primary transition-colors">
-          {caseStudy.title}
+          {cleanTitle(caseStudy.title)}
         </CardTitle>
         <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
         <CardDescription className="text-sm leading-relaxed">
