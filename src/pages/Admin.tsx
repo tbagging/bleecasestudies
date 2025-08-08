@@ -851,14 +851,18 @@ const Admin = () => {
                                 size="sm"
                                 onClick={() => {
                                   console.log('Regenerate Summary clicked');
+                                  console.log('editForm before update:', editForm);
                                   console.log('editForm.content:', editForm.content);
                                   console.log('editForm.company:', editForm.company);
                                   const newSummary = generateSummary(editForm.content, editForm.company);
                                   console.log('Generated summary:', newSummary);
-                                  setEditForm({...editForm, summary: newSummary});
+                                  console.log('Current editForm.summary before update:', editForm.summary);
+                                  const updatedForm = {...editForm, summary: newSummary};
+                                  console.log('Updated form:', updatedForm);
+                                  setEditForm(updatedForm);
                                   toast({
                                     title: "Summary regenerated",
-                                    description: "A new summary has been generated from the case study content.",
+                                    description: `New summary: ${newSummary}`,
                                   });
                                 }}
                               >
