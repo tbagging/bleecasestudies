@@ -24,19 +24,18 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
       onClick={onClick}
     >
       <CardHeader>
-        <div className="flex justify-between items-start mb-2">
-          <div></div>
-          {caseStudy.logo && (
+        {caseStudy.logo && (
+          <div className="flex justify-center mb-4">
             <img 
               src={caseStudy.logo} 
               alt={`${caseStudy.company} logo`}
-              className="w-12 h-12 object-contain"
+              className="w-20 h-20 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
             />
-          )}
-        </div>
+          </div>
+        )}
         <CardTitle className="text-xl group-hover:text-primary transition-colors">
           {caseStudy.title}
         </CardTitle>
