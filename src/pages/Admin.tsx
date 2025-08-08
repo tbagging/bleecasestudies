@@ -1133,7 +1133,7 @@ const Admin = () => {
                           
                           {/* Content Editing Section */}
                           <div className="space-y-6 border-t pt-6">
-                            <h4 className="font-medium text-lg">Case Study Content</h4>
+                            <p className="font-medium text-sm text-muted-foreground">Case Study Content</p>
                             
                             {/* Company Details */}
                             <div className="grid grid-cols-2 gap-4">
