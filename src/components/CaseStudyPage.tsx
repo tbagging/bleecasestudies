@@ -163,14 +163,9 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                   
                   return (
                     <div key={phaseIndex} className="space-y-4">
-                      {/* Phase title */}
-                      <div className="border-l-4 border-primary pl-4">
-                        <h4 className="font-semibold mb-2">{phase.phase}</h4>
-                      </div>
-                      
-                      {/* Individual numbered steps */}
+                      {/* Individual numbered steps only */}
                       {steps.map((step, stepIndex) => (
-                        <div key={stepIndex} className="border-l-4 border-primary pl-4 ml-4">
+                        <div key={stepIndex} className="border-l-4 border-primary pl-4">
                           <p className="text-muted-foreground whitespace-pre-wrap">{step.trim()}</p>
                         </div>
                       ))}
