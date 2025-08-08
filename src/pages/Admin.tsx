@@ -850,7 +850,11 @@ const Admin = () => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => {
+                                  console.log('Regenerate Summary clicked');
+                                  console.log('editForm.content:', editForm.content);
+                                  console.log('editForm.company:', editForm.company);
                                   const newSummary = generateSummary(editForm.content, editForm.company);
+                                  console.log('Generated summary:', newSummary);
                                   setEditForm({...editForm, summary: newSummary});
                                   toast({
                                     title: "Summary regenerated",
