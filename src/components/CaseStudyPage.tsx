@@ -156,13 +156,16 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           </CardHeader>
           <CardContent>
             {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
-              <div className="space-y-4">
-                {caseStudy.content.process.map((phase, index) => (
-                  <div key={index} className="border-l-4 border-primary pl-4">
-                    <h4 className="font-semibold mb-2">{phase.phase}</h4>
-                    <p className="text-muted-foreground whitespace-pre-wrap">{phase.description}</p>
-                  </div>
-                ))}
+              <div className="prose prose-gray max-w-none">
+                <div 
+                  className="text-muted-foreground leading-relaxed whitespace-pre-wrap"
+                  dangerouslySetInnerHTML={{
+                    __html: caseStudy.content.process[0].description
+                      .replace(/(\d+\.\s*[^:\n]+)/g, '<strong class="text-primary">$1</strong>')
+                      .replace(/([A-Z][a-z\s&]+:)/g, '<strong class="text-primary">$1</strong>')
+                      .replace(/([•\-\*]\s*[^:\n]+)/g, '<strong class="text-primary">$1</strong>')
+                  }}
+                />
               </div>
             ) : (
               <p className="text-muted-foreground">Process details from the uploaded case study document will be displayed here.</p>
@@ -183,8 +186,8 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
               <div className="grid md:grid-cols-3 gap-6">
                  {caseStudy.content.results.map((result, index) => (
                    <div key={index} className="text-center">
-                     <div className="text-4xl font-bold text-primary mb-2">{result.metric}</div>
-                     <div className="text-2xl font-bold text-foreground mb-2">{result.value}</div>
+                     <div className="text-4xl font-bold text-primary mb-2">{result.value}</div>
+                     <div className="text-lg font-semibold text-foreground mb-2">{result.metric}</div>
                      <div className="text-sm text-muted-foreground">{result.description}</div>
                    </div>
                  ))}
