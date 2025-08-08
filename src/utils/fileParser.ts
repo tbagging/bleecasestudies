@@ -83,15 +83,92 @@ export function extractStructuredContent(text: string): ParsedCaseStudyContent {
     console.log('Found Challenge:', content.challenge.substring(0, 100));
   }
 
-  // Extract The Process section - keep as single text with steps highlighted
+  // Extract The Process section
   const processMatch = cleanText.match(/The Process[:\n](.*?)(?=\n\s*(?:Client Snapshot|Overview|Challenge|Key Stats|$))/is);
   if (processMatch) {
     const processText = processMatch[1].trim();
     
-    // Store as single text and parse for individual steps for highlighting
-    content.process = [{ phase: "Complete Process", description: processText }];
+    // Skip introductory sentences and find actual process steps
+    const introductoryPhrases = [
+      'the process included',
+      'our process consisted of',
+      'we followed',
+      'the methodology',
+      'our approach',
+      'process overview'
+    ];
     
-    console.log('Found Process section as single text:', processText.substring(0, 200));
+    // Look for actual phase names with descriptions
+    const phasePatterns = [
+      // Pattern for "Phase Name:" followed by description
+      /([^:\n]+):\s*([^\n]+(?:\n(?!.*:)[^\n]+)*)/g,
+      // Pattern for numbered items "1. Phase Name - description"
+      /(\d+\.\s*[^-\n]+)\s*[-–]\s*([^\n]+(?:\n(?!\d+\.)[^\n]+)*)/g,
+      // Pattern for bullet points with descriptions
+      /[•\-\*]\s*([^:\n]+):\s*([^\n]+(?:\n(?![•\-\*])[^\n]+)*)/g
+    ];
+    
+    let steps: { phase: string; description: string }[] = [];
+    
+    for (const pattern of phasePatterns) {
+      const matches = Array.from(processText.matchAll(pattern));
+      if (matches.length > 0) {
+        steps = matches.map(match => ({
+          phase: match[1].trim(),
+          description: match[2].trim()
+        })).filter(step => {
+          // Filter out introductory sentences
+          const isIntroductory = introductoryPhrases.some(phrase => 
+            step.phase.toLowerCase().includes(phrase)
+          );
+          return !isIntroductory && step.phase.length >= 3 && step.phase.length <= 50;
+        });
+        break;
+      }
+    }
+    
+    // Fallback: split by numbered items or bullet points if no patterns match
+    if (steps.length === 0) {
+      const processLines = processText.split(/\n/).map(line => line.trim()).filter(line => line.length > 0);
+      
+      for (const line of processLines) {
+        // Skip introductory sentences
+        const isIntroductory = introductoryPhrases.some(phrase => 
+          line.toLowerCase().includes(phrase)
+        );
+        
+        if (isIntroductory || line.length > 80) {
+          continue;
+        }
+        
+        // Look for numbered, bulleted, or titled items
+        const stepPatterns = [
+          /^\d+\.\s*([^.]+?)(?:\s*[:.]\s|$)/,  // "1. Step name"
+          /^•\s*([^.]+?)(?:\s*[:.]\s|$)/,      // "• Step name"
+          /^-\s*([^.]+?)(?:\s*[:.]\s|$)/,      // "- Step name"
+          /^([A-Z][^.!?]*?):\s/,              // "Step Name: description"
+          /^([A-Z][a-zA-Z\s&]{3,25})$/        // Standalone phase names
+        ];
+        
+        for (const pattern of stepPatterns) {
+          const match = line.match(pattern);
+          if (match) {
+            const stepName = (match[1] || match[0]).trim();
+            if (stepName && stepName.length >= 3 && stepName.length <= 50) {
+              const restOfLine = line.replace(match[0], '').trim();
+              steps.push({
+                phase: stepName,
+                description: restOfLine || stepName
+              });
+              break;
+            }
+          }
+        }
+      }
+    }
+    
+    content.process = steps.slice(0, 6);
+    console.log('Found Process steps:', steps.length, steps.map(s => s.phase));
   }
 
   // Extract Key Stats section - Enhanced detection
