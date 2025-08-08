@@ -148,21 +148,21 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
 
         {/* Process */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Users className="h-4 w-4" />
               The Process
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-0">
             {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-2">
                 <div 
-                  className="text-muted-foreground leading-relaxed"
+                  className="text-muted-foreground leading-relaxed text-sm"
                   dangerouslySetInnerHTML={{
                     __html: caseStudy.content.process[0].description
                       .replace(/\n/g, '<br/>')
-                      .replace(/(\d+\.\s*[^<\n]+)/g, '<div class="mt-4 mb-2"><strong class="text-primary text-lg">$1</strong></div>')
+                      .replace(/(\d+\.\s*[^<\n]+)/g, '<div class="mt-3 mb-1"><strong class="text-primary text-base">$1</strong></div>')
                       .replace(/([A-Z][a-z\s&]+):/g, '<strong class="text-primary">$1:</strong>')
                       .replace(/(Co-developed|Created|Compiled|Conducted|Hosted|Formed|Teams received|Evaluation was based)/g, '<strong class="text-foreground">$1</strong>')
                       .replace(/(-primary">[^<]+)/g, '$1')
@@ -170,7 +170,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                 />
               </div>
             ) : (
-              <p className="text-muted-foreground">Process details from the uploaded case study document will be displayed here.</p>
+              <p className="text-muted-foreground text-sm">Process details from the uploaded case study document will be displayed here.</p>
             )}
           </CardContent>
         </Card>
