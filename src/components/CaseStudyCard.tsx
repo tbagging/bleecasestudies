@@ -45,7 +45,6 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <span className="text-sm font-medium text-primary block mb-3">{caseStudy.company}</span>
         <div className="flex flex-wrap gap-2">
           {caseStudy.tags.map((tag, index) => (
             <Badge key={index} variant="secondary" className="text-xs">
