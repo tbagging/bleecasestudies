@@ -156,17 +156,18 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           </CardHeader>
           <CardContent>
             {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-6">
                 <div 
-                  className="text-muted-foreground leading-snug"
+                  className="text-muted-foreground leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html: caseStudy.content.process[0].description
-                      .replace(/\n/g, '<br/>')
-                      .replace(/(\d+\.\s*[^<\n]+)/g, '<div class="mt-3 mb-1"><strong class="text-primary text-lg">$1</strong></div>')
-                      .replace(/([A-Z][a-z\s&]+):/g, '<div class="ml-4 mt-2"><strong class="text-primary">$1:</strong>')
-                      .replace(/(Co-developed|Created|Compiled|Conducted|Hosted|Formed|Teams received|Evaluation was based)/g, '<span class="ml-6 block"><strong class="text-foreground">$1</strong>')
-                      .replace(/(-primary">[^<]+)/g, '$1</div>')
-                      .replace(/(<span class="ml-6 block"><strong[^>]*>[^<]*<\/strong>)/g, '$1</span>')
+                      .replace(/\n\n/g, '<div class="mb-6"></div>')
+                      .replace(/\n/g, ' ')
+                      .replace(/(\d+\.\s*[^.]+)/g, '<div class="mb-6"><h3 class="text-lg font-semibold text-foreground mb-3">$1</h3>')
+                      .replace(/([A-Z][a-z\s&]+):/g, '<h3 class="text-lg font-semibold text-foreground mb-3">$1</h3>')
+                      .replace(/(Co-developed|Created|Compiled|Conducted|Hosted|Formed|Teams received|Evaluation was based)([^<]*)/g, '<p class="mb-4">$1$2</p>')
+                      .replace(/(<h3[^>]*>[^<]+<\/h3>)\s*(<p[^>]*>)/g, '$1</div><div class="mb-6">$2')
+                      .replace(/(<p[^>]*>[^<]+<\/p>)\s*(<h3)/g, '$1</div><div class="mb-6">$2')
                   }}
                 />
               </div>
