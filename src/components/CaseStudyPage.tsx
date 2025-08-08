@@ -44,6 +44,9 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
               src={caseStudy.content.heroImage} 
               alt={`${caseStudy.title} hero image`}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.parentElement?.style.setProperty('display', 'none');
+              }}
             />
           </div>
         )}
@@ -56,6 +59,9 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                 src={caseStudy.logo} 
                 alt={`${caseStudy.company} logo`}
                 className="h-8 w-8 object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
               />
             ) : (
               <Building className="h-6 w-6 text-primary" />
