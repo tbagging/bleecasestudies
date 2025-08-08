@@ -156,14 +156,16 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           </CardHeader>
           <CardContent>
             {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
-              <div className="prose prose-gray max-w-none">
+              <div className="space-y-4">
                 <div 
-                  className="text-muted-foreground leading-relaxed whitespace-pre-wrap"
+                  className="text-muted-foreground leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html: caseStudy.content.process[0].description
-                      .replace(/(\d+\.\s*[^:\n]+)/g, '<strong class="text-primary">$1</strong>')
-                      .replace(/([A-Z][a-z\s&]+:)/g, '<strong class="text-primary">$1</strong>')
-                      .replace(/([•\-\*]\s*[^:\n]+)/g, '<strong class="text-primary">$1</strong>')
+                      .replace(/\n/g, '<br/>')
+                      .replace(/(\d+\.\s*[^<\n]+)/g, '<div class="mt-4 mb-2"><strong class="text-primary text-lg">$1</strong></div>')
+                      .replace(/([A-Z][a-z\s&]+):/g, '<strong class="text-primary">$1:</strong>')
+                      .replace(/(Co-developed|Created|Compiled|Conducted|Hosted|Formed|Teams received|Evaluation was based)/g, '<strong class="text-foreground">$1</strong>')
+                      .replace(/(-primary">[^<]+)/g, '$1')
                   }}
                 />
               </div>
