@@ -158,17 +158,20 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
               <div className="space-y-6">
                 {caseStudy.content.process.map((phase, phaseIndex) => {
-                  // Split description by numbered items
-                  const steps = phase.description.split(/(?=\d+\.\s)/).filter(step => step.trim());
+                  // Split description by numbered items and clean up
+                  const steps = phase.description
+                    .split(/(?=\d+\.\s)/)
+                    .filter(step => step.trim())
+                    .map(step => step.trim());
                   
                   return (
                     <div key={phaseIndex} className="space-y-4">
                       {/* Individual numbered steps */}
                       {steps.map((step, stepIndex) => {
-                        // Extract title and description
-                        const lines = step.trim().split('\n');
-                        const title = lines[0]; // First line is the numbered title
-                        const description = lines.slice(1).join('\n').trim(); // Rest is description
+                        // Find the first line break after the numbered title
+                        const firstLineMatch = step.match(/^(\d+\.\s[^\n]*)/);
+                        const title = firstLineMatch ? firstLineMatch[1] : step.split('\n')[0];
+                        const description = step.replace(title, '').trim();
                         
                         return (
                           <div key={stepIndex} className="border-l-4 border-primary pl-4">
