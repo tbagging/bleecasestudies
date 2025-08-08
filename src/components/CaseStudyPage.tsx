@@ -58,7 +58,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
               <img 
                 src={caseStudy.logo} 
                 alt={`${caseStudy.company} logo`}
-                className="h-8 w-8 object-contain"
+                className="h-24 w-24 object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
