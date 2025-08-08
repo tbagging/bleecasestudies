@@ -25,10 +25,7 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
     >
       <CardHeader>
         <div className="flex justify-between items-start mb-2">
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-medium text-primary">{caseStudy.company}</span>
-            <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
-          </div>
+          <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
           {caseStudy.logo && (
             <img 
               src={caseStudy.logo} 
@@ -48,6 +45,7 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <span className="text-sm font-medium text-primary block mb-3">{caseStudy.company}</span>
         <div className="flex flex-wrap gap-2">
           {caseStudy.tags.map((tag, index) => (
             <Badge key={index} variant="secondary" className="text-xs">
