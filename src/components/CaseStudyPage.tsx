@@ -163,12 +163,22 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                   
                   return (
                     <div key={phaseIndex} className="space-y-4">
-                      {/* Individual numbered steps only */}
-                      {steps.map((step, stepIndex) => (
-                        <div key={stepIndex} className="border-l-4 border-primary pl-4">
-                          <p className="text-muted-foreground whitespace-pre-wrap">{step.trim()}</p>
-                        </div>
-                      ))}
+                      {/* Individual numbered steps */}
+                      {steps.map((step, stepIndex) => {
+                        // Extract title and description
+                        const lines = step.trim().split('\n');
+                        const title = lines[0]; // First line is the numbered title
+                        const description = lines.slice(1).join('\n').trim(); // Rest is description
+                        
+                        return (
+                          <div key={stepIndex} className="border-l-4 border-primary pl-4">
+                            <h5 className="font-bold text-primary mb-2">{title}</h5>
+                            {description && (
+                              <p className="text-muted-foreground whitespace-pre-wrap">{description}</p>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   );
                 })}
