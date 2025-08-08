@@ -38,10 +38,10 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
     <div className="p-6">
       <div className="space-y-8">
         {/* Hero Image */}
-        {caseStudy.content?.heroImage && (
+        {(caseStudy.content?.heroImage || caseStudy.image) && (
           <div className="w-full h-64 md:h-80 rounded-lg overflow-hidden">
             <img 
-              src={caseStudy.content.heroImage} 
+              src={caseStudy.content?.heroImage || caseStudy.image} 
               alt={`${caseStudy.title} hero image`}
               className="w-full h-full object-cover"
               onError={(e) => {
