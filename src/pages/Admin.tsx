@@ -1012,32 +1012,79 @@ const Admin = () => {
                           </div>
                           <div>
                             <Label>Hashtags</Label>
-                            <div className="space-y-2">
-                              <p className="text-sm text-muted-foreground">Select tags for this case study:</p>
-                              <div className="flex flex-wrap gap-2">
-                                {availableTags.map((tag) => (
-                                  <Badge
-                                    key={tag}
-                                    variant={editForm.tags.includes(tag) ? "default" : "outline"}
-                                    className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                                    onClick={() => toggleTag(tag)}
-                                  >
-                                    #{tag}
-                                  </Badge>
-                                ))}
+                            <div className="space-y-4">
+                              <div>
+                                <p className="text-sm text-muted-foreground mb-2">Select from available tags:</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {availableTags.map((tag) => (
+                                    <Badge
+                                      key={tag}
+                                      variant={editForm.tags.includes(tag) ? "default" : "outline"}
+                                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                                      onClick={() => toggleTag(tag)}
+                                    >
+                                      #{tag}
+                                    </Badge>
+                                  ))}
+                                </div>
                               </div>
-                              {editForm.tags.length > 0 && (
-                                <div className="mt-2">
-                                  <p className="text-sm font-medium text-muted-foreground mb-1">Selected tags:</p>
-                                  <div className="flex flex-wrap gap-1">
-                                    {editForm.tags.map((tag) => (
-                                      <Badge key={tag} variant="secondary" className="text-xs">
+                              
+                              <div>
+                                <p className="text-sm font-medium text-muted-foreground mb-2">Selected tags:</p>
+                                <div className="space-y-2">
+                                  <div className="flex flex-wrap gap-2">
+                                    {editForm.tags.map((tag, index) => (
+                                      <Badge 
+                                        key={index} 
+                                        variant="secondary" 
+                                        className="text-xs pr-1 flex items-center gap-1"
+                                      >
                                         #{tag}
+                                        <button
+                                          onClick={() => {
+                                            const newTags = editForm.tags.filter((_, i) => i !== index);
+                                            setEditForm({...editForm, tags: newTags});
+                                          }}
+                                          className="ml-1 text-muted-foreground hover:text-foreground"
+                                        >
+                                          ×
+                                        </button>
                                       </Badge>
                                     ))}
                                   </div>
+                                  <div className="flex gap-2">
+                                    <Input
+                                      placeholder="Add custom tag (without #)"
+                                      className="text-sm"
+                                      onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                          const input = e.target as HTMLInputElement;
+                                          const newTag = input.value.trim().replace(/^#+/, '');
+                                          if (newTag && !editForm.tags.includes(newTag)) {
+                                            setEditForm({...editForm, tags: [...editForm.tags, newTag]});
+                                            input.value = '';
+                                          }
+                                        }
+                                      }}
+                                    />
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={(e) => {
+                                        const input = (e.target as HTMLElement).previousElementSibling as HTMLInputElement;
+                                        const newTag = input.value.trim().replace(/^#+/, '');
+                                        if (newTag && !editForm.tags.includes(newTag)) {
+                                          setEditForm({...editForm, tags: [...editForm.tags, newTag]});
+                                          input.value = '';
+                                        }
+                                      }}
+                                    >
+                                      <Plus className="w-4 h-4" />
+                                    </Button>
+                                  </div>
                                 </div>
-                              )}
+                              </div>
                             </div>
                           </div>
                           
