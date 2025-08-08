@@ -156,11 +156,13 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           </CardHeader>
           <CardContent>
             {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {caseStudy.content.process.map((phase, index) => (
-                  <div key={index} className="border-l-4 border-primary pl-4">
-                    <h4 className="font-semibold mb-2">{phase.phase}</h4>
-                    <p className="text-muted-foreground whitespace-pre-wrap">{phase.description}</p>
+                  <div key={index} className="relative">
+                    <div className="border-l-4 border-primary pl-4">
+                      <h4 className="font-semibold mb-2">{phase.phase}</h4>
+                      <p className="text-muted-foreground whitespace-pre-wrap">{phase.description}</p>
+                    </div>
                   </div>
                 ))}
               </div>
