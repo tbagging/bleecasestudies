@@ -33,7 +33,7 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
             <img 
               src={caseStudy.logo} 
               alt={`${caseStudy.company} logo`}
-              className="w-40 h-40 object-contain"
+              className="w-32 h-32 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
