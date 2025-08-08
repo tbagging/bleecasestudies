@@ -11,8 +11,17 @@ const Hero = () => {
     const body = "I'm interested in learning more about BLEE's strategic transformation approach for our organization.";
     window.location.href = `mailto:hello@blee.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
-  return <section className="min-h-screen flex items-center justify-center bg-primary text-primary-foreground">
-      <div className="text-center max-w-4xl mx-auto px-6">
+  return <section 
+      className="min-h-screen flex items-center justify-center bg-primary text-primary-foreground relative"
+      style={{
+        backgroundImage: `url('/lovable-uploads/44cf9821-f49f-4fb3-852a-063bd79faf1e.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <div className="absolute inset-0 bg-primary/70"></div>
+      <div className="text-center max-w-4xl mx-auto px-6 relative z-10">
         
         <h1 className="text-5xl md:text-7xl font-title font-bold mb-8 leading-tight">
           {heroContent.title}
