@@ -25,7 +25,7 @@ const Hero = () => {
         <img 
           src="/lovable-uploads/e05b80ef-55e5-45e6-85b7-ec1d92c3c898.png" 
           alt="BLEE Logo" 
-          className="w-48 md:w-64 h-auto mx-auto mb-8"
+          className="w-48 h-auto mx-auto mb-8"
         />
         <h1 className="text-5xl md:text-7xl font-title font-bold mb-8 leading-tight">
           {heroContent.title}
