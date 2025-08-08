@@ -1219,7 +1219,7 @@ const Admin = () => {
                                           }}
                                           placeholder="Phase description"
                                           rows={2}
-                                          className="text-sm"
+                                          className="text-sm text-muted-foreground font-normal"
                                         />
                                       </div>
                                       <Button
