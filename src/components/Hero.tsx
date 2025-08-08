@@ -13,7 +13,7 @@ const Hero = () => {
   };
   return <section className="min-h-screen flex items-center justify-center bg-primary text-primary-foreground">
       <div className="text-center max-w-4xl mx-auto px-6">
-        <img src="/lovable-uploads/31c0e9ec-b93a-4065-9536-a710b7df5b8d.png" alt="BLEE" className="w-96 h-auto mx-auto mb-12" />
+        
         <h1 className="text-5xl md:text-7xl font-title font-bold mb-8 leading-tight">
           {heroContent.title}
         </h1>
