@@ -157,12 +157,26 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           <CardContent>
             {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
               <div className="space-y-6">
-                {caseStudy.content.process.map((phase, index) => (
-                  <div key={index} className="border-l-4 border-primary pl-4">
-                    <h4 className="font-semibold mb-2">{phase.phase}</h4>
-                    <p className="text-muted-foreground whitespace-pre-wrap">{phase.description}</p>
-                  </div>
-                ))}
+                {caseStudy.content.process.map((phase, phaseIndex) => {
+                  // Split description by numbered items
+                  const steps = phase.description.split(/(?=\d+\.\s)/).filter(step => step.trim());
+                  
+                  return (
+                    <div key={phaseIndex} className="space-y-4">
+                      {/* Phase title */}
+                      <div className="border-l-4 border-primary pl-4">
+                        <h4 className="font-semibold mb-2">{phase.phase}</h4>
+                      </div>
+                      
+                      {/* Individual numbered steps */}
+                      {steps.map((step, stepIndex) => (
+                        <div key={stepIndex} className="border-l-4 border-primary pl-4 ml-4">
+                          <p className="text-muted-foreground whitespace-pre-wrap">{step.trim()}</p>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <p className="text-muted-foreground">Process details from the uploaded case study document will be displayed here.</p>
