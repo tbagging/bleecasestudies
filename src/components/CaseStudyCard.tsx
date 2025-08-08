@@ -25,20 +25,20 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
     >
       <CardHeader>
         <div className="flex justify-between items-start mb-2">
-          <div className="flex items-center gap-2">
-            {caseStudy.logo && (
-              <img 
-                src={caseStudy.logo} 
-                alt={`${caseStudy.company} logo`}
-                className="w-6 h-6 object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            )}
+          <div className="flex flex-col gap-1">
             <span className="text-sm font-medium text-primary">{caseStudy.company}</span>
+            <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
           </div>
-          <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
+          {caseStudy.logo && (
+            <img 
+              src={caseStudy.logo} 
+              alt={`${caseStudy.company} logo`}
+              className="w-12 h-12 object-contain"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          )}
         </div>
         <CardTitle className="text-xl group-hover:text-primary transition-colors">
           {caseStudy.title}
