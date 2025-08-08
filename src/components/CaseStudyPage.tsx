@@ -164,7 +164,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                       .replace(/\n/g, '<br/>')
                       .replace(/(\d+\.\s*[^<\n]+)/g, '<div class="mt-4 mb-2"><strong class="text-primary text-lg">$1</strong></div>')
                       .replace(/([A-Z][a-z\s&]+):/g, '<strong class="text-primary">$1:</strong>')
-                      .replace(/(Co-developed|Created|Compiled|Conducted|Hosted|Formed|Teams received|Evaluation was based)/g, '<strong class="text-foreground">$1</strong>')
+                      .replace(/(Co-developed|Created|Compiled|Conducted|Hosted|Formed|Teams received|Evaluation was based)/g, '<div class="mt-1 mb-1">• <strong class="text-foreground">$1</strong></div>')
                       .replace(/(-primary">[^<]+)/g, '$1')
                   }}
                 />
