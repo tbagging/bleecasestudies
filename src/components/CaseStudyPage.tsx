@@ -157,33 +157,14 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           <CardContent>
             {caseStudy.content?.process && caseStudy.content.process.length > 0 ? (
               <div className="space-y-6">
-                {caseStudy.content.process.map((phase, phaseIndex) => {
-                  // Split description by numbered items
-                  const steps = phase.description
-                    .split(/(?=\d+\.\s)/)
-                    .filter(step => step.trim());
-                  
-                  return (
-                    <div key={phaseIndex} className="space-y-4">
-                      {/* Individual numbered steps */}
-                      {steps.map((step, stepIndex) => {
-                        // Extract title (numbered line) and content (everything after)
-                        const lines = step.trim().split('\n');
-                        const title = lines[0]; // First line with number
-                        const content = lines.slice(1).join('\n').trim(); // All remaining content
-                        
-                        return (
-                          <div key={stepIndex} className="border-l-4 border-primary pl-4">
-                            <h5 className="font-bold text-primary mb-2">{title}</h5>
-                            {content && (
-                              <div className="text-muted-foreground whitespace-pre-wrap">{content}</div>
-                            )}
-                          </div>
-                        );
-                      })}
+                {caseStudy.content.process.map((phase, phaseIndex) => (
+                  <div key={phaseIndex} className="border-l-4 border-primary pl-4">
+                    <h5 className="font-semibold text-lg mb-2">{phase.phase}</h5>
+                    <div className="text-muted-foreground whitespace-pre-wrap text-sm">
+                      {phase.description}
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             ) : (
               <p className="text-muted-foreground">Process details from the uploaded case study document will be displayed here.</p>
