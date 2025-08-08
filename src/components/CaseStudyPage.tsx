@@ -66,7 +66,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             ) : (
               <Building className="h-6 w-6 text-primary" />
             )}
-            <span className="text-lg font-medium text-primary">{caseStudy.company}</span>
+            
             <span className="text-sm text-muted-foreground">{caseStudy.industry}</span>
           </div>
           <h1 className="text-3xl font-bold mb-4">{caseStudy.title}</h1>
