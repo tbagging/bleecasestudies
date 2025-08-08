@@ -25,7 +25,7 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
     >
       <CardHeader>
         <div className="flex justify-between items-start mb-2">
-          <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
+          <div></div>
           {caseStudy.logo && (
             <img 
               src={caseStudy.logo} 
@@ -40,6 +40,7 @@ const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
         <CardTitle className="text-xl group-hover:text-primary transition-colors">
           {caseStudy.title}
         </CardTitle>
+        <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
         <CardDescription className="text-sm leading-relaxed">
           {caseStudy.summary}
         </CardDescription>
