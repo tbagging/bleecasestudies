@@ -76,37 +76,57 @@ export const useContent = () => {
 export const ContentProvider = ({ children }: { children: ReactNode }) => {
   console.log('ContentProvider rendering');
   
-  // Default content that will always be available (no localStorage dependency)
-  const [heroContent, setHeroContent] = useState<HeroContent>({
-    title: "Strategic transformation from within",
-    subtitle: "We generate clarity, direction and ownership — within 24–48 hours"
-  });
+  // Initialize from localStorage if available, otherwise use defaults
+  const initializeContent = <T,>(key: string, defaultValue: T): T => {
+    try {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  };
 
-  const [aboutContent, setAboutContent] = useState<AboutContent>({
-    heading: "Change from within the system",
-    description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives aligned action."
-  });
+  const [heroContent, setHeroContent] = useState<HeroContent>(() => 
+    initializeContent('heroContent', {
+      title: "Strategic transformation from within",
+      subtitle: "We generate clarity, direction and ownership — within 24–48 hours"
+    })
+  );
 
-  const [ctaContent, setCTAContent] = useState<CTAContent>({
-    primary: "Let's talk",
-    secondary: "Request full case studies"
-  });
+  const [aboutContent, setAboutContent] = useState<AboutContent>(() =>
+    initializeContent('aboutContent', {
+      heading: "Change from within the system",
+      description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives aligned action."
+    })
+  );
 
-  const [clientLogos, setClientLogos] = useState<ClientLogo[]>([
-    { id: 1, name: "Client 1", url: "/lovable-uploads/1c39af01-0e9b-42cd-8833-e7e47da9bbd7.png" },
-    { id: 2, name: "Client 2", url: "/lovable-uploads/31c0e9ec-b93a-4065-9536-a710b7df5b8d.png" },
-    { id: 3, name: "Client 3", url: "/lovable-uploads/b3ee8b18-3ea9-48fa-a1db-fb95bb3c136a.png" },
-    { id: 4, name: "Client 4", url: "/lovable-uploads/44cf9821-f49f-4fb3-852a-063bd79faf1e.png" },
-    { id: 5, name: "Client 5", url: "/lovable-uploads/e05b80ef-55e5-45e6-85b7-ec1d92c3c898.png" }
-  ]);
+  const [ctaContent, setCTAContent] = useState<CTAContent>(() =>
+    initializeContent('ctaContent', {
+      primary: "Let's talk",
+      secondary: "Request full case studies"
+    })
+  );
 
-  const [availableTags, setAvailableTags] = useState<string[]>([
-    "revenue-growth", "alignment", "process-optimization", "market-expansion", 
-    "strategy", "restructuring", "operational-excellence", "cost-reduction", "quality",
-    "innovation", "collaboration", "entrepreneurship", "healthcare"
-  ]);
+  const [clientLogos, setClientLogos] = useState<ClientLogo[]>(() =>
+    initializeContent('clientLogos', [
+      { id: 1, name: "Client 1", url: "/lovable-uploads/1c39af01-0e9b-42cd-8833-e7e47da9bbd7.png" },
+      { id: 2, name: "Client 2", url: "/lovable-uploads/31c0e9ec-b93a-4065-9536-a710b7df5b8d.png" },
+      { id: 3, name: "Client 3", url: "/lovable-uploads/b3ee8b18-3ea9-48fa-a1db-fb95bb3c136a.png" },
+      { id: 4, name: "Client 4", url: "/lovable-uploads/44cf9821-f49f-4fb3-852a-063bd79faf1e.png" },
+      { id: 5, name: "Client 5", url: "/lovable-uploads/e05b80ef-55e5-45e6-85b7-ec1d92c3c898.png" }
+    ])
+  );
 
-  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([
+  const [availableTags, setAvailableTags] = useState<string[]>(() =>
+    initializeContent('availableTags', [
+      "revenue-growth", "alignment", "process-optimization", "market-expansion", 
+      "strategy", "restructuring", "operational-excellence", "cost-reduction", "quality",
+      "innovation", "collaboration", "entrepreneurship", "healthcare"
+    ])
+  );
+
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(() =>
+    initializeContent('caseStudies', [
     {
       id: "1",
       title: "Revenue Growth Through Strategic Alignment",
@@ -223,30 +243,37 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         timeline: "2 months"
       }
     }
-  ]);
+    ])
+  );
 
   const updateHeroContent = (content: HeroContent) => {
     setHeroContent(content);
+    localStorage.setItem('heroContent', JSON.stringify(content));
   };
 
   const updateAboutContent = (content: AboutContent) => {
     setAboutContent(content);
+    localStorage.setItem('aboutContent', JSON.stringify(content));
   };
 
   const updateCTAContent = (content: CTAContent) => {
     setCTAContent(content);
+    localStorage.setItem('ctaContent', JSON.stringify(content));
   };
 
   const updateClientLogos = (logos: ClientLogo[]) => {
     setClientLogos(logos);
+    localStorage.setItem('clientLogos', JSON.stringify(logos));
   };
 
   const updateAvailableTags = (tags: string[]) => {
     setAvailableTags(tags);
+    localStorage.setItem('availableTags', JSON.stringify(tags));
   };
 
   const updateCaseStudies = (studies: CaseStudy[]) => {
     setCaseStudies(studies);
+    localStorage.setItem('caseStudies', JSON.stringify(studies));
   };
 
   const value = {
