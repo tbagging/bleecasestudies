@@ -10,8 +10,11 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Download, Edit, Trash2, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { parseFile } from "@/utils/fileParser";
 import { compressImage, validateImageFile, testLocalStorageCapacity } from "@/utils/imageCompression";
+import { AuthStatus } from "@/components/AuthStatus";
+import { SyncStatus } from "@/components/SyncStatus";
 
 const Admin = () => {
   const { toast } = useToast();
@@ -265,24 +268,33 @@ const Admin = () => {
     const failureCount = results.length - successCount;
     
     // Update case studies with all new ones
-    updateCaseStudies([...caseStudies, ...newCaseStudies]);
-    
-    // Show appropriate toast messages
-    if (successCount > 0 && failureCount === 0) {
+    try {
+      await updateCaseStudies([...caseStudies, ...newCaseStudies]);
+      
+      // Show appropriate toast messages
+      if (successCount > 0 && failureCount === 0) {
+        toast({
+          title: `${successCount} case ${successCount === 1 ? 'study' : 'studies'} uploaded successfully`,
+          description: "All files have been uploaded and synced to Supabase.",
+        });
+      } else if (successCount > 0 && failureCount > 0) {
+        toast({
+          title: `${successCount} case ${successCount === 1 ? 'study' : 'studies'} uploaded successfully, ${failureCount} failed`,
+          description: "Some files were uploaded successfully, others need manual content editing.",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Upload completed with issues",
+          description: "Files were uploaded but automatic parsing failed. Please edit content manually.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Failed to save uploaded case studies:', error);
       toast({
-        title: `${successCount} case ${successCount === 1 ? 'study' : 'studies'} uploaded successfully`,
-        description: "All files have been uploaded and content has been extracted automatically.",
-      });
-    } else if (successCount > 0 && failureCount > 0) {
-      toast({
-        title: `${successCount} case ${successCount === 1 ? 'study' : 'studies'} uploaded successfully, ${failureCount} failed`,
-        description: "Some files were uploaded successfully, others need manual content editing.",
-        variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Upload completed with issues",
-        description: "Files were uploaded but automatic parsing failed. Please edit content manually.",
+        title: "Upload failed",
+        description: "Failed to save case studies to Supabase. Please try again.",
         variant: "destructive"
       });
     }
@@ -534,24 +546,33 @@ const Admin = () => {
     });
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (editingCaseStudy) {
       const finalImage = editForm.image;
       const finalLogo = editForm.logo;
       const finalFileName = editForm.newFile ? editForm.newFile.name : editForm.fileName;
       
-      updateCaseStudies(caseStudies.map(cs => 
-        cs.id === editingCaseStudy 
-          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, logo: finalLogo, fileName: finalFileName, content: editForm.content }
-          : cs
-      ));
-      
-      toast({
-        title: "Case study updated",
-        description: "Your changes have been saved successfully.",
-      });
-      
-      cancelEditing();
+      try {
+        await updateCaseStudies(caseStudies.map(cs => 
+          cs.id === editingCaseStudy 
+            ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, logo: finalLogo, fileName: finalFileName, content: editForm.content }
+            : cs
+        ));
+        
+        toast({
+          title: "Case study updated",
+          description: "Your changes have been saved successfully to Supabase.",
+        });
+        
+        cancelEditing();
+      } catch (error) {
+        console.error('Failed to save case study:', error);
+        toast({
+          title: "Save failed",
+          description: "Failed to save changes to Supabase. Please try again.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
@@ -791,8 +812,13 @@ const Admin = () => {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">BLEE Admin Panel</h1>
-          <p className="text-muted-foreground">Manage your landing page content and case studies</p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold">BLEE Admin Panel</h1>
+              <p className="text-muted-foreground">Manage your landing page content and case studies</p>
+            </div>
+            <AuthStatus />
+          </div>
         </div>
 
         <Tabs defaultValue="case-studies" className="space-y-6">
@@ -886,6 +912,12 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="case-studies" className="space-y-6">
+            {/* Sync Status */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Case Studies</h2>
+              <SyncStatus caseStudies={caseStudies} updateCaseStudies={updateCaseStudies} />
+            </div>
+            
             {/* Upload Case Studies */}
             <Card>
               <CardHeader>
