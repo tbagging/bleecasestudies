@@ -823,8 +823,9 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="case-studies" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="case-studies">Case Studies</TabsTrigger>
+            <TabsTrigger value="order">Order</TabsTrigger>
             <TabsTrigger value="content">Page Content</TabsTrigger>
             <TabsTrigger value="logos">Client Logos</TabsTrigger>
             <TabsTrigger value="tags">Manage Tags</TabsTrigger>
@@ -948,51 +949,6 @@ const Admin = () => {
               </CardContent>
             </Card>
 
-            {/* Reorder Case Studies */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Reorder Case Studies</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SortableCaseStudies
-                  caseStudies={caseStudies}
-                  onReorder={async (newOrder) => {
-                    try {
-                      await updateCaseStudies(newOrder);
-                      toast({
-                        title: "Order updated",
-                        description: "Case studies have been reordered successfully.",
-                      });
-                    } catch (error) {
-                      console.error('Failed to update order:', error);
-                      toast({
-                        title: "Failed to update order",
-                        description: "Please try again.",
-                        variant: "destructive"
-                      });
-                    }
-                  }}
-                  onEdit={startEditing}
-                  onDelete={async (id) => {
-                    try {
-                      const newCaseStudies = caseStudies.filter(cs => cs.id !== id);
-                      await updateCaseStudies(newCaseStudies);
-                      toast({
-                        title: "Case study deleted",
-                        description: "Case study has been deleted successfully.",
-                      });
-                    } catch (error) {
-                      console.error('Failed to delete case study:', error);
-                      toast({
-                        title: "Failed to delete",
-                        description: "Please try again.",
-                        variant: "destructive"
-                      });
-                    }
-                  }}
-                />
-              </CardContent>
-            </Card>
 
             {/* Existing Case Studies */}
             <Card>
@@ -1646,6 +1602,56 @@ const Admin = () => {
                     </div>
                   ))}
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="order" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Reorder Case Studies</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Drag and drop to change the order of case studies on the main page
+                </p>
+              </CardHeader>
+              <CardContent>
+                <SortableCaseStudies
+                  caseStudies={caseStudies}
+                  onReorder={async (newOrder) => {
+                    try {
+                      await updateCaseStudies(newOrder);
+                      toast({
+                        title: "Order updated",
+                        description: "Case studies have been reordered successfully.",
+                      });
+                    } catch (error) {
+                      console.error('Failed to update order:', error);
+                      toast({
+                        title: "Failed to update order",
+                        description: "Please try again.",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                  onEdit={startEditing}
+                  onDelete={async (id) => {
+                    try {
+                      const newCaseStudies = caseStudies.filter(cs => cs.id !== id);
+                      await updateCaseStudies(newCaseStudies);
+                      toast({
+                        title: "Case study deleted",
+                        description: "Case study has been deleted successfully.",
+                      });
+                    } catch (error) {
+                      console.error('Failed to delete case study:', error);
+                      toast({
+                        title: "Failed to delete",
+                        description: "Please try again.",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                />
               </CardContent>
             </Card>
           </TabsContent>
