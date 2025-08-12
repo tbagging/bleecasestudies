@@ -1275,53 +1275,91 @@ const Admin = () => {
                               <Label>Process Steps</Label>
                               <div className="space-y-3">
                                 {editForm.content.process.map((phase, index) => (
-                                  <div key={index} className="border rounded-lg p-3 space-y-2">
-                                    <div className="flex gap-2 items-start">
-                                      <div className="flex-1 space-y-2">
-                                        <Input
-                                          value={phase.phase}
-                                          onChange={(e) => {
-                                            const newProcess = [...editForm.content.process];
-                                            newProcess[index].phase = e.target.value;
-                                            setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
-                                          }}
-                                          placeholder="Phase name"
-                                        />
-                                        <Textarea
-                                          value={phase.description}
-                                          onChange={(e) => {
-                                            const newProcess = [...editForm.content.process];
-                                            newProcess[index].description = e.target.value;
-                                            setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
-                                          }}
-                                          placeholder="Phase description"
-                                          rows={2}
-                                          className="text-sm text-muted-foreground font-normal"
-                                        />
-                                      </div>
+                                  <div key={index} className="space-y-2">
+                                    {/* Insert Before Button */}
+                                    <div className="flex justify-center">
                                       <Button
-                                        variant="outline"
+                                        variant="ghost"
                                         size="sm"
                                         onClick={() => {
-                                          const newProcess = editForm.content.process.filter((_, i) => i !== index);
+                                          const newProcess = [...editForm.content.process];
+                                          newProcess.splice(index, 0, {phase: "", description: ""});
                                           setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
                                         }}
+                                        className="text-xs h-6 px-2 text-muted-foreground hover:text-foreground"
                                       >
-                                        <Trash2 className="w-4 h-4" />
+                                        <Plus className="w-3 h-3 mr-1" />
+                                        Insert Step Before
                                       </Button>
+                                    </div>
+                                    
+                                    <div className="border rounded-lg p-3 space-y-2">
+                                      <div className="flex gap-2 items-start">
+                                        <div className="flex-1 space-y-2">
+                                          <Input
+                                            value={phase.phase}
+                                            onChange={(e) => {
+                                              const newProcess = [...editForm.content.process];
+                                              newProcess[index].phase = e.target.value;
+                                              setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
+                                            }}
+                                            placeholder="Phase name"
+                                          />
+                                          <Textarea
+                                            value={phase.description}
+                                            onChange={(e) => {
+                                              const newProcess = [...editForm.content.process];
+                                              newProcess[index].description = e.target.value;
+                                              setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
+                                            }}
+                                            placeholder="Phase description"
+                                            rows={2}
+                                            className="text-sm text-muted-foreground font-normal"
+                                          />
+                                        </div>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => {
+                                            const newProcess = editForm.content.process.filter((_, i) => i !== index);
+                                            setEditForm({...editForm, content: {...editForm.content, process: newProcess}});
+                                          }}
+                                        >
+                                          <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                      </div>
                                     </div>
                                   </div>
                                 ))}
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => {
-                                    setEditForm({...editForm, content: {...editForm.content, process: [...editForm.content.process, {phase: "", description: ""}]}});
-                                  }}
-                                >
-                                  <Plus className="w-4 h-4 mr-1" />
-                                  Add Process Step
-                                </Button>
+                                
+                                {/* Add first step or append step */}
+                                <div className="flex gap-2">
+                                  {editForm.content.process.length === 0 && (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        setEditForm({...editForm, content: {...editForm.content, process: [{phase: "", description: ""}]}});
+                                      }}
+                                    >
+                                      <Plus className="w-4 h-4 mr-1" />
+                                      Add First Process Step
+                                    </Button>
+                                  )}
+                                  
+                                  {editForm.content.process.length > 0 && (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        setEditForm({...editForm, content: {...editForm.content, process: [...editForm.content.process, {phase: "", description: ""}]}});
+                                      }}
+                                    >
+                                      <Plus className="w-4 h-4 mr-1" />
+                                      Add Process Step
+                                    </Button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                             
