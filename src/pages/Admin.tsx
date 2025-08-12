@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Download, Edit, Trash2, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { parseFile } from "@/utils/fileParser";
+import { compressImage, validateImageFile, testLocalStorageCapacity } from "@/utils/imageCompression";
 
 const Admin = () => {
   const { toast } = useToast();
@@ -287,18 +288,48 @@ const Admin = () => {
     }
   };
 
-  const handleLogoFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewLogo({...newLogo, file, url: reader.result as string});
-      };
-      reader.readAsDataURL(file);
-    } else if (file && file.size > 2 * 1024 * 1024) {
+    if (!file) return;
+
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
       toast({
-        title: "File too large",
-        description: "Please select an image smaller than 2MB.",
+        title: "Invalid file",
+        description: validation.error,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const storageTest = testLocalStorageCapacity();
+    if (!storageTest.available) {
+      toast({
+        title: "Storage limit exceeded",
+        description: storageTest.error,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Compressing image...",
+        description: "Please wait while we optimize your image.",
+      });
+
+      const compressedDataUrl = await compressImage(file, 200);
+      setNewLogo({...newLogo, file, url: compressedDataUrl});
+      
+      toast({
+        title: "Logo uploaded successfully",
+        description: "Image has been compressed and optimized for storage.",
+      });
+    } catch (error) {
+      console.error('Image compression failed:', error);
+      toast({
+        title: "Upload failed",
+        description: "Failed to process the image. Please try a different file.",
         variant: "destructive"
       });
     }
@@ -524,70 +555,142 @@ const Admin = () => {
     }
   };
 
-  const handleCaseStudyImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCaseStudyImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditForm({...editForm, imageFile: file, image: reader.result as string});
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
       toast({
-        title: "Photo uploaded",
-        description: "Case study photo has been uploaded successfully.",
+        title: "Invalid file",
+        description: validation.error,
+        variant: "destructive"
       });
-    } else if (file && file.size > 2 * 1024 * 1024) {
+      return;
+    }
+
+    const storageTest = testLocalStorageCapacity();
+    if (!storageTest.available) {
       toast({
-        title: "File too large",
-        description: "Please select an image smaller than 2MB.",
+        title: "Storage limit exceeded",
+        description: storageTest.error,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Compressing image...",
+        description: "Please wait while we optimize your image.",
+      });
+
+      const compressedDataUrl = await compressImage(file, 200);
+      setEditForm({...editForm, imageFile: file, image: compressedDataUrl});
+      
+      toast({
+        title: "Photo uploaded successfully",
+        description: "Image has been compressed and optimized for storage.",
+      });
+    } catch (error) {
+      console.error('Image compression failed:', error);
+      toast({
+        title: "Upload failed",
+        description: "Failed to process the image. Please try a different file.",
         variant: "destructive"
       });
     }
   };
 
-  const handleCaseStudyLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCaseStudyLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditForm({...editForm, logoFile: file, logo: reader.result as string});
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
       toast({
-        title: "Logo uploaded",
-        description: "Case study logo has been uploaded successfully.",
-      });
-    } else if (file && file.size > 2 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please select an image smaller than 2MB.",
+        title: "Invalid file",
+        description: validation.error,
         variant: "destructive"
       });
-    } else {
+      return;
+    }
+
+    const storageTest = testLocalStorageCapacity();
+    if (!storageTest.available) {
       toast({
-        title: "Invalid file type",
-        description: "Please select a valid image file.",
-        variant: "destructive",
+        title: "Storage limit exceeded",
+        description: storageTest.error,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Compressing image...",
+        description: "Please wait while we optimize your image.",
+      });
+
+      const compressedDataUrl = await compressImage(file, 200);
+      setEditForm({...editForm, logoFile: file, logo: compressedDataUrl});
+      
+      toast({
+        title: "Logo uploaded successfully",
+        description: "Image has been compressed and optimized for storage.",
+      });
+    } catch (error) {
+      console.error('Image compression failed:', error);
+      toast({
+        title: "Upload failed",
+        description: "Failed to process the image. Please try a different file.",
+        variant: "destructive"
       });
     }
   };
 
-  const handleHeroImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHeroImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditForm({...editForm, content: {...editForm.content, heroImage: reader.result as string}});
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
       toast({
-        title: "Hero image uploaded",
-        description: "Case study hero image has been uploaded successfully.",
+        title: "Invalid file",
+        description: validation.error,
+        variant: "destructive"
       });
-    } else if (file && file.size > 2 * 1024 * 1024) {
+      return;
+    }
+
+    const storageTest = testLocalStorageCapacity();
+    if (!storageTest.available) {
       toast({
-        title: "File too large",
-        description: "Please select an image smaller than 2MB.",
+        title: "Storage limit exceeded",
+        description: storageTest.error,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Compressing image...",
+        description: "Please wait while we optimize your image.",
+      });
+
+      const compressedDataUrl = await compressImage(file, 200);
+      setEditForm({...editForm, content: {...editForm.content, heroImage: compressedDataUrl}});
+      
+      toast({
+        title: "Hero image uploaded successfully",
+        description: "Image has been compressed and optimized for storage.",
+      });
+    } catch (error) {
+      console.error('Image compression failed:', error);
+      toast({
+        title: "Upload failed",
+        description: "Failed to process the image. Please try a different file.",
         variant: "destructive"
       });
     }

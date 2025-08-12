@@ -272,8 +272,15 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateCaseStudies = (studies: CaseStudy[]) => {
-    setCaseStudies(studies);
-    localStorage.setItem('caseStudies', JSON.stringify(studies));
+    try {
+      setCaseStudies(studies);
+      localStorage.setItem('caseStudies', JSON.stringify(studies));
+    } catch (error) {
+      console.error('Failed to save case studies to localStorage:', error);
+      // Still update state even if localStorage fails
+      setCaseStudies(studies);
+      throw new Error('Storage limit exceeded. Please reduce image file sizes.');
+    }
   };
 
   const value = {
