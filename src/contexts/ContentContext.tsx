@@ -63,18 +63,15 @@ interface ContentContextType {
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
 
 export const useContent = () => {
-  console.log('useContent hook called');
   const context = useContext(ContentContext);
-  console.log('useContent context:', context);
   if (!context) {
-    console.error('useContent: No context found! Provider not wrapping component');
     throw new Error('useContent must be used within a ContentProvider');
   }
   return context;
 };
 
 export const ContentProvider = ({ children }: { children: ReactNode }) => {
-  console.log('ContentProvider rendering');
+  
   
   // Initialize from localStorage if available, otherwise use defaults
   const initializeContent = <T,>(key: string, defaultValue: T): T => {
@@ -298,7 +295,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     updateCaseStudies
   };
 
-  console.log('ContentProvider value:', value);
+  
 
   return (
     <ContentContext.Provider value={value}>

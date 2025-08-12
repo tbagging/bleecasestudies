@@ -1,10 +1,10 @@
 import * as mammoth from 'mammoth';
 import { getDocument } from 'pdfjs-dist';
 
-// Set up PDF.js worker
+// Set up PDF.js worker (self-hosted to avoid CDN/version mismatch)
 import { GlobalWorkerOptions } from 'pdfjs-dist';
-GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js`;
-
+import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+GlobalWorkerOptions.workerSrc = workerUrl;
 export interface ParsedCaseStudyContent {
   clientSnapshot: string;
   background: string;

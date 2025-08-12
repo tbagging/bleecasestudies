@@ -20,8 +20,8 @@ const CaseStudy = () => {
 
   // Check if user has already unlocked content
   useEffect(() => {
-    const unlockedEmail = localStorage.getItem('blee_unlocked_email');
-    if (unlockedEmail) {
+    const unlocked = localStorage.getItem('blee_unlocked') === 'true';
+    if (unlocked) {
       setIsUnlocked(true);
     }
   }, []);
@@ -60,7 +60,7 @@ const CaseStudy = () => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    localStorage.setItem('blee_unlocked_email', email);
+    localStorage.setItem('blee_unlocked', 'true');
     setIsUnlocked(true);
     setIsSubmitting(false);
   };
