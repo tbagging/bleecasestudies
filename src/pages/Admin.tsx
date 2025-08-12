@@ -548,18 +548,25 @@ const Admin = () => {
   };
 
   const saveEdit = async () => {
+    console.log('saveEdit called');
+    console.log('editingCaseStudy:', editingCaseStudy);
+    console.log('editForm:', editForm);
+    
     if (editingCaseStudy) {
+      console.log('Starting save process...');
       const finalImage = editForm.image;
       const finalLogo = editForm.logo;
       const finalFileName = editForm.newFile ? editForm.newFile.name : editForm.fileName;
       
       try {
+        console.log('Calling updateCaseStudies...');
         await updateCaseStudies(caseStudies.map(cs => 
           cs.id === editingCaseStudy 
             ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, logo: finalLogo, fileName: finalFileName, content: editForm.content }
             : cs
         ));
         
+        console.log('Save successful');
         toast({
           title: "Case study updated",
           description: "Your changes have been saved successfully to Supabase.",
@@ -574,6 +581,8 @@ const Admin = () => {
           variant: "destructive"
         });
       }
+    } else {
+      console.log('No editingCaseStudy found');
     }
   };
 
