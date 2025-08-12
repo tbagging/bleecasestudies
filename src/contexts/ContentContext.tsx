@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from "@/integrations/supabase/client";
 
 interface HeroContent {
   title: string;
@@ -57,7 +58,7 @@ interface ContentContextType {
   updateCTAContent: (content: CTAContent) => void;
   updateClientLogos: (logos: ClientLogo[]) => void;
   updateAvailableTags: (tags: string[]) => void;
-  updateCaseStudies: (caseStudies: CaseStudy[]) => void;
+  updateCaseStudies: (caseStudies: CaseStudy[]) => Promise<void>;
 }
 
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
@@ -268,17 +269,84 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('availableTags', JSON.stringify(tags));
   };
 
-  const updateCaseStudies = (studies: CaseStudy[]) => {
+  const updateCaseStudies = async (studies: CaseStudy[]) => {
     try {
+      // Determine removed IDs compared to current state
+      const currentIds = new Set(caseStudies.map(cs => cs.id));
+      const newIds = new Set(studies.map(cs => cs.id));
+      const removedIds = Array.from(currentIds).filter(id => !newIds.has(id));
+
+      // Upsert all studies
+      const rows = studies.map(cs => ({
+        id: cs.id,
+        title: cs.title,
+        summary: cs.summary ?? null,
+        image: cs.image ?? null,
+        logo: cs.logo ?? null,
+        tags: cs.tags ?? [],
+        company: cs.company,
+        industry: cs.industry,
+        file_name: cs.fileName ?? null,
+        content: cs.content ? cs.content as any : null,
+      }));
+
+      const { error: upsertError } = await supabase
+        .from('case_studies')
+        .upsert(rows, { onConflict: 'id' });
+
+      if (upsertError) {
+        console.error('Supabase upsert error:', upsertError);
+      }
+
+      if (removedIds.length > 0) {
+        const { error: deleteError } = await supabase
+          .from('case_studies')
+          .delete()
+          .in('id', removedIds);
+        if (deleteError) {
+          console.error('Supabase delete error:', deleteError);
+        }
+      }
+
       setCaseStudies(studies);
-      localStorage.setItem('caseStudies', JSON.stringify(studies));
+      try {
+        localStorage.setItem('caseStudies', JSON.stringify(studies));
+      } catch {}
     } catch (error) {
-      console.error('Failed to save case studies to localStorage:', error);
-      // Still update state even if localStorage fails
-      setCaseStudies(studies);
-      throw new Error('Storage limit exceeded. Please reduce image file sizes.');
+      console.error('Failed to persist case studies:', error);
     }
   };
+
+  // Load case studies from Supabase on app start
+  useEffect(() => {
+    const load = async () => {
+      const { data, error } = await supabase
+        .from('case_studies')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) {
+        console.error('Failed to fetch case studies from Supabase:', error.message);
+        return;
+      }
+      if (data && data.length > 0) {
+        const mapped = data.map((row: any) => ({
+          id: row.id as string,
+          title: row.title as string,
+          summary: (row.summary ?? '') as string,
+          image: (row.image ?? undefined) as string | undefined,
+          logo: (row.logo ?? undefined) as string | undefined,
+          tags: (row.tags ?? []) as string[],
+          company: (row.company ?? '') as string,
+          industry: (row.industry ?? '') as string,
+          fileName: (row.file_name ?? undefined) as string | undefined,
+          content: (row.content ?? undefined) as any,
+        }));
+        setCaseStudies(mapped);
+        try { localStorage.setItem('caseStudies', JSON.stringify(mapped)); } catch {}
+      }
+    };
+    load();
+  }, []);
 
   const value = {
     heroContent,
