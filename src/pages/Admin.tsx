@@ -15,6 +15,7 @@ import { parseFile } from "@/utils/fileParser";
 import { compressImage, validateImageFile, testLocalStorageCapacity } from "@/utils/imageCompression";
 import { AuthStatus } from "@/components/AuthStatus";
 import { SyncStatus } from "@/components/SyncStatus";
+import { SortableCaseStudies } from "@/components/SortableCaseStudies";
 
 const Admin = () => {
   const { toast } = useToast();
@@ -947,11 +948,57 @@ const Admin = () => {
               </CardContent>
             </Card>
 
+            {/* Reorder Case Studies */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Reorder Case Studies</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SortableCaseStudies
+                  caseStudies={caseStudies}
+                  onReorder={async (newOrder) => {
+                    try {
+                      await updateCaseStudies(newOrder);
+                      toast({
+                        title: "Order updated",
+                        description: "Case studies have been reordered successfully.",
+                      });
+                    } catch (error) {
+                      console.error('Failed to update order:', error);
+                      toast({
+                        title: "Failed to update order",
+                        description: "Please try again.",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                  onEdit={startEditing}
+                  onDelete={async (id) => {
+                    try {
+                      const newCaseStudies = caseStudies.filter(cs => cs.id !== id);
+                      await updateCaseStudies(newCaseStudies);
+                      toast({
+                        title: "Case study deleted",
+                        description: "Case study has been deleted successfully.",
+                      });
+                    } catch (error) {
+                      console.error('Failed to delete case study:', error);
+                      toast({
+                        title: "Failed to delete",
+                        description: "Please try again.",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                />
+              </CardContent>
+            </Card>
+
             {/* Existing Case Studies */}
             <Card>
               <CardHeader>
                 <div className="flex justify-between items-center">
-                  <CardTitle>Existing Case Studies</CardTitle>
+                  <CardTitle>Edit Case Studies</CardTitle>
                   <Button 
                     variant="outline" 
                     size="sm" 
