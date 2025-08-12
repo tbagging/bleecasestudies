@@ -31,11 +31,11 @@ const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardPro
     >
       <CardHeader>
         {caseStudy.logo && (
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4 bg-white rounded-lg p-2">
             <img 
               src={caseStudy.logo} 
               alt={`${caseStudy.company} logo`}
-              className="w-24 h-24 object-contain"
+              className="w-20 h-20 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
