@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
@@ -6,11 +6,13 @@ import CaseStudyCard from "./CaseStudyCard";
 import { useContent } from "@/contexts/ContentContext";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CaseStudyPage from "./CaseStudyPage";
+import { extractDominantColor } from "@/utils/colorExtractor";
 
 const CaseStudiesSection = () => {
   const { caseStudies } = useContent();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [logoColors, setLogoColors] = useState<{ [key: string]: string }>({});
 
   const allTags = Array.from(new Set(caseStudies.flatMap(cs => cs.tags)));
 
@@ -29,6 +31,30 @@ const CaseStudiesSection = () => {
         : [...prev, tag]
     );
   };
+
+  useEffect(() => {
+    const extractColors = async () => {
+      const colors: { [key: string]: string } = {};
+      
+      for (const caseStudy of caseStudies) {
+        if (caseStudy.logo) {
+          try {
+            const color = await extractDominantColor(caseStudy.logo);
+            colors[caseStudy.id] = color;
+          } catch (error) {
+            console.error(`Error extracting color for ${caseStudy.id}:`, error);
+            colors[caseStudy.id] = 'hsl(var(--muted))';
+          }
+        }
+      }
+      
+      setLogoColors(colors);
+    };
+
+    if (caseStudies.length > 0) {
+      extractColors();
+    }
+  }, [caseStudies]);
 
   return (
     <section className="py-20 bg-accent/50">
@@ -76,6 +102,7 @@ const CaseStudiesSection = () => {
                 <div>
                   <CaseStudyCard
                     caseStudy={caseStudy}
+                    backgroundColor={logoColors[caseStudy.id]}
                     onClick={() => {}}
                   />
                 </div>
