@@ -270,11 +270,13 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateCaseStudies = async (studies: CaseStudy[]) => {
+    console.log('updateCaseStudies called with:', studies);
     try {
       // Determine removed IDs compared to current state
       const currentIds = new Set(caseStudies.map(cs => cs.id));
       const newIds = new Set(studies.map(cs => cs.id));
       const removedIds = Array.from(currentIds).filter(id => !newIds.has(id));
+      console.log('removedIds:', removedIds);
 
       // Upsert all studies
       const rows = studies.map(cs => ({
@@ -289,6 +291,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         file_name: cs.fileName ?? null,
         content: cs.content ? cs.content as any : null,
       }));
+      console.log('Upserting rows:', rows);
 
       const { error: upsertError } = await supabase
         .from('case_studies')
@@ -296,24 +299,33 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
 
       if (upsertError) {
         console.error('Supabase upsert error:', upsertError);
+        throw upsertError;
       }
 
       if (removedIds.length > 0) {
+        console.log('Deleting removed IDs...');
         const { error: deleteError } = await supabase
           .from('case_studies')
           .delete()
           .in('id', removedIds);
         if (deleteError) {
           console.error('Supabase delete error:', deleteError);
+          throw deleteError;
         }
       }
 
+      console.log('Setting case studies state...');
       setCaseStudies(studies);
       try {
         localStorage.setItem('caseStudies', JSON.stringify(studies));
-      } catch {}
+        console.log('Saved to localStorage');
+      } catch (localStorageError) {
+        console.error('Failed to save to localStorage:', localStorageError);
+      }
+      console.log('updateCaseStudies completed successfully');
     } catch (error) {
       console.error('Failed to persist case studies:', error);
+      throw error; // Re-throw so the Admin component can handle it
     }
   };
 
