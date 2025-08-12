@@ -248,32 +248,58 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
 
   const updateHeroContent = (content: HeroContent) => {
     setHeroContent(content);
-    localStorage.setItem('heroContent', JSON.stringify(content));
+    try {
+      localStorage.setItem('heroContent', JSON.stringify(content));
+    } catch (error) {
+      console.error('Failed to save hero content to localStorage:', error);
+    }
   };
 
   const updateAboutContent = (content: AboutContent) => {
     setAboutContent(content);
-    localStorage.setItem('aboutContent', JSON.stringify(content));
+    try {
+      localStorage.setItem('aboutContent', JSON.stringify(content));
+    } catch (error) {
+      console.error('Failed to save about content to localStorage:', error);
+    }
   };
 
   const updateCTAContent = (content: CTAContent) => {
     setCTAContent(content);
-    localStorage.setItem('ctaContent', JSON.stringify(content));
+    try {
+      localStorage.setItem('ctaContent', JSON.stringify(content));
+    } catch (error) {
+      console.error('Failed to save CTA content to localStorage:', error);
+    }
   };
 
   const updateClientLogos = (logos: ClientLogo[]) => {
     setClientLogos(logos);
-    localStorage.setItem('clientLogos', JSON.stringify(logos));
+    try {
+      localStorage.setItem('clientLogos', JSON.stringify(logos));
+    } catch (error) {
+      console.error('Failed to save client logos to localStorage:', error);
+    }
   };
 
   const updateAvailableTags = (tags: string[]) => {
     setAvailableTags(tags);
-    localStorage.setItem('availableTags', JSON.stringify(tags));
+    try {
+      localStorage.setItem('availableTags', JSON.stringify(tags));
+    } catch (error) {
+      console.error('Failed to save available tags to localStorage:', error);
+    }
   };
 
   const updateCaseStudies = (studies: CaseStudy[]) => {
     setCaseStudies(studies);
-    localStorage.setItem('caseStudies', JSON.stringify(studies));
+    try {
+      localStorage.setItem('caseStudies', JSON.stringify(studies));
+    } catch (error) {
+      console.error('Failed to save case studies to localStorage:', error);
+      // Still update state even if localStorage fails
+      // This ensures the UI remains functional
+    }
   };
 
   const value = {
