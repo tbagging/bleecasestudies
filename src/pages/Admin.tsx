@@ -4,10 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import DraggableCaseStudyList from "@/components/DraggableCaseStudyList";
+import EditCaseStudyDialog from "@/components/EditCaseStudyDialog";
 
 const AdminSimple = () => {
   const { toast } = useToast();
   const { caseStudies, updateCaseStudies } = useContent();
+  const [editingCaseStudy, setEditingCaseStudy] = useState<any>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleReorder = (reorderedStudies: any[]) => {
     updateCaseStudies(reorderedStudies);
@@ -18,10 +21,18 @@ const AdminSimple = () => {
   };
 
   const handleEdit = (caseStudy: any) => {
-    // For now, just show a toast - this can be expanded later
+    setEditingCaseStudy(caseStudy);
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = (updatedCaseStudy: any) => {
+    const updatedCaseStudies = caseStudies.map(cs => 
+      cs.id === updatedCaseStudy.id ? updatedCaseStudy : cs
+    );
+    updateCaseStudies(updatedCaseStudies);
     toast({
-      title: "Edit functionality",
-      description: `Would edit case study: ${caseStudy.title}`,
+      title: "Case study updated",
+      description: "Changes have been saved successfully.",
     });
   };
 
@@ -55,6 +66,13 @@ const AdminSimple = () => {
             />
           </CardContent>
         </Card>
+
+        <EditCaseStudyDialog
+          caseStudy={editingCaseStudy}
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+          onSave={handleSaveEdit}
+        />
       </div>
     </div>
   );
