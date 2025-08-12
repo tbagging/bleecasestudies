@@ -82,16 +82,26 @@ function SortableItem({ id, caseStudy, onEdit, onDelete }: SortableItemProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onEdit(caseStudy)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(caseStudy);
+                }}
+                className="flex items-center gap-1"
               >
                 <Edit className="w-4 h-4" />
+                Edit
               </Button>
               <Button
-                variant="outline"
+                variant="destructive"
                 size="sm"
-                onClick={() => onDelete(caseStudy.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(caseStudy.id);
+                }}
+                className="flex items-center gap-1"
               >
                 <Trash2 className="w-4 h-4" />
+                Delete
               </Button>
             </div>
           </div>
