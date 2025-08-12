@@ -35,8 +35,7 @@ const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardPro
             <img 
               src={caseStudy.logo} 
               alt={`${caseStudy.company} logo`}
-              className="w-20 h-20 object-contain mix-blend-multiply"
-              style={{ backgroundColor: 'transparent' }}
+              className="w-20 h-20 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
