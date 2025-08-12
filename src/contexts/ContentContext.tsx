@@ -248,58 +248,32 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
 
   const updateHeroContent = (content: HeroContent) => {
     setHeroContent(content);
-    try {
-      localStorage.setItem('heroContent', JSON.stringify(content));
-    } catch (error) {
-      console.error('Failed to save hero content to localStorage:', error);
-    }
+    localStorage.setItem('heroContent', JSON.stringify(content));
   };
 
   const updateAboutContent = (content: AboutContent) => {
     setAboutContent(content);
-    try {
-      localStorage.setItem('aboutContent', JSON.stringify(content));
-    } catch (error) {
-      console.error('Failed to save about content to localStorage:', error);
-    }
+    localStorage.setItem('aboutContent', JSON.stringify(content));
   };
 
   const updateCTAContent = (content: CTAContent) => {
     setCTAContent(content);
-    try {
-      localStorage.setItem('ctaContent', JSON.stringify(content));
-    } catch (error) {
-      console.error('Failed to save CTA content to localStorage:', error);
-    }
+    localStorage.setItem('ctaContent', JSON.stringify(content));
   };
 
   const updateClientLogos = (logos: ClientLogo[]) => {
     setClientLogos(logos);
-    try {
-      localStorage.setItem('clientLogos', JSON.stringify(logos));
-    } catch (error) {
-      console.error('Failed to save client logos to localStorage:', error);
-    }
+    localStorage.setItem('clientLogos', JSON.stringify(logos));
   };
 
   const updateAvailableTags = (tags: string[]) => {
     setAvailableTags(tags);
-    try {
-      localStorage.setItem('availableTags', JSON.stringify(tags));
-    } catch (error) {
-      console.error('Failed to save available tags to localStorage:', error);
-    }
+    localStorage.setItem('availableTags', JSON.stringify(tags));
   };
 
   const updateCaseStudies = (studies: CaseStudy[]) => {
     setCaseStudies(studies);
-    try {
-      localStorage.setItem('caseStudies', JSON.stringify(studies));
-    } catch (error) {
-      console.error('Failed to save case studies to localStorage:', error);
-      // Still update state even if localStorage fails
-      // This ensures the UI remains functional
-    }
+    localStorage.setItem('caseStudies', JSON.stringify(studies));
   };
 
   const value = {

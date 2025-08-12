@@ -505,247 +505,89 @@ const Admin = () => {
 
   const saveEdit = () => {
     if (editingCaseStudy) {
-      try {
-        const finalImage = editForm.image;
-        const finalLogo = editForm.logo;
-        const finalFileName = editForm.newFile ? editForm.newFile.name : editForm.fileName;
-        
-        // Validate image data before saving
-        if (editForm.imageFile && !finalImage) {
-          toast({
-            title: "Image upload error",
-            description: "Image is still processing. Please wait and try again.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        if (editForm.logoFile && !finalLogo) {
-          toast({
-            title: "Logo upload error", 
-            description: "Logo is still processing. Please wait and try again.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        const updatedCaseStudy = {
-          ...caseStudies.find(cs => cs.id === editingCaseStudy),
-          title: editForm.title,
-          company: editForm.company,
-          industry: editForm.industry,
-          summary: editForm.summary,
-          tags: editForm.tags,
-          image: finalImage,
-          logo: finalLogo,
-          fileName: finalFileName,
-          content: editForm.content
-        };
-
-        const updatedCaseStudies = caseStudies.map(cs => 
-          cs.id === editingCaseStudy ? updatedCaseStudy : cs
-        );
-        
-        // Test localStorage capacity before saving
-        try {
-          const testData = JSON.stringify(updatedCaseStudies);
-          localStorage.setItem('caseStudies_test', testData);
-          localStorage.removeItem('caseStudies_test');
-        } catch (storageError) {
-          console.error('LocalStorage quota exceeded:', storageError);
-          toast({
-            title: "Storage limit exceeded",
-            description: "Please reduce image file sizes. Images should be under 200KB each.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        updateCaseStudies(updatedCaseStudies);
-        
-        toast({
-          title: "Case study updated",
-          description: "Your changes have been saved successfully.",
-        });
-        
-        cancelEditing();
-      } catch (error) {
-        console.error('Error saving case study:', error);
-        toast({
-          title: "Save failed",
-          description: "Unable to save changes. Please try reducing image sizes or contact support.",
-          variant: "destructive"
-        });
-      }
+      const finalImage = editForm.image;
+      const finalLogo = editForm.logo;
+      const finalFileName = editForm.newFile ? editForm.newFile.name : editForm.fileName;
+      
+      updateCaseStudies(caseStudies.map(cs => 
+        cs.id === editingCaseStudy 
+          ? { ...cs, title: editForm.title, company: editForm.company, industry: editForm.industry, summary: editForm.summary, tags: editForm.tags, image: finalImage, logo: finalLogo, fileName: finalFileName, content: editForm.content }
+          : cs
+      ));
+      
+      toast({
+        title: "Case study updated",
+        description: "Your changes have been saved successfully.",
+      });
+      
+      cancelEditing();
     }
   };
 
-  const compressImage = (file: File, maxWidth = 800, quality = 0.7): Promise<string> => {
-    return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      
-      img.onload = () => {
-        // Calculate new dimensions
-        const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
-        canvas.width = img.width * ratio;
-        canvas.height = img.height * ratio;
-        
-        // Draw and compress
-        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-        resolve(compressedDataUrl);
-      };
-      
-      img.src = URL.createObjectURL(file);
-    });
-  };
-
-  const handleCaseStudyImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCaseStudyImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
-    
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please select a valid image file.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please select an image smaller than 5MB.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      toast({
-        title: "Processing image...",
-        description: "Compressing and uploading your image.",
-      });
-
-      // Compress the image
-      const compressedDataUrl = await compressImage(file);
-      
-      // Check compressed size (rough estimate)
-      const compressedSize = compressedDataUrl.length * 0.75; // base64 is ~4/3 larger
-      if (compressedSize > 200 * 1024) { // 200KB limit
-        // Compress more aggressively
-        const moreCompressed = await compressImage(file, 600, 0.5);
-        setEditForm({...editForm, imageFile: file, image: moreCompressed});
-      } else {
-        setEditForm({...editForm, imageFile: file, image: compressedDataUrl});
-      }
-      
+    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditForm({...editForm, imageFile: file, image: reader.result as string});
+      };
+      reader.readAsDataURL(file);
       toast({
         title: "Photo uploaded",
-        description: "Case study photo has been uploaded and optimized successfully.",
+        description: "Case study photo has been uploaded successfully.",
       });
-    } catch (error) {
-      console.error('Error processing image:', error);
+    } else if (file && file.size > 2 * 1024 * 1024) {
       toast({
-        title: "Upload failed",
-        description: "Failed to process image. Please try a different file.",
+        title: "File too large",
+        description: "Please select an image smaller than 2MB.",
         variant: "destructive"
       });
     }
   };
 
-  const handleCaseStudyLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCaseStudyLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
-    
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please select a valid image file.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please select an image smaller than 5MB.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      toast({
-        title: "Processing logo...",
-        description: "Compressing and uploading your logo.",
-      });
-
-      // Compress the logo (smaller size for logos)
-      const compressedDataUrl = await compressImage(file, 400, 0.8);
-      
-      setEditForm({...editForm, logoFile: file, logo: compressedDataUrl});
-      
+    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditForm({...editForm, logoFile: file, logo: reader.result as string});
+      };
+      reader.readAsDataURL(file);
       toast({
         title: "Logo uploaded",
-        description: "Case study logo has been uploaded and optimized successfully.",
+        description: "Case study logo has been uploaded successfully.",
       });
-    } catch (error) {
-      console.error('Error processing logo:', error);
+    } else if (file && file.size > 2 * 1024 * 1024) {
       toast({
-        title: "Upload failed",
-        description: "Failed to process logo. Please try a different file.",
+        title: "File too large",
+        description: "Please select an image smaller than 2MB.",
         variant: "destructive"
+      });
+    } else {
+      toast({
+        title: "Invalid file type",
+        description: "Please select a valid image file.",
+        variant: "destructive",
       });
     }
   };
 
-  const handleHeroImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHeroImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
-    
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please select a valid image file.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please select an image smaller than 5MB.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      toast({
-        title: "Processing hero image...",
-        description: "Compressing and uploading your hero image.",
-      });
-
-      // Compress the hero image
-      const compressedDataUrl = await compressImage(file, 1000, 0.7);
-      
-      setEditForm({...editForm, content: {...editForm.content, heroImage: compressedDataUrl}});
-      
+    if (file && file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditForm({...editForm, content: {...editForm.content, heroImage: reader.result as string}});
+      };
+      reader.readAsDataURL(file);
       toast({
         title: "Hero image uploaded",
-        description: "Case study hero image has been uploaded and optimized successfully.",
+        description: "Case study hero image has been uploaded successfully.",
       });
-    } catch (error) {
-      console.error('Error processing hero image:', error);
+    } else if (file && file.size > 2 * 1024 * 1024) {
       toast({
-        title: "Upload failed",
-        description: "Failed to process hero image. Please try a different file.",
+        title: "File too large",
+        description: "Please select an image smaller than 2MB.",
         variant: "destructive"
       });
     }
