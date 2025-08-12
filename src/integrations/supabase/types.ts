@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      case_studies: {
+        Row: {
+          company: string
+          content: Json | null
+          created_at: string
+          file_name: string | null
+          id: string
+          image: string | null
+          industry: string
+          logo: string | null
+          summary: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          company: string
+          content?: Json | null
+          created_at?: string
+          file_name?: string | null
+          id: string
+          image?: string | null
+          industry: string
+          logo?: string | null
+          summary?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string
+          content?: Json | null
+          created_at?: string
+          file_name?: string | null
+          id?: string
+          image?: string | null
+          industry?: string
+          logo?: string | null
+          summary?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
