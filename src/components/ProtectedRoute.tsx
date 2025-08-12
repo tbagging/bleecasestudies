@@ -22,6 +22,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     return <Navigate to="/auth" replace state={{ from: location }} />;
   }
 
+  // Quick email-based guard for admin access
+  const allowedEmails = new Set(["tomer@blee.pro"]);
+  if (!allowedEmails.has(user.email ?? "")) {
+    return <Navigate to="/" replace />;
+  }
+
   return <>{children}</>;
 };
 
