@@ -333,6 +333,9 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   // Load case studies from Supabase on app start
   useEffect(() => {
     const load = async () => {
+      // Clear localStorage cache to ensure fresh data
+      localStorage.removeItem('caseStudies');
+      
       const { data, error } = await supabase
         .from('case_studies')
         .select('*')
@@ -355,7 +358,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
           content: (row.content ?? undefined) as any,
         }));
         setCaseStudies(mapped);
-        try { localStorage.setItem('caseStudies', JSON.stringify(mapped)); } catch {}
+        localStorage.setItem('caseStudies', JSON.stringify(mapped));
       }
     };
     load();
