@@ -25,8 +25,12 @@ interface CaseStudyCardProps {
 const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardProps) => {
   return (
     <Card 
-      className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
-      style={{ backgroundColor }}
+      className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative overflow-hidden"
+      style={{ 
+        background: backgroundColor 
+          ? `linear-gradient(to bottom, white 60%, ${backgroundColor} 100%)`
+          : 'white'
+      }}
       onClick={onClick}
     >
       <CardHeader>
