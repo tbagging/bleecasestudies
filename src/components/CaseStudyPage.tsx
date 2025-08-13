@@ -59,14 +59,16 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         <div className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
             {caseStudy.logo ? (
-              <img 
-                src={caseStudy.logo} 
-                alt={`${caseStudy.company} logo`}
-                className="h-24 w-24 object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
+              <div className="rounded-lg p-3 shadow-sm border bg-[hsl(var(--logo-tile))]">
+                <img 
+                  src={caseStudy.logo} 
+                  alt={`${caseStudy.company} logo`}
+                  className="h-24 w-24 object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
             ) : (
               <Building className="h-6 w-6 text-primary" />
             )}

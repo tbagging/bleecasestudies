@@ -33,8 +33,7 @@ const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardPro
         {caseStudy.logo && (
           <div className="flex justify-center mb-4">
             <div 
-              className="rounded-lg p-3 shadow-sm border"
-              style={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb' }}
+              className="rounded-lg p-3 shadow-sm border bg-[hsl(var(--logo-tile))]"
             >
               <img 
                 src={caseStudy.logo} 

@@ -1194,7 +1194,7 @@ const Admin = () => {
                                 </Button>
                               </div>
                               {editForm.logo && (
-                                <div className="mt-2 p-2 border rounded">
+                                <div className="mt-2 p-2 border rounded bg-[hsl(var(--logo-tile))]">
                                   <img src={editForm.logo} alt="Company logo preview" className="w-16 h-16 object-contain mx-auto rounded" />
                                   <Button 
                                     variant="outline" 
@@ -1704,7 +1704,7 @@ const Admin = () => {
                       </label>
                     </div>
                     {newLogo.url && (
-                      <div className="mt-2 p-2 border rounded">
+                      <div className="mt-2 p-2 border rounded bg-[hsl(var(--logo-tile))]">
                         <img src={newLogo.url} alt="Preview" className="w-20 h-10 object-contain mx-auto" />
                       </div>
                     )}
@@ -1734,17 +1734,19 @@ const Admin = () => {
                     {clientLogos.map((logo) => (
                       <div key={logo.id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div className="flex items-center gap-4">
-                          <img src={logo.url} alt={logo.name} className="w-16 h-8 object-contain" />
+                          <div className="p-2 border rounded bg-[hsl(var(--logo-tile))]">
+                            <img src={logo.url} alt={logo.name} className="w-16 h-8 object-contain" />
+                          </div>
                           <span className="font-medium">{logo.name}</span>
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => removeLogo(logo.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => removeLogo(logo.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                     ))}
                   </div>
                 </div>
