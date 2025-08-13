@@ -32,7 +32,10 @@ const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardPro
       <CardHeader>
         {caseStudy.logo && (
           <div className="flex justify-center mb-4">
-            <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
+            <div 
+              className="rounded-lg p-3 shadow-sm border"
+              style={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb' }}
+            >
               <img 
                 src={caseStudy.logo} 
                 alt={`${caseStudy.company} logo`}
