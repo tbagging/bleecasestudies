@@ -333,32 +333,39 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   // Load case studies from Supabase on app start
   useEffect(() => {
     const load = async () => {
-      // Clear localStorage cache to ensure fresh data
-      localStorage.removeItem('caseStudies');
-      
-      const { data, error } = await supabase
-        .from('case_studies')
-        .select('*')
-        .order('display_order', { ascending: true });
-      if (error) {
-        console.error('Failed to fetch case studies from Supabase:', error.message);
-        return;
-      }
-      if (data && data.length > 0) {
-        const mapped = data.map((row: any) => ({
-          id: row.id as string,
-          title: row.title as string,
-          summary: (row.summary ?? '') as string,
-          image: (row.image ?? undefined) as string | undefined,
-          logo: (row.logo ?? undefined) as string | undefined,
-          tags: (row.tags ?? []) as string[],
-          company: (row.company ?? '') as string,
-          industry: (row.industry ?? '') as string,
-          fileName: (row.file_name ?? undefined) as string | undefined,
-          content: (row.content ?? undefined) as any,
-        }));
-        setCaseStudies(mapped);
-        localStorage.setItem('caseStudies', JSON.stringify(mapped));
+      try {
+        // Clear localStorage cache to ensure fresh data
+        localStorage.removeItem('caseStudies');
+        
+        const { data, error } = await supabase
+          .from('case_studies')
+          .select('*')
+          .order('display_order', { ascending: true });
+          
+        if (error) {
+          console.error('Failed to fetch case studies from Supabase:', error);
+          return;
+        }
+        
+        if (data && data.length > 0) {
+          const mapped = data.map((row: any) => ({
+            id: row.id as string,
+            title: row.title as string,
+            summary: (row.summary ?? '') as string,
+            image: (row.image ?? undefined) as string | undefined,
+            logo: (row.logo ?? undefined) as string | undefined,
+            tags: (row.tags ?? []) as string[],
+            company: (row.company ?? '') as string,
+            industry: (row.industry ?? '') as string,
+            fileName: (row.file_name ?? undefined) as string | undefined,
+            content: (row.content ?? undefined) as any,
+          }));
+          setCaseStudies(mapped);
+          localStorage.setItem('caseStudies', JSON.stringify(mapped));
+        }
+      } catch (error) {
+        console.error('Error loading case studies:', error);
+        // Fall back to default data if Supabase fails
       }
     };
     load();
