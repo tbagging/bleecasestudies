@@ -19,29 +19,28 @@ interface CaseStudy {
 interface CaseStudyCardProps {
   caseStudy: CaseStudy;
   onClick: () => void;
+  backgroundColor?: string;
 }
 
-const CaseStudyCard = ({ caseStudy, onClick }: CaseStudyCardProps) => {
+const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardProps) => {
   return (
     <Card 
       className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
+      style={{ backgroundColor }}
       onClick={onClick}
     >
       <CardHeader>
         {caseStudy.logo && (
           <div className="flex justify-center mb-4">
-            <div 
-              className="rounded-lg p-3 shadow-sm border bg-[hsl(var(--logo-tile))]"
-            >
-              <img 
-                src={caseStudy.logo} 
-                alt={`${caseStudy.company} logo`}
-                className="w-20 h-20 object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </div>
+            <img 
+              src={caseStudy.logo} 
+              alt={`${caseStudy.company} logo`}
+              className="w-20 h-20 object-contain mix-blend-multiply"
+              style={{ backgroundColor: 'transparent' }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
           </div>
         )}
         <CardTitle className="text-xl group-hover:text-primary transition-colors">

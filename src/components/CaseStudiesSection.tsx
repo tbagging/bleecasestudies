@@ -102,6 +102,7 @@ const CaseStudiesSection = () => {
                 <div>
                   <CaseStudyCard
                     caseStudy={caseStudy}
+                    backgroundColor={logoColors[caseStudy.id]}
                     onClick={() => {}}
                   />
                 </div>
