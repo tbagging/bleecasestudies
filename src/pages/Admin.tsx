@@ -1194,7 +1194,7 @@ const Admin = () => {
                                 </Button>
                               </div>
                               {editForm.logo && (
-                                <div className="mt-2 p-2 border rounded bg-[hsl(var(--logo-tile))]">
+                                <div className="mt-2 p-3 border rounded bg-white">
                                   <img src={editForm.logo} alt="Company logo preview" className="w-16 h-16 object-contain mx-auto rounded" />
                                   <Button 
                                     variant="outline" 
