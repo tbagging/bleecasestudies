@@ -278,8 +278,8 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
       const removedIds = Array.from(currentIds).filter(id => !newIds.has(id));
       console.log('removedIds:', removedIds);
 
-      // Upsert all studies
-      const rows = studies.map(cs => ({
+      // Upsert all studies with display_order
+      const rows = studies.map((cs, index) => ({
         id: cs.id,
         title: cs.title,
         summary: cs.summary ?? null,
@@ -290,6 +290,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         industry: cs.industry,
         file_name: cs.fileName ?? null,
         content: cs.content ? cs.content as any : null,
+        display_order: index + 1, // Save the order position
       }));
       console.log('Upserting rows:', rows);
 
@@ -335,7 +336,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
       const { data, error } = await supabase
         .from('case_studies')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('display_order', { ascending: true });
       if (error) {
         console.error('Failed to fetch case studies from Supabase:', error.message);
         return;

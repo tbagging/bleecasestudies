@@ -19,6 +19,7 @@ export type Database = {
           company: string
           content: Json | null
           created_at: string
+          display_order: number
           file_name: string | null
           id: string
           image: string | null
@@ -33,6 +34,7 @@ export type Database = {
           company: string
           content?: Json | null
           created_at?: string
+          display_order: number
           file_name?: string | null
           id: string
           image?: string | null
@@ -47,6 +49,7 @@ export type Database = {
           company?: string
           content?: Json | null
           created_at?: string
+          display_order?: number
           file_name?: string | null
           id?: string
           image?: string | null
