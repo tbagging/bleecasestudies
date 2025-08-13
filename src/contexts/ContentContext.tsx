@@ -332,13 +332,16 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const load = async () => {
       try {
+        console.log('Starting to load case studies from Supabase...');
         const { data, error } = await supabase
           .from('case_studies')
           .select('*')
           .order('display_order', { ascending: true });
         
+        console.log('Supabase response:', { data, error });
+        
         if (error) {
-          console.error('Failed to fetch case studies from Supabase:', error.message);
+          console.error('Supabase error details:', error);
           return;
         }
         
@@ -356,10 +359,11 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
             fileName: (row.file_name ?? undefined) as string | undefined,
             content: (row.content ?? undefined) as any,
           }));
+          console.log('Mapped case studies:', mapped);
           setCaseStudies(mapped);
           localStorage.setItem('caseStudies', JSON.stringify(mapped));
         } else {
-          console.log('No case studies found in Supabase, using localStorage fallback');
+          console.log('No case studies found in Supabase, keeping current state');
         }
       } catch (err) {
         console.error('Error loading case studies from Supabase:', err);
