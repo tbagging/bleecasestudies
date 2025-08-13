@@ -215,25 +215,23 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const load = async () => {
       try {
-        console.log('Starting to load case studies from Supabase...');
+        console.log('Loading case studies from Supabase...');
         
-        // Try a simpler approach first
-        const response = await fetch(`https://ktyqsarxhhhaorcehquj.supabase.co/rest/v1/case_studies?select=*&order=display_order.asc`, {
-          headers: {
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0eXFzYXJ4aGhoYW9yY2VocXVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwMjAyODQsImV4cCI6MjA3MDU5NjI4NH0.hNqBa-R85tLgF4YOLrDzrQBAo98PIwGvApjXxCywLuE',
-            'accept-profile': 'public'
-          }
-        });
+        // Use Supabase client directly - it's optimized and handles auth properly
+        const { data, error } = await supabase
+          .from('case_studies')
+          .select('*')
+          .order('display_order', { ascending: true });
         
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (error) {
+          console.error('Error loading case studies:', error);
+          return;
         }
         
-        const data = await response.json();
-        console.log('Direct fetch response:', data);
-        
         if (data && data.length > 0) {
-          console.log('Loading case studies from Supabase:', data.length);
+          console.log(`Loaded ${data.length} case studies from Supabase`);
+          
+          // Process data efficiently in a single pass
           const mapped = data.map((row: any) => ({
             id: row.id as string,
             title: row.title as string,
@@ -246,51 +244,23 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
             fileName: (row.file_name ?? undefined) as string | undefined,
             content: (row.content ?? undefined) as any,
           }));
-          console.log('Mapped case studies:', mapped);
+          
           setCaseStudies(mapped);
-          localStorage.setItem('caseStudies', JSON.stringify(mapped));
-        } else {
-          console.log('No case studies found in direct fetch');
+          
+          // Save to localStorage asynchronously to avoid blocking UI
+          setTimeout(() => {
+            try {
+              localStorage.setItem('caseStudies', JSON.stringify(mapped));
+            } catch (storageError) {
+              console.warn('Failed to save to localStorage:', storageError);
+            }
+          }, 0);
         }
       } catch (err) {
-        console.error('Error with direct fetch, trying Supabase client:', err);
-        
-        // Fallback to Supabase client
-        try {
-          const { data, error } = await supabase
-            .from('case_studies')
-            .select('*')
-            .order('display_order', { ascending: true });
-          
-          console.log('Supabase client response:', { data, error });
-          
-          if (error) {
-            console.error('Supabase client error:', error);
-            return;
-          }
-          
-          if (data && data.length > 0) {
-            console.log('Loading case studies from Supabase client:', data.length);
-            const mapped = data.map((row: any) => ({
-              id: row.id as string,
-              title: row.title as string,
-              summary: (row.summary ?? '') as string,
-              image: (row.image ?? undefined) as string | undefined,
-              logo: (row.logo ?? undefined) as string | undefined,
-              tags: (row.tags ?? []) as string[],
-              company: (row.company ?? '') as string,
-              industry: (row.industry ?? '') as string,
-              fileName: (row.file_name ?? undefined) as string | undefined,
-              content: (row.content ?? undefined) as any,
-            }));
-            setCaseStudies(mapped);
-            localStorage.setItem('caseStudies', JSON.stringify(mapped));
-          }
-        } catch (clientError) {
-          console.error('Both direct fetch and Supabase client failed:', clientError);
-        }
+        console.error('Failed to load case studies:', err);
       }
     };
+    
     load();
   }, []);
 
