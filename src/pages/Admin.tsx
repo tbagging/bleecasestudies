@@ -302,10 +302,13 @@ const Admin = () => {
   };
 
   const handleLogoFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleLogoFileUpload called');
     const file = event.target.files?.[0];
+    console.log('File selected:', file);
     if (!file) return;
 
     const validation = validateImageFile(file);
+    console.log('Validation result:', validation);
     if (!validation.isValid) {
       toast({
         title: "Invalid file",
