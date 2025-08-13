@@ -4,7 +4,7 @@ import AboutSection from "@/components/AboutSection";
 import SocialProof from "@/components/SocialProof";
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <Hero />
       <CaseStudiesSection />
       <AboutSection />
