@@ -33,7 +33,7 @@ const Hero = () => {
         <p className="text-xl md:text-2xl font-body mb-12 opacity-90 leading-relaxed max-w-3xl mx-auto">
           {heroContent.subtitle}
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
           <Button 
             onClick={handleEmailCTA} 
             variant="outline" 
