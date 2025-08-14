@@ -34,7 +34,12 @@ const Hero = () => {
           {heroContent.subtitle}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={handleEmailCTA} size="lg" variant="secondary" className="text-lg px-8 py-4">
+          <Button 
+            onClick={handleEmailCTA} 
+            variant="outline" 
+            size="lg" 
+            className="bg-transparent border-white text-white hover:bg-white hover:text-primary transition-colors duration-300 text-lg px-8 py-4"
+          >
             {ctaContent.primary}
           </Button>
           
