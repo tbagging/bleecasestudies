@@ -24,6 +24,12 @@ interface CTAContent {
   secondary: string;
 }
 
+interface FooterContent {
+  description: string;
+  buttonText: string;
+  copyright: string;
+}
+
 interface ClientLogo {
   id: number;
   name: string;
@@ -58,6 +64,7 @@ interface ContentContextType {
   heroContent: HeroContent;
   aboutContent: AboutContent;
   ctaContent: CTAContent;
+  footerContent: FooterContent;
   clientLogos: ClientLogo[];
   availableTags: string[];
   caseStudies: CaseStudy[];
@@ -65,6 +72,7 @@ interface ContentContextType {
   updateHeroContent: (content: HeroContent) => void;
   updateAboutContent: (content: AboutContent) => void;
   updateCTAContent: (content: CTAContent) => void;
+  updateFooterContent: (content: FooterContent) => void;
   updateClientLogos: (logos: ClientLogo[]) => void;
   updateAvailableTags: (tags: string[]) => void;
   updateCaseStudies: (caseStudies: CaseStudy[]) => Promise<void>;
@@ -122,6 +130,14 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     })
   );
 
+  const [footerContent, setFooterContent] = useState<FooterContent>(() =>
+    initializeContent('footerContent', {
+      description: "BLEE is here to help your organization unlock its potential and drive meaningful change from within. Let's make 2025 the year of strategic transformation.",
+      buttonText: "Start Your Transformation",
+      copyright: "© 2025 BLEE. Empowering organizations to transform from within."
+    })
+  );
+
   const [clientLogos, setClientLogos] = useState<ClientLogo[]>(() =>
     initializeContent('clientLogos', [
       { id: 1, name: "Client 1", url: "/lovable-uploads/1c39af01-0e9b-42cd-8833-e7e47da9bbd7.png" },
@@ -156,6 +172,11 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   const updateCTAContent = (content: CTAContent) => {
     setCTAContent(content);
     localStorage.setItem('ctaContent', JSON.stringify(content));
+  };
+
+  const updateFooterContent = (content: FooterContent) => {
+    setFooterContent(content);
+    localStorage.setItem('footerContent', JSON.stringify(content));
   };
 
   const updateClientLogos = (logos: ClientLogo[]) => {
@@ -301,6 +322,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     heroContent,
     aboutContent,
     ctaContent,
+    footerContent,
     clientLogos,
     availableTags,
     caseStudies,
@@ -308,6 +330,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     updateHeroContent,
     updateAboutContent,
     updateCTAContent,
+    updateFooterContent,
     updateClientLogos,
     updateAvailableTags,
     updateCaseStudies

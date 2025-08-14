@@ -23,12 +23,14 @@ const Admin = () => {
     heroContent, 
     aboutContent, 
     ctaContent, 
+    footerContent,
     clientLogos, 
     availableTags,
     caseStudies,
     updateHeroContent,
     updateAboutContent,
     updateCTAContent,
+    updateFooterContent,
     updateClientLogos,
     updateAvailableTags,
     updateCaseStudies
@@ -37,6 +39,7 @@ const Admin = () => {
   const [localHeroContent, setLocalHeroContent] = useState(heroContent);
   const [localAboutContent, setLocalAboutContent] = useState(aboutContent);
   const [localCTAContent, setLocalCTAContent] = useState(ctaContent);
+  const [localFooterContent, setLocalFooterContent] = useState(footerContent);
 
   // Sync local state when context changes
   React.useEffect(() => {
@@ -50,6 +53,10 @@ const Admin = () => {
   React.useEffect(() => {
     setLocalCTAContent(ctaContent);
   }, [ctaContent]);
+
+  React.useEffect(() => {
+    setLocalFooterContent(footerContent);
+  }, [footerContent]);
   const [newTag, setNewTag] = useState("");
 
   const [newLogo, setNewLogo] = useState({ name: "", url: "", file: null as File | null });
@@ -363,6 +370,14 @@ const Admin = () => {
     updateAboutContent(localAboutContent);
     toast({
       title: "About section updated",
+      description: "Your changes have been saved successfully.",
+    });
+  };
+
+  const saveFooterContent = () => {
+    updateFooterContent(localFooterContent);
+    toast({
+      title: "Footer section updated",
       description: "Your changes have been saved successfully.",
     });
   };
@@ -921,6 +936,41 @@ const Admin = () => {
                   />
                 </div>
                 <Button onClick={saveCTAContent}>Save Changes</Button>
+              </CardContent>
+            </Card>
+
+            {/* Footer Content */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Footer Section</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="footer-description">Description</Label>
+                  <Textarea
+                    id="footer-description"
+                    rows={3}
+                    value={localFooterContent.description}
+                    onChange={(e) => setLocalFooterContent({...localFooterContent, description: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="footer-button">Button Text</Label>
+                  <Input
+                    id="footer-button"
+                    value={localFooterContent.buttonText}
+                    onChange={(e) => setLocalFooterContent({...localFooterContent, buttonText: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="footer-copyright">Copyright Text</Label>
+                  <Input
+                    id="footer-copyright"
+                    value={localFooterContent.copyright}
+                    onChange={(e) => setLocalFooterContent({...localFooterContent, copyright: e.target.value})}
+                  />
+                </div>
+                <Button onClick={saveFooterContent}>Save Changes</Button>
               </CardContent>
             </Card>
           </TabsContent>
