@@ -909,6 +909,74 @@ const Admin = () => {
                     onChange={(e) => setLocalAboutContent({...localAboutContent, description: e.target.value})}
                   />
                 </div>
+                <div>
+                  <Label htmlFor="about-secondary-description">Secondary Description</Label>
+                  <Textarea
+                    id="about-secondary-description"
+                    rows={3}
+                    value={localAboutContent.secondaryDescription}
+                    onChange={(e) => setLocalAboutContent({...localAboutContent, secondaryDescription: e.target.value})}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="clarity-title">Clarity Title</Label>
+                    <Input
+                      id="clarity-title"
+                      value={localAboutContent.clarityTitle}
+                      onChange={(e) => setLocalAboutContent({...localAboutContent, clarityTitle: e.target.value})}
+                    />
+                    <Label htmlFor="clarity-description" className="mt-2">Clarity Description</Label>
+                    <Textarea
+                      id="clarity-description"
+                      rows={3}
+                      value={localAboutContent.clarityDescription}
+                      onChange={(e) => setLocalAboutContent({...localAboutContent, clarityDescription: e.target.value})}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="engagement-title">Engagement Title</Label>
+                    <Input
+                      id="engagement-title"
+                      value={localAboutContent.engagementTitle}
+                      onChange={(e) => setLocalAboutContent({...localAboutContent, engagementTitle: e.target.value})}
+                    />
+                    <Label htmlFor="engagement-description" className="mt-2">Engagement Description</Label>
+                    <Textarea
+                      id="engagement-description"
+                      rows={3}
+                      value={localAboutContent.engagementDescription}
+                      onChange={(e) => setLocalAboutContent({...localAboutContent, engagementDescription: e.target.value})}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="momentum-title">Momentum Title</Label>
+                    <Input
+                      id="momentum-title"
+                      value={localAboutContent.momentumTitle}
+                      onChange={(e) => setLocalAboutContent({...localAboutContent, momentumTitle: e.target.value})}
+                    />
+                    <Label htmlFor="momentum-description" className="mt-2">Momentum Description</Label>
+                    <Textarea
+                      id="momentum-description"
+                      rows={3}
+                      value={localAboutContent.momentumDescription}
+                      onChange={(e) => setLocalAboutContent({...localAboutContent, momentumDescription: e.target.value})}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="about-button-text">Button Text</Label>
+                  <Input
+                    id="about-button-text"
+                    value={localAboutContent.buttonText}
+                    onChange={(e) => setLocalAboutContent({...localAboutContent, buttonText: e.target.value})}
+                  />
+                </div>
                 <Button onClick={saveAboutContent}>Save Changes</Button>
               </CardContent>
             </Card>
