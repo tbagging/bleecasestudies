@@ -22,31 +22,27 @@ const AboutSection = () => {
           </p>
           
           <p>
-            Our strategic approach transforms internal complexity into executable direction. 
-            Through focused engagement, we help teams move from paralysis to progress, 
-            typically within 24–48 hours.
+            {aboutContent.secondaryDescription}
           </p>
-          
-          
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="text-center bg-slate-50 rounded-2xl px-[14px] mx-0 my-0 py-[20px]">
-            <h3 className="text-xl font-title mb-4 text-primary font-extrabold">Clarity</h3>
+            <h3 className="text-xl font-title mb-4 text-primary font-extrabold">{aboutContent.clarityTitle}</h3>
             <p className="font-body text-muted-foreground">
-              Structured communication that cuts through complexity and drives aligned understanding.
+              {aboutContent.clarityDescription}
             </p>
           </div>
           <div className="text-center my-0 px-[15px] py-[20px] rounded-2xl bg-slate-50">
-            <h3 className="text-xl font-title mb-4 text-primary font-extrabold">Engagement</h3>
+            <h3 className="text-xl font-title mb-4 text-primary font-extrabold">{aboutContent.engagementTitle}</h3>
             <p className="font-body text-muted-foreground">
-              Activating people within the system to own solutions and drive change forward.
+              {aboutContent.engagementDescription}
             </p>
           </div>
           <div className="text-center px-[14px] py-[20px] rounded-2xl bg-slate-50">
-            <h3 className="text-xl font-title mb-4 text-primary font-extrabold">Momentum</h3>
+            <h3 className="text-xl font-title mb-4 text-primary font-extrabold">{aboutContent.momentumTitle}</h3>
             <p className="font-body text-muted-foreground">
-              Creating urgency and direction that leads to immediate execution and results.
+              {aboutContent.momentumDescription}
             </p>
           </div>
         </div>
@@ -57,7 +53,7 @@ const AboutSection = () => {
           size="lg" 
           className="bg-transparent border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-300 text-lg px-8 py-4"
         >
-          Start Your Transformation
+          {aboutContent.buttonText}
         </Button>
       </div>
     </section>;

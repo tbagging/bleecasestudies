@@ -9,6 +9,14 @@ interface HeroContent {
 interface AboutContent {
   heading: string;
   description: string;
+  secondaryDescription: string;
+  clarityTitle: string;
+  clarityDescription: string;
+  engagementTitle: string;
+  engagementDescription: string;
+  momentumTitle: string;
+  momentumDescription: string;
+  buttonText: string;
 }
 
 interface CTAContent {
@@ -95,7 +103,15 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   const [aboutContent, setAboutContent] = useState<AboutContent>(() =>
     initializeContent('aboutContent', {
       heading: "Change from within the system",
-      description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives aligned action."
+      description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives aligned action.",
+      secondaryDescription: "Our strategic approach transforms internal complexity into executable direction. Through focused engagement, we help teams move from paralysis to progress, typically within 24–48 hours.",
+      clarityTitle: "Clarity",
+      clarityDescription: "Structured communication that cuts through complexity and drives aligned understanding.",
+      engagementTitle: "Engagement", 
+      engagementDescription: "Activating people within the system to own solutions and drive change forward.",
+      momentumTitle: "Momentum",
+      momentumDescription: "Creating urgency and direction that leads to immediate execution and results.",
+      buttonText: "Start Your Transformation"
     })
   );
 
