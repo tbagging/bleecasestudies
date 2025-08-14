@@ -53,6 +53,7 @@ interface ContentContextType {
   clientLogos: ClientLogo[];
   availableTags: string[];
   caseStudies: CaseStudy[];
+  isLoadingCaseStudies: boolean;
   updateHeroContent: (content: HeroContent) => void;
   updateAboutContent: (content: AboutContent) => void;
   updateCTAContent: (content: CTAContent) => void;
@@ -124,6 +125,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
+  const [isLoadingCaseStudies, setIsLoadingCaseStudies] = useState(true);
 
   const updateHeroContent = (content: HeroContent) => {
     setHeroContent(content);
@@ -215,23 +217,37 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const load = async () => {
       try {
+        setIsLoadingCaseStudies(true);
         console.log('Loading case studies from Supabase...');
         
-        // Use Supabase client directly - it's optimized and handles auth properly
+        // First load from localStorage for instant display
+        try {
+          const stored = localStorage.getItem('caseStudies');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            setCaseStudies(parsed);
+            console.log('Loaded case studies from localStorage');
+          }
+        } catch {
+          // Ignore localStorage errors
+        }
+        
+        // Then load fresh data from Supabase
         const { data, error } = await supabase
           .from('case_studies')
-          .select('*')
+          .select('id, title, summary, image, logo, tags, company, industry, display_order')
           .order('display_order', { ascending: true });
         
         if (error) {
           console.error('Error loading case studies:', error);
+          setIsLoadingCaseStudies(false);
           return;
         }
         
         if (data && data.length > 0) {
           console.log(`Loaded ${data.length} case studies from Supabase`);
           
-          // Process data efficiently in a single pass
+          // Process data efficiently - defer content loading
           const mapped = data.map((row: any) => ({
             id: row.id as string,
             title: row.title as string,
@@ -241,13 +257,12 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
             tags: (row.tags ?? []) as string[],
             company: (row.company ?? '') as string,
             industry: (row.industry ?? '') as string,
-            fileName: (row.file_name ?? undefined) as string | undefined,
-            content: (row.content ?? undefined) as any,
+            // Content will be loaded separately when needed
           }));
           
           setCaseStudies(mapped);
           
-          // Save to localStorage asynchronously to avoid blocking UI
+          // Save to localStorage asynchronously
           setTimeout(() => {
             try {
               localStorage.setItem('caseStudies', JSON.stringify(mapped));
@@ -258,6 +273,8 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (err) {
         console.error('Failed to load case studies:', err);
+      } finally {
+        setIsLoadingCaseStudies(false);
       }
     };
     
@@ -271,6 +288,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     clientLogos,
     availableTags,
     caseStudies,
+    isLoadingCaseStudies,
     updateHeroContent,
     updateAboutContent,
     updateCTAContent,

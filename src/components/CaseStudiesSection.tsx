@@ -3,13 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import CaseStudyCard from "./CaseStudyCard";
+import CaseStudyCardSkeleton from "./CaseStudyCardSkeleton";
 import { useContent } from "@/contexts/ContentContext";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CaseStudyPage from "./CaseStudyPage";
 import { extractDominantColor } from "@/utils/colorExtractor";
 
 const CaseStudiesSection = () => {
-  const { caseStudies } = useContent();
+  const { caseStudies, isLoadingCaseStudies } = useContent();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [logoColors, setLogoColors] = useState<{ [key: string]: string }>({});
@@ -96,25 +97,32 @@ const CaseStudiesSection = () => {
 
         {/* Case Studies Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCaseStudies.map(caseStudy => (
-            <Dialog key={caseStudy.id}>
-              <DialogTrigger asChild>
-                <div>
-                  <CaseStudyCard
-                    caseStudy={caseStudy}
-                    backgroundColor={logoColors[caseStudy.id]}
-                    onClick={() => {}}
-                  />
-                </div>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto">
-                <CaseStudyPage caseStudyId={caseStudy.id} />
-              </DialogContent>
-            </Dialog>
-          ))}
+          {isLoadingCaseStudies ? (
+            // Show skeleton loaders while loading
+            Array.from({ length: 6 }, (_, i) => (
+              <CaseStudyCardSkeleton key={i} />
+            ))
+          ) : (
+            filteredCaseStudies.map(caseStudy => (
+              <Dialog key={caseStudy.id}>
+                <DialogTrigger asChild>
+                  <div>
+                    <CaseStudyCard
+                      caseStudy={caseStudy}
+                      backgroundColor={logoColors[caseStudy.id]}
+                      onClick={() => {}}
+                    />
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto">
+                  <CaseStudyPage caseStudyId={caseStudy.id} />
+                </DialogContent>
+              </Dialog>
+            ))
+          )}
         </div>
 
-        {filteredCaseStudies.length === 0 && (
+        {!isLoadingCaseStudies && filteredCaseStudies.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No case studies match your current filters.</p>
           </div>
