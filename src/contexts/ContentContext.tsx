@@ -53,7 +53,6 @@ interface ContentContextType {
   clientLogos: ClientLogo[];
   availableTags: string[];
   caseStudies: CaseStudy[];
-  isLoadingCaseStudies: boolean;
   updateHeroContent: (content: HeroContent) => void;
   updateAboutContent: (content: AboutContent) => void;
   updateCTAContent: (content: CTAContent) => void;
@@ -125,8 +124,6 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
-  const [isLoadingCaseStudies, setIsLoadingCaseStudies] = useState(false);
-  const [hasLoadedCaseStudies, setHasLoadedCaseStudies] = useState(false);
 
   const updateHeroContent = (content: HeroContent) => {
     setHeroContent(content);
@@ -214,83 +211,58 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Load case studies from Supabase on app start with caching and loading states
+  // Load case studies from Supabase on app start
   useEffect(() => {
-    if (hasLoadedCaseStudies || isLoadingCaseStudies) {
-      return; // Prevent duplicate requests
-    }
-
     const load = async () => {
-      setIsLoadingCaseStudies(true);
-      
       try {
-        // First try to load from localStorage for instant display
-        const cachedData = localStorage.getItem('caseStudies');
-        if (cachedData) {
-          try {
-            const parsed = JSON.parse(cachedData);
-            if (parsed.length > 0) {
-              setCaseStudies(parsed);
-              console.log(`Loaded ${parsed.length} case studies from cache`);
-            }
-          } catch (cacheError) {
-            console.warn('Failed to parse cached case studies:', cacheError);
-          }
-        }
-
-        // Then fetch fresh data from Supabase
+        console.log('Loading case studies from Supabase...');
+        
+        // Use Supabase client directly - it's optimized and handles auth properly
         const { data, error } = await supabase
           .from('case_studies')
-          .select('id, title, summary, image, logo, tags, company, industry, file_name, content, display_order')
+          .select('*')
           .order('display_order', { ascending: true });
         
         if (error) {
-          console.error('Error loading case studies from Supabase:', error);
-          setHasLoadedCaseStudies(true);
-          setIsLoadingCaseStudies(false);
+          console.error('Error loading case studies:', error);
           return;
         }
         
         if (data && data.length > 0) {
           console.log(`Loaded ${data.length} case studies from Supabase`);
           
-          // Process data efficiently
+          // Process data efficiently in a single pass
           const mapped = data.map((row: any) => ({
-            id: row.id,
-            title: row.title,
-            summary: row.summary || '',
-            image: row.image || undefined,
-            logo: row.logo || undefined,
-            tags: row.tags || [],
-            company: row.company || '',
-            industry: row.industry || '',
-            fileName: row.file_name || undefined,
-            content: row.content || undefined,
+            id: row.id as string,
+            title: row.title as string,
+            summary: (row.summary ?? '') as string,
+            image: (row.image ?? undefined) as string | undefined,
+            logo: (row.logo ?? undefined) as string | undefined,
+            tags: (row.tags ?? []) as string[],
+            company: (row.company ?? '') as string,
+            industry: (row.industry ?? '') as string,
+            fileName: (row.file_name ?? undefined) as string | undefined,
+            content: (row.content ?? undefined) as any,
           }));
           
           setCaseStudies(mapped);
           
-          // Save to localStorage in background
-          requestIdleCallback(() => {
+          // Save to localStorage asynchronously to avoid blocking UI
+          setTimeout(() => {
             try {
               localStorage.setItem('caseStudies', JSON.stringify(mapped));
             } catch (storageError) {
               console.warn('Failed to save to localStorage:', storageError);
             }
-          });
+          }, 0);
         }
-        
-        setHasLoadedCaseStudies(true);
       } catch (err) {
         console.error('Failed to load case studies:', err);
-        setHasLoadedCaseStudies(true);
-      } finally {
-        setIsLoadingCaseStudies(false);
       }
     };
     
     load();
-  }, [hasLoadedCaseStudies, isLoadingCaseStudies]);
+  }, []);
 
   const value = {
     heroContent,
@@ -299,7 +271,6 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     clientLogos,
     availableTags,
     caseStudies,
-    isLoadingCaseStudies,
     updateHeroContent,
     updateAboutContent,
     updateCTAContent,

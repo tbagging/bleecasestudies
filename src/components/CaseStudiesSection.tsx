@@ -7,10 +7,9 @@ import { useContent } from "@/contexts/ContentContext";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CaseStudyPage from "./CaseStudyPage";
 import { extractDominantColor } from "@/utils/colorExtractor";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const CaseStudiesSection = () => {
-  const { caseStudies, isLoadingCaseStudies } = useContent();
+  const { caseStudies } = useContent();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [logoColors, setLogoColors] = useState<{ [key: string]: string }>({});
@@ -97,40 +96,25 @@ const CaseStudiesSection = () => {
 
         {/* Case Studies Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {isLoadingCaseStudies && caseStudies.length === 0 ? (
-            // Show loading skeletons
-            Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="space-y-4">
-                <Skeleton className="h-48 w-full rounded-lg" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-6 w-16 rounded-full" />
-                  <Skeleton className="h-6 w-20 rounded-full" />
+          {filteredCaseStudies.map(caseStudy => (
+            <Dialog key={caseStudy.id}>
+              <DialogTrigger asChild>
+                <div>
+                  <CaseStudyCard
+                    caseStudy={caseStudy}
+                    backgroundColor={logoColors[caseStudy.id]}
+                    onClick={() => {}}
+                  />
                 </div>
-              </div>
-            ))
-          ) : (
-            filteredCaseStudies.map(caseStudy => (
-              <Dialog key={caseStudy.id}>
-                <DialogTrigger asChild>
-                  <div>
-                    <CaseStudyCard
-                      caseStudy={caseStudy}
-                      backgroundColor={logoColors[caseStudy.id]}
-                      onClick={() => {}}
-                    />
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto">
-                  <CaseStudyPage caseStudyId={caseStudy.id} />
-                </DialogContent>
-              </Dialog>
-            ))
-          )}
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto">
+                <CaseStudyPage caseStudyId={caseStudy.id} />
+              </DialogContent>
+            </Dialog>
+          ))}
         </div>
 
-        {!isLoadingCaseStudies && filteredCaseStudies.length === 0 && caseStudies.length > 0 && (
+        {filteredCaseStudies.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No case studies match your current filters.</p>
           </div>
