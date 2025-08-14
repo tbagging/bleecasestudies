@@ -40,7 +40,7 @@ const Hero = () => {
             size="lg" 
             className="bg-transparent border-white text-white hover:bg-white hover:text-primary transition-colors duration-300 text-lg px-8 py-4"
           >
-            {ctaContent.primary}
+            Start Your Transformation
           </Button>
           
         </div>
