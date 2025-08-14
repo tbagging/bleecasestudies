@@ -214,70 +214,42 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Load case studies from Supabase on app start with caching and loading states
+  // Load case studies from Supabase on app start - optimized for speed
   useEffect(() => {
     if (hasLoadedCaseStudies || isLoadingCaseStudies) {
-      return; // Prevent duplicate requests
+      return;
     }
 
     const load = async () => {
       setIsLoadingCaseStudies(true);
       
       try {
-        // First try to load from localStorage for instant display
-        const cachedData = localStorage.getItem('caseStudies');
-        if (cachedData) {
-          try {
-            const parsed = JSON.parse(cachedData);
-            if (parsed.length > 0) {
-              setCaseStudies(parsed);
-              console.log(`Loaded ${parsed.length} case studies from cache`);
-            }
-          } catch (cacheError) {
-            console.warn('Failed to parse cached case studies:', cacheError);
-          }
-        }
-
-        // Then fetch fresh data from Supabase
+        // Load only essential data without logos/content for speed
         const { data, error } = await supabase
           .from('case_studies')
-          .select('id, title, summary, image, logo, tags, company, industry, file_name, content, display_order')
-          .order('display_order', { ascending: true });
+          .select('id, title, summary, image, tags, company, industry, file_name, display_order')
+          .order('display_order', { ascending: true })
+          .limit(20); // Load only first 20 for speed
         
         if (error) {
-          console.error('Error loading case studies from Supabase:', error);
-          setHasLoadedCaseStudies(true);
-          setIsLoadingCaseStudies(false);
+          console.error('Error loading case studies:', error);
           return;
         }
         
-        if (data && data.length > 0) {
-          console.log(`Loaded ${data.length} case studies from Supabase`);
-          
-          // Process data efficiently
+        if (data) {
           const mapped = data.map((row: any) => ({
             id: row.id,
             title: row.title,
             summary: row.summary || '',
             image: row.image || undefined,
-            logo: row.logo || undefined,
             tags: row.tags || [],
             company: row.company || '',
             industry: row.industry || '',
             fileName: row.file_name || undefined,
-            content: row.content || undefined,
           }));
           
           setCaseStudies(mapped);
-          
-          // Save to localStorage in background
-          requestIdleCallback(() => {
-            try {
-              localStorage.setItem('caseStudies', JSON.stringify(mapped));
-            } catch (storageError) {
-              console.warn('Failed to save to localStorage:', storageError);
-            }
-          });
+          console.log(`Loaded ${mapped.length} case studies`);
         }
         
         setHasLoadedCaseStudies(true);
