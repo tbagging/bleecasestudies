@@ -51,8 +51,13 @@ const AboutSection = () => {
           </div>
         </div>
 
-        <Button onClick={handleEmailCTA} size="lg" className="text-lg px-8 py-4">
-          Let's talk
+        <Button 
+          onClick={handleEmailCTA} 
+          variant="outline" 
+          size="lg" 
+          className="bg-transparent border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-300 text-lg px-8 py-4"
+        >
+          Start Your Transformation
         </Button>
       </div>
     </section>;
