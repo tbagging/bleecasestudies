@@ -187,6 +187,7 @@ const Admin = () => {
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+    console.log('handleFileUpload called with files:', files);
     if (!files || files.length === 0) return;
     
     const validFiles = Array.from(files).filter(file => 
@@ -277,6 +278,7 @@ const Admin = () => {
     
     // Update case studies with all new ones
     try {
+      console.log('Attempting to update case studies. Current count:', caseStudies.length, 'New count:', newCaseStudies.length);
       await updateCaseStudies([...caseStudies, ...newCaseStudies]);
       
       // Show appropriate toast messages

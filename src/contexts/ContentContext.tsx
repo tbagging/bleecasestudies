@@ -190,7 +190,8 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateCaseStudies = async (studies: CaseStudy[]) => {
-    console.log('updateCaseStudies called with:', studies);
+    console.log('updateCaseStudies called with:', studies.length, 'studies');
+    console.log('Current case studies in state:', caseStudies.length);
     try {
       // Determine removed IDs compared to current state
       const currentIds = new Set(caseStudies.map(cs => cs.id));
