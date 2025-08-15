@@ -15,6 +15,11 @@ interface CaseStudyPageProps {
 const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
   const { caseStudies } = useContent();
   const caseStudy = caseStudies.find(cs => cs.id === caseStudyId);
+  
+  // Debug logging
+  console.log('CaseStudyPage - caseStudyId:', caseStudyId);
+  console.log('CaseStudyPage - found case study:', caseStudy);
+  console.log('CaseStudyPage - case study content:', caseStudy?.content);
 
   if (!caseStudy) {
     return (

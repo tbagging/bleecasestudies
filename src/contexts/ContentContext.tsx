@@ -295,18 +295,48 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         if (data && data.length > 0) {
           console.log(`Loaded ${data.length} case studies from Supabase`);
           
-          // Process data efficiently
-          const mapped = data.map((row: any) => ({
-            id: row.id as string,
-            title: row.title as string,
-            summary: (row.summary ?? '') as string,
-            image: (row.image ?? undefined) as string | undefined,
-            logo: (row.logo ?? undefined) as string | undefined,
-            tags: (row.tags ?? []) as string[],
-            company: (row.company ?? '') as string,
-            industry: (row.industry ?? '') as string,
-            content: row.content || undefined,
-          }));
+          // Process data efficiently and handle content deserialization
+          console.log('Raw data from Supabase:', data[0]); // Debug first item
+          const mapped = data.map((row: any) => {
+            let content = undefined;
+            if (row.content) {
+              // Handle different content formats from database
+              if (typeof row.content === 'string') {
+                try {
+                  content = JSON.parse(row.content);
+                } catch {
+                  content = undefined;
+                }
+              } else if (row.content && typeof row.content === 'object') {
+                // Handle serialized objects with _type/_value structure
+                if (row.content._type && row.content.value) {
+                  if (row.content._type === 'string') {
+                    try {
+                      content = JSON.parse(row.content.value);
+                    } catch {
+                      content = undefined;
+                    }
+                  } else {
+                    content = row.content.value;
+                  }
+                } else {
+                  content = row.content;
+                }
+              }
+            }
+            
+            return {
+              id: row.id as string,
+              title: row.title as string,
+              summary: (row.summary ?? '') as string,
+              image: (row.image ?? undefined) as string | undefined,
+              logo: (row.logo ?? undefined) as string | undefined,
+              tags: (row.tags ?? []) as string[],
+              company: (row.company ?? '') as string,
+              industry: (row.industry ?? '') as string,
+              content: content,
+            };
+          });
           
           setCaseStudies(mapped);
           
