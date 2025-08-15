@@ -11,6 +11,13 @@ import { extractDominantColor } from "@/utils/colorExtractor";
 
 const CaseStudiesSection = () => {
   const { caseStudies, isLoadingCaseStudies } = useContent();
+  
+  // Debug logging
+  console.log('CaseStudiesSection render:', {
+    caseStudiesCount: caseStudies.length,
+    isLoadingCaseStudies,
+    caseStudies: caseStudies.map(cs => ({ id: cs.id, title: cs.title }))
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [logoColors, setLogoColors] = useState<{ [key: string]: string }>({});
