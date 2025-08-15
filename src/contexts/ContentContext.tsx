@@ -272,7 +272,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         // Then load fresh data from Supabase
         const { data, error } = await supabase
           .from('case_studies')
-          .select('id, title, summary, image, logo, tags, company, industry, display_order')
+          .select('id, title, summary, image, logo, tags, company, industry, display_order, content')
           .order('display_order', { ascending: true });
         
         if (error) {
@@ -284,7 +284,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         if (data && data.length > 0) {
           console.log(`Loaded ${data.length} case studies from Supabase`);
           
-          // Process data efficiently - defer content loading
+          // Process data efficiently
           const mapped = data.map((row: any) => ({
             id: row.id as string,
             title: row.title as string,
@@ -294,7 +294,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
             tags: (row.tags ?? []) as string[],
             company: (row.company ?? '') as string,
             industry: (row.industry ?? '') as string,
-            // Content will be loaded separately when needed
+            content: row.content ? row.content as any : undefined,
           }));
           
           setCaseStudies(mapped);
