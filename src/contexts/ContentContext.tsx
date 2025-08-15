@@ -238,12 +238,6 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
 
       console.log('Setting case studies state...');
       setCaseStudies(studies);
-      try {
-        localStorage.setItem('caseStudies', JSON.stringify(studies));
-        console.log('Saved to localStorage');
-      } catch (localStorageError) {
-        console.error('Failed to save to localStorage:', localStorageError);
-      }
       console.log('updateCaseStudies completed successfully');
     } catch (error) {
       console.error('Failed to persist case studies:', error);
@@ -299,15 +293,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
           }));
           
           setCaseStudies(mapped);
-          
-          // Save to localStorage asynchronously
-          setTimeout(() => {
-            try {
-              localStorage.setItem('caseStudies', JSON.stringify(mapped));
-            } catch (storageError) {
-              console.warn('Failed to save to localStorage:', storageError);
-            }
-          }, 0);
+          console.log('Case studies loaded and set successfully');
         }
       } catch (err) {
         console.error('Failed to load case studies:', err);
