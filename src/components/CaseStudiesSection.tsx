@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import CaseStudyCard from "./CaseStudyCard";
 import CaseStudyCardSkeleton from "./CaseStudyCardSkeleton";
 import { useContent } from "@/contexts/ContentContext";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import CaseStudyPage from "./CaseStudyPage";
 import { extractDominantColor } from "@/utils/colorExtractor";
 
@@ -115,6 +115,8 @@ const CaseStudiesSection = () => {
                   </div>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto">
+                  <DialogTitle className="sr-only">{caseStudy.title}</DialogTitle>
+                  <DialogDescription className="sr-only">{caseStudy.summary}</DialogDescription>
                   <CaseStudyPage caseStudyId={caseStudy.id} />
                 </DialogContent>
               </Dialog>
