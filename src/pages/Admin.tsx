@@ -278,8 +278,16 @@ const Admin = () => {
     
     // Update case studies with all new ones
     try {
-      console.log('Attempting to update case studies. Current count:', caseStudies.length, 'New count:', newCaseStudies.length);
-      await updateCaseStudies([...caseStudies, ...newCaseStudies]);
+      console.log('handleFileUpload: Attempting to update case studies');
+      console.log('handleFileUpload: Current count:', caseStudies.length);
+      console.log('handleFileUpload: New count:', newCaseStudies.length);
+      console.log('handleFileUpload: New case studies:', newCaseStudies.map(cs => ({ id: cs.id, title: cs.title })));
+      
+      const updatedList = [...caseStudies, ...newCaseStudies];
+      console.log('handleFileUpload: Total count after merge:', updatedList.length);
+      
+      await updateCaseStudies(updatedList);
+      console.log('handleFileUpload: updateCaseStudies call completed');
       
       // Show appropriate toast messages
       if (successCount > 0 && failureCount === 0) {
