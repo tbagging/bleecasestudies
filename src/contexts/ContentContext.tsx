@@ -238,19 +238,8 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
       console.log('Setting case studies state...');
       setCaseStudies(studies);
       try {
-        // Only save basic info to localStorage to avoid quota issues
-        const basicInfo = studies.map(cs => ({
-          id: cs.id,
-          title: cs.title,
-          summary: cs.summary,
-          image: cs.image,
-          logo: cs.logo,
-          tags: cs.tags,
-          company: cs.company,
-          industry: cs.industry
-        }));
-        localStorage.setItem('caseStudiesBasic', JSON.stringify(basicInfo));
-        console.log('Saved basic info to localStorage');
+        localStorage.setItem('caseStudies', JSON.stringify(studies));
+        console.log('Saved to localStorage');
       } catch (localStorageError) {
         console.error('Failed to save to localStorage:', localStorageError);
       }
@@ -268,13 +257,13 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         setIsLoadingCaseStudies(true);
         console.log('Loading case studies from Supabase...');
         
-        // First load basic info from localStorage for instant display (no content to save space)
+        // First load from localStorage for instant display
         try {
-          const stored = localStorage.getItem('caseStudiesBasic');
+          const stored = localStorage.getItem('caseStudies');
           if (stored) {
             const parsed = JSON.parse(stored);
             setCaseStudies(parsed);
-            console.log('Loaded basic case studies from localStorage');
+            console.log('Loaded case studies from localStorage');
           }
         } catch {
           // Ignore localStorage errors
@@ -283,7 +272,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         // Then load fresh data from Supabase
         const { data, error } = await supabase
           .from('case_studies')
-          .select('id, title, summary, image, logo, tags, company, industry, display_order, content')
+          .select('id, title, summary, image, logo, tags, company, industry, display_order')
           .order('display_order', { ascending: true });
         
         if (error) {
@@ -295,67 +284,27 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         if (data && data.length > 0) {
           console.log(`Loaded ${data.length} case studies from Supabase`);
           
-          // Process data efficiently and handle content deserialization
-          console.log('Raw data from Supabase:', data[0]); // Debug first item
-          const mapped = data.map((row: any) => {
-            let content = undefined;
-            if (row.content) {
-              // Handle different content formats from database
-              if (typeof row.content === 'string') {
-                try {
-                  content = JSON.parse(row.content);
-                } catch {
-                  content = undefined;
-                }
-              } else if (row.content && typeof row.content === 'object') {
-                // Handle serialized objects with _type/_value structure
-                if (row.content._type && row.content.value) {
-                  if (row.content._type === 'string') {
-                    try {
-                      content = JSON.parse(row.content.value);
-                    } catch {
-                      content = undefined;
-                    }
-                  } else {
-                    content = row.content.value;
-                  }
-                } else {
-                  content = row.content;
-                }
-              }
-            }
-            
-            return {
-              id: row.id as string,
-              title: row.title as string,
-              summary: (row.summary ?? '') as string,
-              image: (row.image ?? undefined) as string | undefined,
-              logo: (row.logo ?? undefined) as string | undefined,
-              tags: (row.tags ?? []) as string[],
-              company: (row.company ?? '') as string,
-              industry: (row.industry ?? '') as string,
-              content: content,
-            };
-          });
+          // Process data efficiently - defer content loading
+          const mapped = data.map((row: any) => ({
+            id: row.id as string,
+            title: row.title as string,
+            summary: (row.summary ?? '') as string,
+            image: (row.image ?? undefined) as string | undefined,
+            logo: (row.logo ?? undefined) as string | undefined,
+            tags: (row.tags ?? []) as string[],
+            company: (row.company ?? '') as string,
+            industry: (row.industry ?? '') as string,
+            // Content will be loaded separately when needed
+          }));
           
           setCaseStudies(mapped);
           
-          // Save basic info to localStorage (without content to save space)
+          // Save to localStorage asynchronously
           setTimeout(() => {
             try {
-              const basicInfo = mapped.map(cs => ({
-                id: cs.id,
-                title: cs.title,
-                summary: cs.summary,
-                image: cs.image,
-                logo: cs.logo,
-                tags: cs.tags,
-                company: cs.company,
-                industry: cs.industry
-              }));
-              localStorage.setItem('caseStudiesBasic', JSON.stringify(basicInfo));
+              localStorage.setItem('caseStudies', JSON.stringify(mapped));
             } catch (storageError) {
-              console.warn('Failed to save basic info to localStorage:', storageError);
+              console.warn('Failed to save to localStorage:', storageError);
             }
           }, 0);
         }
