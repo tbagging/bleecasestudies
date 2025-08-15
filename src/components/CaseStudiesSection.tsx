@@ -15,6 +15,12 @@ const CaseStudiesSection = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [logoColors, setLogoColors] = useState<{ [key: string]: string }>({});
 
+  console.log('CaseStudiesSection render:', { 
+    caseStudiesCount: caseStudies.length, 
+    isLoadingCaseStudies,
+    caseStudies: caseStudies.slice(0, 3) // Log first 3 for debugging
+  });
+
   const allTags = Array.from(new Set(caseStudies.flatMap(cs => cs.tags)));
 
   const filteredCaseStudies = caseStudies.filter(cs => {
