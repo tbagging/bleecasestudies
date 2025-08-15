@@ -238,8 +238,19 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
       console.log('Setting case studies state...');
       setCaseStudies(studies);
       try {
-        localStorage.setItem('caseStudies', JSON.stringify(studies));
-        console.log('Saved to localStorage');
+        // Only save basic info to localStorage to avoid quota issues
+        const basicInfo = studies.map(cs => ({
+          id: cs.id,
+          title: cs.title,
+          summary: cs.summary,
+          image: cs.image,
+          logo: cs.logo,
+          tags: cs.tags,
+          company: cs.company,
+          industry: cs.industry
+        }));
+        localStorage.setItem('caseStudiesBasic', JSON.stringify(basicInfo));
+        console.log('Saved basic info to localStorage');
       } catch (localStorageError) {
         console.error('Failed to save to localStorage:', localStorageError);
       }
@@ -257,13 +268,13 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         setIsLoadingCaseStudies(true);
         console.log('Loading case studies from Supabase...');
         
-        // First load from localStorage for instant display
+        // First load basic info from localStorage for instant display (no content to save space)
         try {
-          const stored = localStorage.getItem('caseStudies');
+          const stored = localStorage.getItem('caseStudiesBasic');
           if (stored) {
             const parsed = JSON.parse(stored);
             setCaseStudies(parsed);
-            console.log('Loaded case studies from localStorage');
+            console.log('Loaded basic case studies from localStorage');
           }
         } catch {
           // Ignore localStorage errors
@@ -294,17 +305,27 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
             tags: (row.tags ?? []) as string[],
             company: (row.company ?? '') as string,
             industry: (row.industry ?? '') as string,
-            content: row.content ? row.content as any : undefined,
+            content: row.content || undefined,
           }));
           
           setCaseStudies(mapped);
           
-          // Save to localStorage asynchronously
+          // Save basic info to localStorage (without content to save space)
           setTimeout(() => {
             try {
-              localStorage.setItem('caseStudies', JSON.stringify(mapped));
+              const basicInfo = mapped.map(cs => ({
+                id: cs.id,
+                title: cs.title,
+                summary: cs.summary,
+                image: cs.image,
+                logo: cs.logo,
+                tags: cs.tags,
+                company: cs.company,
+                industry: cs.industry
+              }));
+              localStorage.setItem('caseStudiesBasic', JSON.stringify(basicInfo));
             } catch (storageError) {
-              console.warn('Failed to save to localStorage:', storageError);
+              console.warn('Failed to save basic info to localStorage:', storageError);
             }
           }, 0);
         }
