@@ -87,7 +87,7 @@ const CaseStudiesSection = () => {
             />
           </div>
           
-          <div className="flex flex-wrap gap-2">
+          <div className="hidden md:flex flex-wrap gap-2">
             <span className="text-sm font-medium text-muted-foreground mr-2">Filter by:</span>
             {allTags.map(tag => (
               <Badge
