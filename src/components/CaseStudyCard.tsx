@@ -30,7 +30,7 @@ const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardPro
     >
       <CardHeader>
         {caseStudy.logo && (
-          <div className="flex justify-center mb-4 h-20">
+          <div className="flex justify-center mb-4 h-16">
             <img 
               src={caseStudy.logo} 
               alt={`${caseStudy.company} logo`}
