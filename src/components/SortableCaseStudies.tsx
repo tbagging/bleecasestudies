@@ -138,36 +138,42 @@ export function SortableCaseStudies({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Case Studies Order</h3>
-        <p className="text-sm text-muted-foreground">
-          Drag to reorder how they appear on the main page
-        </p>
+      <div className="flex items-center justify-center">
+        <div className="text-center">
+          <h3 className="text-lg font-semibold">Case Studies Order</h3>
+          <p className="text-sm text-muted-foreground">
+            Drag to reorder how they appear on the main page
+          </p>
+        </div>
       </div>
       
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={items.map(item => item.id)} strategy={verticalListSortingStrategy}>
-          {items.map((caseStudy) => (
-            <SortableItem
-              key={caseStudy.id}
-              id={caseStudy.id}
-              caseStudy={caseStudy}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
-          ))}
-        </SortableContext>
-      </DndContext>
-      
-      {items.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
-          No case studies to reorder. Upload some case studies first.
+      <div className="flex justify-center">
+        <div className="w-full max-w-2xl">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={items.map(item => item.id)} strategy={verticalListSortingStrategy}>
+              {items.map((caseStudy) => (
+                <SortableItem
+                  key={caseStudy.id}
+                  id={caseStudy.id}
+                  caseStudy={caseStudy}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
+          
+          {items.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              No case studies to reorder. Upload some case studies first.
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
