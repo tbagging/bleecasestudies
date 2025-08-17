@@ -121,7 +121,7 @@ const CaseStudiesSection = () => {
                     />
                   </div>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto">
+                <DialogContent className="max-w-4xl h-[90vh] overflow-y-auto" aria-describedby="case-study-content">
                   <CaseStudyPage caseStudyId={caseStudy.id} />
                 </DialogContent>
               </Dialog>
