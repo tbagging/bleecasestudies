@@ -188,7 +188,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             {caseStudy.content?.results && caseStudy.content.results.length > 0 ? (
               <div className="grid md:grid-cols-3 gap-6">
                  {caseStudy.content.results.map((result, index) => (
-                   <div key={index} className="text-center p-4">
+                   <div key={index} className="flex flex-col items-center justify-center text-center p-6">
                      <div className="text-4xl font-bold text-primary mb-2">{result.metric}</div>
                      <div className="text-sm text-muted-foreground font-medium mb-1">{result.value}</div>
                      <div className="text-sm text-muted-foreground">{result.description}</div>
