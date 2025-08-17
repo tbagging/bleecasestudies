@@ -60,22 +60,7 @@ function SortableItem({ id, caseStudy, onEdit, onDelete }: SortableItemProps) {
             </div>
             
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h4 className="font-medium truncate">{caseStudy.title}</h4>
-                <Badge variant="secondary" className="text-xs">
-                  {caseStudy.industry}
-                </Badge>
-              </div>
-              <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-                {caseStudy.summary || "No summary available"}
-              </p>
-              <div className="flex flex-wrap gap-1">
-                {caseStudy.tags.map((tag: string) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
-                    #{tag}
-                  </Badge>
-                ))}
-              </div>
+              <h4 className="font-medium">{caseStudy.title}</h4>
             </div>
             
             <div className="flex gap-2">
