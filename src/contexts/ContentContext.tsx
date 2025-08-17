@@ -43,6 +43,7 @@ interface CaseStudyContent {
   challenge: string;
   process: { phase: string; description: string }[];
   results: { metric: string; value: string; description: string }[];
+  keyStats?: { [key: string]: string | number };
   companySize?: string;
   timeline?: string;
 }

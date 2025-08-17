@@ -193,6 +193,15 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                    </div>
                  ))}
               </div>
+            ) : caseStudy.content?.keyStats ? (
+              <div className="grid md:grid-cols-3 gap-6">
+                {Object.entries(caseStudy.content.keyStats).map(([key, value], index) => (
+                  <div key={index} className="flex flex-col items-center justify-center text-center p-6">
+                    <div className="text-4xl font-bold text-primary mb-2">{value as string}</div>
+                    <div className="text-sm text-muted-foreground font-medium">{key}</div>
+                  </div>
+                ))}
+              </div>
             ) : (
               <p className="text-muted-foreground">Results and metrics from the uploaded case study document will be displayed here.</p>
             )}
