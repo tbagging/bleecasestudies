@@ -22,13 +22,13 @@ const ClientLogos = () => {
           
           // If width is significantly larger than height (long logo), make it larger
           if (aspectRatio > 1.5) {
-            sizes[logo.url] = "max-h-20 max-w-full"; // Larger for long logos
+            sizes[logo.url] = "max-h-12 max-w-full"; // Larger for long logos
           } else {
-            sizes[logo.url] = "max-h-16 max-w-full"; // Standard size for square/tall logos
+            sizes[logo.url] = "max-h-10 max-w-full"; // Standard size for square/tall logos
           }
         } catch (error) {
           // Fallback to standard size if image fails to load
-          sizes[logo.url] = "max-h-16 max-w-full";
+          sizes[logo.url] = "max-h-10 max-w-full";
         }
       }
       
@@ -48,11 +48,11 @@ const ClientLogos = () => {
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
           {clientLogos.map((logo, index) => (
-            <div key={index} className="flex items-center justify-center h-20 p-4">
+            <div key={index} className="flex items-center justify-center h-16 p-4">
               <img 
                 src={logo.url} 
                 alt={logo.name} 
-                className={`${logoSizes[logo.url] || 'max-h-16 max-w-full'} object-contain opacity-60 hover:opacity-100 transition-opacity`}
+                className={`${logoSizes[logo.url] || 'max-h-10 max-w-full'} object-contain opacity-60 hover:opacity-100 transition-opacity`}
               />
             </div>
           ))}
