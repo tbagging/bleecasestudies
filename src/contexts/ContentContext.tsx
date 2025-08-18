@@ -111,8 +111,8 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
 
   const [aboutContent, setAboutContent] = useState<AboutContent>(() =>
     initializeContent('aboutContent', {
-      heading: "Change from within the system",
-      description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives action.",
+      heading: "Change from within",
+      description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives change.",
       secondaryDescription: "Our approach transforms internal complexity into executable results. Through focused engagement, we help teams move from paralysis to progress, within 24 hours.",
       clarityTitle: "Clarity",
       clarityDescription: "Structured communication that cuts through complexity and drives aligned understanding.",
