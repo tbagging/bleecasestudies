@@ -105,15 +105,15 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   const [heroContent, setHeroContent] = useState<HeroContent>(() => 
     initializeContent('heroContent', {
       title: "Strategic transformation from within",
-      subtitle: "We generate clarity, direction and ownership — within 24–48 hours"
+      subtitle: "Real change, sparked by your employees"
     })
   );
 
   const [aboutContent, setAboutContent] = useState<AboutContent>(() =>
     initializeContent('aboutContent', {
       heading: "Change from within the system",
-      description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives aligned action.",
-      secondaryDescription: "Our strategic approach transforms internal complexity into executable direction. Through focused engagement, we help teams move from paralysis to progress, typically within 24–48 hours.",
+      description: "We are not consultants. We are not facilitators. We embed inside organizations to activate clarity, ownership, and momentum that drives action.",
+      secondaryDescription: "Our approach transforms internal complexity into executable results. Through focused engagement, we help teams move from paralysis to progress, within 24 hours.",
       clarityTitle: "Clarity",
       clarityDescription: "Structured communication that cuts through complexity and drives aligned understanding.",
       engagementTitle: "Engagement", 
