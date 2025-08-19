@@ -19,24 +19,24 @@ const CaseStudiesSection = () => {
     caseStudies: caseStudies.map(cs => ({ id: cs.id, title: cs.title }))
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [logoColors, setLogoColors] = useState<{ [key: string]: string }>({});
 
-  const allTags = Array.from(new Set(caseStudies.flatMap(cs => cs.tags)));
+  const allIndustries = Array.from(new Set(caseStudies.map(cs => cs.industry).filter(Boolean)));
 
   const filteredCaseStudies = caseStudies.filter(cs => {
     const matchesSearch = cs.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cs.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cs.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => cs.tags.includes(tag));
-    return matchesSearch && matchesTags;
+    const matchesIndustry = selectedIndustries.length === 0 || selectedIndustries.includes(cs.industry);
+    return matchesSearch && matchesIndustry;
   });
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+  const toggleIndustry = (industry: string) => {
+    setSelectedIndustries(prev => 
+      prev.includes(industry) 
+        ? prev.filter(i => i !== industry)
+        : [...prev, industry]
     );
   };
 
@@ -88,15 +88,15 @@ const CaseStudiesSection = () => {
           </div>
           
           <div className="hidden md:flex flex-wrap gap-2">
-            <span className="text-sm font-medium text-muted-foreground mr-2">Filter by:</span>
-            {allTags.map(tag => (
+            <span className="text-sm font-medium text-muted-foreground mr-2">Filter by industry:</span>
+            {allIndustries.map(industry => (
               <Badge
-                key={tag}
-                variant={selectedTags.includes(tag) ? "default" : "outline"}
+                key={industry}
+                variant={selectedIndustries.includes(industry) ? "default" : "outline"}
                 className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                onClick={() => toggleTag(tag)}
+                onClick={() => toggleIndustry(industry)}
               >
-                #{tag}
+                {industry}
               </Badge>
             ))}
           </div>
