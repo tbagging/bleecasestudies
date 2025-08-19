@@ -26,6 +26,16 @@ const CaseStudiesSection = () => {
 
   const filteredCaseStudies = caseStudies.filter(cs => {
     const searchLower = searchTerm.toLowerCase();
+    
+    // Handle hashtag search (e.g., "#ai" should only match tags)
+    if (searchTerm.startsWith('#')) {
+      const hashtagTerm = searchLower.slice(1); // Remove the # symbol
+      const matchesHashtag = cs.tags.some(tag => tag.toLowerCase().includes(hashtagTerm));
+      const matchesIndustry = selectedIndustries.length === 0 || selectedIndustries.includes(cs.industry);
+      return matchesHashtag && matchesIndustry;
+    }
+    
+    // Regular search across all fields
     const matchesSearch = cs.title.toLowerCase().includes(searchLower) ||
                          cs.summary.toLowerCase().includes(searchLower) ||
                          cs.company.toLowerCase().includes(searchLower) ||
