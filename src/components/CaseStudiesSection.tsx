@@ -25,9 +25,11 @@ const CaseStudiesSection = () => {
   const allIndustries = Array.from(new Set(caseStudies.map(cs => cs.industry).filter(Boolean)));
 
   const filteredCaseStudies = caseStudies.filter(cs => {
-    const matchesSearch = cs.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cs.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cs.company.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = cs.title.toLowerCase().includes(searchLower) ||
+                         cs.summary.toLowerCase().includes(searchLower) ||
+                         cs.company.toLowerCase().includes(searchLower) ||
+                         cs.tags.some(tag => tag.toLowerCase().includes(searchLower));
     const matchesIndustry = selectedIndustries.length === 0 || selectedIndustries.includes(cs.industry);
     return matchesSearch && matchesIndustry;
   });
