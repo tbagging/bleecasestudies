@@ -219,7 +219,7 @@ const CaseStudy = () => {
             onClick={() => {
               const subject = "Case Study Discussion";
               const body = `I'm interested in discussing how BLEE can help our organization achieve results similar to the ${caseStudy.company} case study.`;
-              window.location.href = `mailto:tomer@bleehackathons.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+              window.location.href = `mailto:hello@blee.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             }}
             size="lg"
             className="text-lg px-8 py-4"

@@ -9,7 +9,7 @@ const Hero = () => {
   const handleEmailCTA = () => {
     const subject = "Strategic Transformation Discussion";
     const body = "I'm interested in learning more about BLEE's strategic transformation approach for our organization.";
-    window.location.href = `tomer@bleehackathons.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:hello@blee.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
   return <section 
       className="min-h-screen flex items-center justify-center bg-primary text-primary-foreground relative"
