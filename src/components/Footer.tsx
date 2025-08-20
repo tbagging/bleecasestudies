@@ -5,6 +5,7 @@ const Footer = () => {
   const { footerContent } = useContent();
   
   const handleEmailCTA = () => {
+    console.log("Footer button clicked!");
     const subject = "Strategic Transformation Discussion";
     const body = "I'm interested in learning more about BLEE's strategic transformation approach for our organization.";
     window.location.href = `mailto:tomer@bleehackathons.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
