@@ -3,6 +3,13 @@ import { useContent } from "@/contexts/ContentContext";
 
 const Footer = () => {
   const { footerContent } = useContent();
+  
+  const handleEmailCTA = () => {
+    const subject = "Strategic Transformation Discussion";
+    const body = "I'm interested in learning more about BLEE's strategic transformation approach for our organization.";
+    window.location.href = `mailto:hello@blee.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+  
   return (
     <footer className="bg-primary text-primary-foreground py-12">
       <div className="max-w-6xl mx-auto px-6 text-center">
@@ -12,6 +19,7 @@ const Footer = () => {
           </p>
           
           <Button 
+            onClick={handleEmailCTA}
             variant="outline" 
             size="lg"
             className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary transition-colors duration-300"
