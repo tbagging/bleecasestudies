@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,32 +25,58 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Create email with form data
-    const subject = "Contact Form Submission - Strategic Transformation Discussion";
-    const body = `
-New contact form submission:
+    try {
+      const { error } = await supabase.functions.invoke('contact-webhook', {
+        body: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          organization: formData.organization,
+          position: formData.position,
+          message: formData.message,
+          timestamp: new Date().toISOString()
+        }
+      });
 
-Name: ${formData.firstName} ${formData.lastName}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Organization: ${formData.organization}
-Position: ${formData.position}
+      if (error) {
+        throw error;
+      }
 
-Message:
-${formData.message}
-    `;
-    
-    window.location.href = `mailto:tomer@bleehackathons.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-    toast({
-      title: "Form Submitted",
-      description: "Your email client will open with your message ready to send.",
-    });
-    
-    onClose();
+      toast({
+        title: "Form Submitted Successfully",
+        description: "We'll get back to you soon!",
+      });
+      
+      // Reset form
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        organization: "",
+        position: "",
+        message: ""
+      });
+      
+      onClose();
+      
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Submission Failed",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -158,9 +185,10 @@ ${formData.message}
 
           <Button 
             type="submit" 
-            className="w-full bg-black text-white hover:bg-gray-800 rounded-full py-6 text-lg"
+            disabled={isSubmitting}
+            className="w-full bg-black text-white hover:bg-gray-800 rounded-full py-6 text-lg disabled:opacity-50"
           >
-            Submit
+            {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
         </form>
       </DialogContent>
