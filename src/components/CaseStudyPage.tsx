@@ -219,6 +219,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           <h3 className="text-2xl font-title font-bold mb-4">Ready to transform your organization?</h3>
           <Button 
             size="lg"
+            className="text-xl"
             onClick={() => window.location.href = "mailto:hello@blee.com?subject=Let's discuss transformation"}
           >
             Let's talk
