@@ -29,8 +29,22 @@ serve(async (req) => {
       data: formData
     });
 
-    // Log the form data for make.com to process
-    console.log('Form Data:', JSON.stringify(formData, null, 2));
+    // Forward the form data to Make.com webhook
+    const makeWebhookUrl = 'https://hook.us2.make.com/y8h3j2e116wcqke7onlrasaasa6e2ix7';
+    
+    const makeResponse = await fetch(makeWebhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData)
+    });
+
+    if (!makeResponse.ok) {
+      throw new Error(`Make.com webhook failed: ${makeResponse.status}`);
+    }
+
+    console.log('Successfully forwarded to Make.com:', makeResponse.status);
 
     // Return success response
     return new Response(
