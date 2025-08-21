@@ -22,6 +22,7 @@ export default {
 				'title': ['Manrope', 'sans-serif'],
 				'body': ['Manrope', 'sans-serif'],
 				'sans': ['Manrope', 'sans-serif'],
+				'bariol': ['Bariol', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
