@@ -106,7 +106,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
           <div className="lg:col-span-2 order-1">
             <div className="bg-primary rounded-lg p-6 text-primary-foreground h-full">
               <div className="bg-accent/10 backdrop-blur-sm rounded-lg p-6 text-center h-full flex flex-col justify-center">
-                <h3 className="text-xl font-bold mb-4">Reach out Directly</h3>
+                <h3 className="text-xl font-bold mb-4">Reach out directly</h3>
                 
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
                   <img 
