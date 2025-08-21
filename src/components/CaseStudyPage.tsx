@@ -77,7 +77,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
               <Building className="h-6 w-6 text-primary" />
             )}
           </div>
-          <h1 id="case-study-title" className="text-3xl font-bold mb-4">{cleanTitle(caseStudy.title)}</h1>
+          <h1 id="case-study-title" className="text-3xl font-title font-bold mb-4">{cleanTitle(caseStudy.title)}</h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             {caseStudy.summary}
           </p>
@@ -91,7 +91,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         {/* Client Snapshot */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-title">
               <Building className="h-5 w-5" />
               Client Snapshot
             </CardTitle>
@@ -123,7 +123,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         {/* Overview/Background */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-title">
               <Eye className="h-5 w-5" />
               Overview
             </CardTitle>
@@ -138,7 +138,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         {/* Challenge */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-title">
               <Target className="h-5 w-5" />
               The Challenge
             </CardTitle>
@@ -157,7 +157,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         {/* Process */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-title">
               <Users className="h-5 w-5" />
               The Process
             </CardTitle>
@@ -167,7 +167,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
               <div className="space-y-6">
                 {caseStudy.content.process.map((phase, phaseIndex) => (
                   <div key={phaseIndex} className="border-l-4 border-primary pl-4">
-                    <h5 className="font-semibold text-lg mb-2">{phase.phase}</h5>
+                    <h5 className="font-semibold font-title text-lg mb-2">{phase.phase}</h5>
                     <div className="text-muted-foreground whitespace-pre-wrap text-base">
                       {phase.description}
                     </div>
@@ -183,7 +183,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
         {/* Key Metrics */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 font-title">
               <TrendingUp className="h-5 w-5" />
               Key Stats
             </CardTitle>
@@ -216,7 +216,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
 
         {/* CTA */}
         <div className="text-center py-8">
-          <h3 className="text-2xl font-bold mb-4">Ready to transform your organization?</h3>
+          <h3 className="text-2xl font-title font-bold mb-4">Ready to transform your organization?</h3>
           <Button 
             size="lg"
             onClick={() => window.location.href = "mailto:hello@blee.com?subject=Let's discuss transformation"}
