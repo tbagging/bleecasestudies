@@ -2,33 +2,20 @@ import { MessageCircle } from "lucide-react";
 
 const WhatsAppButton = () => {
   const handleClick = () => {
-    const phoneNumber = "972542398076"; // +972542398076 without the + sign
+    const phoneNumber = "+972542398076";
     
-    // Try multiple WhatsApp URL formats to ensure compatibility
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // Simple approach - just open the phone number
+    // This will work on mobile devices and desktop without API calls
+    window.open(`tel:${phoneNumber}`, '_self');
     
-    let whatsappUrl;
-    if (isMobile) {
-      // Mobile: Try to open WhatsApp app directly
-      whatsappUrl = `whatsapp://send?phone=${phoneNumber}`;
-    } else {
-      // Desktop: Use WhatsApp Web
-      whatsappUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}`;
+    // For desktop users, also show a helpful message
+    const isDesktop = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isDesktop) {
+      setTimeout(() => {
+        alert(`Call us at: ${phoneNumber}\n\nOr message us on WhatsApp at this number!`);
+      }, 100);
     }
-    
-    window.open(whatsappUrl, '_blank');
-    
-    // Fallback: if the above doesn't work, provide alternative
-    setTimeout(() => {
-      if (!document.hasFocus()) return; // User likely navigated away
-      
-      const fallbackMessage = `Please contact us on WhatsApp: +972542398076`;
-      if (confirm(`${fallbackMessage}\n\nWould you like to copy the number to clipboard?`)) {
-        navigator.clipboard.writeText('+972542398076').catch(() => {
-          prompt('Copy this WhatsApp number:', '+972542398076');
-        });
-      }
-    }, 2000);
   };
 
   return (
