@@ -101,7 +101,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
           <DialogTitle className="text-2xl font-bold text-primary font-sans text-center">Speak to an Expert</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName" className="font-bold">First name *</Label>
