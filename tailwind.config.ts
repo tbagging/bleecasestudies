@@ -20,8 +20,8 @@ export default {
 		extend: {
 			fontFamily: {
 				'title': ['Manrope', 'sans-serif'],
-				'body': ['Manrope', 'sans-serif'],
-				'sans': ['Manrope', 'sans-serif'],
+				'body': ['Bariol', 'sans-serif'],
+				'sans': ['Bariol', 'sans-serif'],
 				'bariol': ['Bariol', 'sans-serif'],
 			},
 			colors: {
