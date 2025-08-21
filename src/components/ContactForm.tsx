@@ -241,7 +241,8 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
           <Button 
             type="submit" 
             disabled={isSubmitting}
-            className="w-full bg-black text-white hover:bg-gray-800 rounded-full py-6 text-lg disabled:opacity-50"
+            variant="outline"
+            className="w-full bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300 rounded-full py-6 text-lg disabled:opacity-50"
           >
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
