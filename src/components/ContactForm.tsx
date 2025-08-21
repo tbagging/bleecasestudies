@@ -180,17 +180,6 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="webhookUrl">Make.com Webhook URL (for testing)</Label>
-            <Input
-              id="webhookUrl"
-              value={webhookUrl}
-              onChange={(e) => setWebhookUrl(e.target.value)}
-              placeholder="https://hook.us2.make.com/..."
-              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-sm"
-            />
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="message">How can we help?</Label>
             <Textarea
               id="message"
