@@ -98,22 +98,22 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           </CardHeader>
           <CardContent>
             {caseStudy.content?.clientSnapshot ? (
-              <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap mb-4">
+              <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap mb-4 text-lg">
                 {caseStudy.content.clientSnapshot}
               </div>
             ) : (
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
                   <h4 className="font-semibold mb-2">Industry</h4>
-                  <p className="text-muted-foreground">{caseStudy.industry}</p>
+                  <p className="text-muted-foreground text-lg">{caseStudy.industry}</p>
                 </div>
                 <div>
                   <h4 className="font-semibold mb-2">Company Size</h4>
-                  <p className="text-muted-foreground">{caseStudy.content?.companySize || "Not specified"}</p>
+                  <p className="text-muted-foreground text-lg">{caseStudy.content?.companySize || "Not specified"}</p>
                 </div>
                 <div>
                   <h4 className="font-semibold mb-2">Project Timeline</h4>
-                  <p className="text-muted-foreground">{caseStudy.content?.timeline || "Not specified"}</p>
+                  <p className="text-muted-foreground text-lg">{caseStudy.content?.timeline || "Not specified"}</p>
                 </div>
               </div>
             )}
@@ -129,7 +129,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+            <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap text-lg">
               {caseStudy.content?.background || "Overview information from the uploaded case study document will be displayed here."}
             </div>
           </CardContent>
@@ -145,11 +145,11 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           </CardHeader>
           <CardContent>
             {caseStudy.content?.challenge ? (
-              <div className="text-muted-foreground whitespace-pre-wrap">
+              <div className="text-muted-foreground whitespace-pre-wrap text-lg">
                 {caseStudy.content.challenge}
               </div>
             ) : (
-              <p className="text-muted-foreground">Challenge details from the uploaded case study document will be displayed here.</p>
+              <p className="text-muted-foreground text-lg">Challenge details from the uploaded case study document will be displayed here.</p>
             )}
           </CardContent>
         </Card>
@@ -168,14 +168,14 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                 {caseStudy.content.process.map((phase, phaseIndex) => (
                   <div key={phaseIndex} className="border-l-4 border-primary pl-4">
                     <h5 className="font-semibold text-lg mb-2">{phase.phase}</h5>
-                    <div className="text-muted-foreground whitespace-pre-wrap text-sm">
+                    <div className="text-muted-foreground whitespace-pre-wrap text-base">
                       {phase.description}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">Process details from the uploaded case study document will be displayed here.</p>
+              <p className="text-muted-foreground text-lg">Process details from the uploaded case study document will be displayed here.</p>
             )}
           </CardContent>
         </Card>
@@ -194,8 +194,8 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                  {caseStudy.content.results.map((result, index) => (
                    <div key={index} className="flex flex-col items-center justify-center text-center p-6">
                      <div className="text-4xl font-bold text-primary mb-2">{result.metric}</div>
-                     <div className="text-sm text-muted-foreground font-medium mb-1">{result.value}</div>
-                     <div className="text-sm text-muted-foreground">{result.description}</div>
+                      <div className="text-base text-muted-foreground font-medium mb-1">{result.value}</div>
+                      <div className="text-base text-muted-foreground">{result.description}</div>
                    </div>
                  ))}
               </div>
@@ -204,12 +204,12 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
                 {Object.entries(caseStudy.content.keyStats).map(([key, value], index) => (
                   <div key={index} className="flex flex-col items-center justify-center text-center p-6">
                     <div className="text-4xl font-bold text-primary mb-2">{value as string}</div>
-                    <div className="text-sm text-muted-foreground font-medium">{key}</div>
+                    <div className="text-base text-muted-foreground font-medium">{key}</div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">Results and metrics from the uploaded case study document will be displayed here.</p>
+              <p className="text-muted-foreground text-lg">Results and metrics from the uploaded case study document will be displayed here.</p>
             )}
           </CardContent>
         </Card>
