@@ -41,7 +41,7 @@ const Hero = () => {
             onClick={() => setIsContactFormOpen(true)} 
             variant="outline" 
             size="lg" 
-            className="bg-transparent border-white text-white hover:bg-white hover:text-primary transition-colors duration-300 text-lg px-8 py-4"
+            className="bg-transparent border-white text-white hover:bg-white hover:text-primary transition-colors duration-300 text-xl px-8 py-4"
           >
             Start Your Transformation
           </Button>

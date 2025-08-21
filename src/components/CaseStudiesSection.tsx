@@ -95,12 +95,12 @@ const CaseStudiesSection = () => {
               placeholder="Search case studies..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 py-3 text-lg"
+              className="pl-10 py-3 text-xl"
             />
           </div>
           
           <div className="hidden md:flex flex-wrap gap-2">
-            <span className="text-sm font-medium text-muted-foreground mr-2">Filter by industry:</span>
+            <span className="text-base font-medium text-muted-foreground mr-2">Filter by industry:</span>
             {allIndustries.map(industry => (
               <Badge
                 key={industry}
@@ -143,7 +143,7 @@ const CaseStudiesSection = () => {
 
         {!isLoadingCaseStudies && filteredCaseStudies.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No case studies match your current filters.</p>
+            <p className="text-lg text-muted-foreground">No case studies match your current filters.</p>
           </div>
         )}
       </div>

@@ -51,7 +51,7 @@ const AboutSection = () => {
           onClick={handleEmailCTA} 
           variant="outline" 
           size="lg" 
-          className="bg-transparent border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-300 text-lg px-8 py-4"
+          className="bg-transparent border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-300 text-xl px-8 py-4"
         >
           {aboutContent.buttonText}
         </Button>

@@ -41,18 +41,18 @@ const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardPro
             />
           </div>
         )}
-        <CardTitle className="text-xl group-hover:text-primary transition-colors">
+        <CardTitle className="text-2xl group-hover:text-primary transition-colors">
           {cleanTitle(caseStudy.title)}
         </CardTitle>
-        <span className="text-xs text-muted-foreground">{caseStudy.industry}</span>
-        <CardDescription className="text-sm leading-relaxed">
+        <span className="text-sm text-muted-foreground">{caseStudy.industry}</span>
+        <CardDescription className="text-base leading-relaxed">
           {caseStudy.summary}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
           {caseStudy.tags.map((tag, index) => (
-            <Badge key={index} variant="secondary" className="text-xs">
+            <Badge key={index} variant="secondary" className="text-sm">
               #{tag}
             </Badge>
           ))}
