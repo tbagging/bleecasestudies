@@ -112,7 +112,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
                   alt="BLEE Logo" 
                   className="w-32 h-auto mx-auto mb-4"
                 />
-                <h3 className="text-2xl font-bold mb-4">Or reach out directly</h3>
+                <h3 className="text-xl font-bold mb-4">Or reach out directly</h3>
                 
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
                   <img 
@@ -122,12 +122,12 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
                   />
                 </div>
                 
-                <p className="mb-6 font-bold text-lg">Tomer our CEO would love to hear from you by:</p>
+                <p className="mb-6 font-bold">Tomer our CEO would love to hear from you by:</p>
                 
                 <div className="space-y-3">
                   <a 
                     href="mailto:contact@blee.com" 
-                    className="flex items-center justify-center gap-2 bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors rounded-lg p-3 text-lg"
+                    className="flex items-center justify-center gap-2 bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors rounded-lg p-3"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -137,7 +137,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
                   
                   <a 
                     href="tel:7722825731"
-                    className="flex items-center justify-center gap-2 bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors rounded-lg p-3 text-lg"
+                    className="flex items-center justify-center gap-2 bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors rounded-lg p-3"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
@@ -154,43 +154,43 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
             <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName" className="font-bold text-primary text-lg">First name *</Label>
+              <Label htmlFor="firstName" className="font-bold text-primary">First name *</Label>
               <Input
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange("firstName", e.target.value)}
                 required
-                className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-lg"
+                className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName" className="font-bold text-primary text-lg">Last name</Label>
+              <Label htmlFor="lastName" className="font-bold text-primary">Last name</Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange("lastName", e.target.value)}
-                className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-lg"
+                className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="font-bold text-primary text-lg">Email *</Label>
+            <Label htmlFor="email" className="font-bold text-primary">Email *</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
               required
-              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-lg"
+              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone" className="font-bold text-primary text-lg">Phone</Label>
+            <Label htmlFor="phone" className="font-bold text-primary">Phone</Label>
             <div className="flex">
               <Select defaultValue="+1">
-                <SelectTrigger className="w-20 border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-lg">
+                <SelectTrigger className="w-20 border-b-2 border-x-0 border-t-0 rounded-none bg-transparent">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -204,40 +204,40 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange("phone", e.target.value)}
-                className="flex-1 border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-lg"
+                className="flex-1 border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="organization" className="font-bold text-primary text-lg">Organization</Label>
+            <Label htmlFor="organization" className="font-bold text-primary">Organization</Label>
             <Input
               id="organization"
               value={formData.organization}
               onChange={(e) => handleInputChange("organization", e.target.value)}
-              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-lg"
+              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="position" className="font-bold text-primary text-lg">Position</Label>
+            <Label htmlFor="position" className="font-bold text-primary">Position</Label>
             <Input
               id="position"
               value={formData.position}
               onChange={(e) => handleInputChange("position", e.target.value)}
-              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-lg"
+              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message" className="font-bold text-primary text-lg">How can we help?</Label>
+            <Label htmlFor="message" className="font-bold text-primary">How can we help?</Label>
             <Textarea
               id="message"
               value={formData.message}
               onChange={(e) => handleInputChange("message", e.target.value)}
               placeholder="If you have a specific hackathon in mind, tell us everything you can about it."
               rows={4}
-              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent resize-none text-lg"
+              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent resize-none"
             />
           </div>
 
