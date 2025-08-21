@@ -33,7 +33,7 @@ const Hero = () => {
         <h1 className="text-4xl md:text-6xl font-title font-bold mb-8 leading-tight max-w-2xl mx-auto">
           {heroContent.title}
         </h1>
-        <p className="text-xl md:text-2xl font-body mb-12 opacity-90 leading-relaxed max-w-3xl mx-auto">
+        <p className="text-2xl md:text-3xl font-body mb-12 opacity-90 leading-relaxed max-w-3xl mx-auto">
           {heroContent.subtitle}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">

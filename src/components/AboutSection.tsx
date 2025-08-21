@@ -16,7 +16,7 @@ const AboutSection = () => {
         
         <h2 className="text-4xl font-title font-bold mb-8">{aboutContent.heading}</h2>
         
-        <div className="space-y-6 text-lg font-body text-muted-foreground mb-12 max-w-3xl mx-auto">
+        <div className="space-y-6 text-xl font-body text-muted-foreground mb-12 max-w-3xl mx-auto">
           <p>
             {aboutContent.description}
           </p>
@@ -29,19 +29,19 @@ const AboutSection = () => {
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="text-center bg-slate-50 rounded-2xl px-[14px] mx-0 my-0 py-[20px]">
             <h3 className="text-xl font-title mb-4 text-primary font-extrabold">{aboutContent.clarityTitle}</h3>
-            <p className="font-body text-muted-foreground">
+            <p className="font-body text-muted-foreground text-lg">
               {aboutContent.clarityDescription}
             </p>
           </div>
           <div className="text-center my-0 px-[15px] py-[20px] rounded-2xl bg-slate-50">
             <h3 className="text-xl font-title mb-4 text-primary font-extrabold">{aboutContent.engagementTitle}</h3>
-            <p className="font-body text-muted-foreground">
+            <p className="font-body text-muted-foreground text-lg">
               {aboutContent.engagementDescription}
             </p>
           </div>
           <div className="text-center px-[14px] py-[20px] rounded-2xl bg-slate-50">
             <h3 className="text-xl font-title mb-4 text-primary font-extrabold">{aboutContent.momentumTitle}</h3>
-            <p className="font-body text-muted-foreground">
+            <p className="font-body text-muted-foreground text-lg">
               {aboutContent.momentumDescription}
             </p>
           </div>
