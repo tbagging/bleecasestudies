@@ -116,7 +116,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
                   />
                 </div>
                 
-                <p className="mb-6">Tomer our CEO would love to hear from you by:</p>
+                <p className="mb-6 font-bold">Tomer our CEO would love to hear from you by:</p>
                 
                 <div className="space-y-3">
                   <a 
