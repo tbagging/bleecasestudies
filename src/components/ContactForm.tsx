@@ -101,9 +101,9 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
           <DialogTitle className="text-2xl font-bold text-primary font-sans text-center">Speak to an Expert</DialogTitle>
         </DialogHeader>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-6">
           {/* Reach out Directly Section */}
-          <div className="bg-primary rounded-lg p-6 text-primary-foreground">
+          <div className="bg-primary rounded-lg p-6 text-primary-foreground border-r border-border/20">
             <div className="bg-accent/10 backdrop-blur-sm rounded-lg p-6 text-center">
               <h3 className="text-xl font-bold mb-4">Reach out Directly</h3>
               
@@ -144,7 +144,8 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
           </div>
 
           {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="pl-6 lg:pl-0">
+            <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName" className="font-bold">First name *</Label>
@@ -242,6 +243,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
         </form>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
