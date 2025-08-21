@@ -26,6 +26,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [webhookUrl, setWebhookUrl] = useState("https://hook.us2.make.com/fdasjp9j89mg2mwo5l5vmh98bcjktug3");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +42,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
           organization: formData.organization,
           position: formData.position,
           message: formData.message,
+          webhookUrl: webhookUrl,
           timestamp: new Date().toISOString()
         }
       });
@@ -174,6 +176,17 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
               value={formData.position}
               onChange={(e) => handleInputChange("position", e.target.value)}
               className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="webhookUrl">Make.com Webhook URL (for testing)</Label>
+            <Input
+              id="webhookUrl"
+              value={webhookUrl}
+              onChange={(e) => setWebhookUrl(e.target.value)}
+              placeholder="https://hook.us2.make.com/..."
+              className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent text-sm"
             />
           </div>
 

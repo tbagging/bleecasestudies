@@ -30,7 +30,7 @@ serve(async (req) => {
     });
 
     // Forward the form data to Make.com webhook
-    const makeWebhookUrl = 'https://hook.us2.make.com/fdasjp9j89mg2mwo5l5vmh98bcjktug3';
+    const makeWebhookUrl = formData.webhookUrl || 'https://hook.us2.make.com/fdasjp9j89mg2mwo5l5vmh98bcjktug3';
     
     console.log('Attempting to send to Make.com webhook:', makeWebhookUrl);
     
