@@ -98,7 +98,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto font-sans">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-primary font-sans text-center">Speak to an Expert</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-primary font-sans text-center">Speak to an expert</DialogTitle>
         </DialogHeader>
         
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-6">
