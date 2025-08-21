@@ -2,20 +2,18 @@ import { MessageCircle } from "lucide-react";
 
 const WhatsAppButton = () => {
   const handleClick = () => {
-    const phoneNumber = "+972542398076";
+    const phoneNumber = "972542398076";
     
-    // Simple approach - just open the phone number
-    // This will work on mobile devices and desktop without API calls
-    window.open(`tel:${phoneNumber}`, '_self');
+    // Create a simple link element and click it to avoid popup blockers
+    const link = document.createElement('a');
+    link.href = `https://wa.me/${phoneNumber}`;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     
-    // For desktop users, also show a helpful message
-    const isDesktop = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (isDesktop) {
-      setTimeout(() => {
-        alert(`Call us at: ${phoneNumber}\n\nOr message us on WhatsApp at this number!`);
-      }, 100);
-    }
+    // Temporarily add to DOM, click, then remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
