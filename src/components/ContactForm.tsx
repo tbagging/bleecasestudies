@@ -98,7 +98,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto font-sans">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-primary font-sans">Talk to an Expert</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-primary font-sans">Speak to an Expert</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-6">
