@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
 import bleeLogoMain from "@/assets/blee-logo-main.png";
 import { useContent } from "@/contexts/ContentContext";
+import { useState } from "react";
+import ContactForm from "./ContactForm";
 const Hero = () => {
   const {
     heroContent,
     ctaContent
   } = useContent();
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   const handleEmailCTA = () => {
     const subject = "Strategic Transformation Discussion";
     const body = "I'm interested in learning more about BLEE's strategic transformation approach for our organization.";
@@ -35,15 +38,19 @@ const Hero = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
           <Button 
-            onClick={handleEmailCTA} 
+            onClick={() => setIsContactFormOpen(true)} 
             variant="outline" 
             size="lg" 
             className="bg-transparent border-white text-white hover:bg-white hover:text-primary transition-colors duration-300 text-lg px-8 py-4"
           >
             Start Your Transformation
           </Button>
-          
         </div>
+        
+        <ContactForm 
+          isOpen={isContactFormOpen} 
+          onClose={() => setIsContactFormOpen(false)} 
+        />
       </div>
     </section>;
 };

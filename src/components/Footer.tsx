@@ -1,15 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useContent } from "@/contexts/ContentContext";
+import { useState } from "react";
+import ContactForm from "./ContactForm";
 
 const Footer = () => {
   const { footerContent } = useContent();
-  
-  const handleEmailCTA = () => {
-    console.log("Footer button clicked!");
-    const subject = "Strategic Transformation Discussion";
-    const body = "I'm interested in learning more about BLEE's strategic transformation approach for our organization.";
-    window.location.href = `mailto:tomer@bleehackathons.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   
   return (
     <footer className="bg-primary text-primary-foreground py-12">
@@ -20,13 +16,18 @@ const Footer = () => {
           </p>
           
           <Button 
-            onClick={handleEmailCTA}
+            onClick={() => setIsContactFormOpen(true)}
             variant="outline" 
             size="lg"
             className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary transition-colors duration-300"
           >
             {footerContent.buttonText}
           </Button>
+          
+          <ContactForm 
+            isOpen={isContactFormOpen} 
+            onClose={() => setIsContactFormOpen(false)} 
+          />
         </div>
         
         <div className="border-t border-primary-foreground/30 pt-6">
