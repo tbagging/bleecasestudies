@@ -19,7 +19,7 @@ const Footer = () => {
             onClick={() => setIsContactFormOpen(true)}
             variant="outline" 
             size="lg"
-            className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary transition-colors duration-300"
+            className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary transition-colors duration-300 text-xl"
           >
             {footerContent.buttonText}
           </Button>
