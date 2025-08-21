@@ -41,7 +41,7 @@ const CaseStudyCard = ({ caseStudy, onClick, backgroundColor }: CaseStudyCardPro
             />
           </div>
         )}
-        <CardTitle className="text-2xl font-title group-hover:text-primary transition-colors">
+        <CardTitle className="text-xl font-title group-hover:text-primary transition-colors">
           {cleanTitle(caseStudy.title)}
         </CardTitle>
         <span className="text-sm text-muted-foreground">{caseStudy.industry}</span>
