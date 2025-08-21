@@ -107,6 +107,11 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
             <div className="bg-primary rounded-lg p-6 text-primary-foreground h-full relative overflow-hidden" style={{backgroundImage: 'url(/lovable-uploads/cf7219b1-65cc-4ad2-892e-33ca3dc54528.png)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
               <div className="absolute inset-0 bg-primary/70 rounded-lg"></div>
               <div className="relative z-10 p-6 text-center h-full flex flex-col justify-center">
+                <img 
+                  src="/lovable-uploads/e05b80ef-55e5-45e6-85b7-ec1d92c3c898.png" 
+                  alt="BLEE Logo" 
+                  className="w-32 h-auto mx-auto mb-4"
+                />
                 <h3 className="text-xl font-bold mb-4">Or reach out directly</h3>
                 
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
