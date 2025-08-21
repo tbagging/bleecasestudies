@@ -114,12 +114,11 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName" className="font-bold">Last name *</Label>
+              <Label htmlFor="lastName" className="font-bold">Last name</Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange("lastName", e.target.value)}
-                required
                 className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
               />
             </div>
@@ -138,7 +137,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone" className="font-bold">Phone *</Label>
+            <Label htmlFor="phone" className="font-bold">Phone</Label>
             <div className="flex">
               <Select defaultValue="+1">
                 <SelectTrigger className="w-20 border-b-2 border-x-0 border-t-0 rounded-none bg-transparent">
@@ -155,30 +154,27 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange("phone", e.target.value)}
-                required
                 className="flex-1 border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="organization" className="font-bold">Organization *</Label>
+            <Label htmlFor="organization" className="font-bold">Organization</Label>
             <Input
               id="organization"
               value={formData.organization}
               onChange={(e) => handleInputChange("organization", e.target.value)}
-              required
               className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="position" className="font-bold">Position *</Label>
+            <Label htmlFor="position" className="font-bold">Position</Label>
             <Input
               id="position"
               value={formData.position}
               onChange={(e) => handleInputChange("position", e.target.value)}
-              required
               className="border-b-2 border-x-0 border-t-0 rounded-none bg-transparent"
             />
           </div>
