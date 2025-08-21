@@ -32,7 +32,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase.functions.invoke('contact-webhook', {
+      const { data, error } = await supabase.functions.invoke('contact-webhook', {
         body: {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -46,7 +46,13 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
       });
 
       if (error) {
+        console.error('Supabase function error:', error);
         throw error;
+      }
+
+      // Check if the response indicates a webhook delivery failure
+      if (data && data.error) {
+        throw new Error(data.message || 'Webhook delivery failed');
       }
 
       toast({

@@ -38,6 +38,7 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'User-Agent': 'Supabase-Edge-Function',
       },
       body: JSON.stringify(formData)
     });
@@ -48,7 +49,20 @@ serve(async (req) => {
     if (!makeResponse.ok) {
       const responseText = await makeResponse.text();
       console.log('Make.com error response:', responseText);
-      throw new Error(`Make.com webhook failed: ${makeResponse.status} ${makeResponse.statusText} - ${responseText}`);
+      
+      // Return a more specific error response instead of throwing
+      return new Response(
+        JSON.stringify({ 
+          error: 'Webhook delivery failed',
+          message: `Make.com returned ${makeResponse.status}: ${responseText || makeResponse.statusText}`,
+          status: makeResponse.status,
+          details: responseText
+        }),
+        {
+          status: 400, // Use 400 instead of 500 for webhook delivery issues
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
 
     console.log('Successfully forwarded to Make.com:', makeResponse.status);
