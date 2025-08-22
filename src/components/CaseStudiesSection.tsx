@@ -104,7 +104,7 @@ const CaseStudiesSection = () => {
               <Badge
                 key={industry}
                 variant={selectedIndustries.includes(industry) ? "default" : "outline"}
-                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors px-4 py-2 text-base"
                 onClick={() => toggleIndustry(industry)}
               >
                 {industry}
