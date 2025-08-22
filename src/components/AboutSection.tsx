@@ -1,15 +1,13 @@
 import { Button } from "@/components/ui/button";
 import bleeLogoTagline from "@/assets/blee-logo-tagline.png";
 import { useContent } from "@/contexts/ContentContext";
+import { useState } from "react";
+import ContactForm from "./ContactForm";
 const AboutSection = () => {
   const {
     aboutContent
   } = useContent();
-  const handleEmailCTA = () => {
-    const subject = "Strategic Transformation Discussion";
-    const body = "I'm interested in learning more about BLEE's approach to organizational transformation.";
-    window.location.href = `mailto:tomer@bleehackathons.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   return <section 
       className="py-20 bg-background relative"
       style={{
@@ -57,13 +55,18 @@ const AboutSection = () => {
         </div>
 
         <Button 
-          onClick={handleEmailCTA} 
+          onClick={() => setIsContactFormOpen(true)} 
           variant="outline" 
           size="lg" 
           className="bg-transparent border-primary text-primary hover:bg-primary hover:text-white transition-colors duration-300 text-xl px-8 py-4"
         >
           {aboutContent.buttonText}
         </Button>
+        
+        <ContactForm 
+          isOpen={isContactFormOpen} 
+          onClose={() => setIsContactFormOpen(false)} 
+        />
       </div>
     </section>;
 };
