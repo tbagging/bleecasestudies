@@ -116,7 +116,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
                 
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
                   <img 
-                    src="/lovable-uploads/b00fba53-4f82-4959-a863-4f027e313a63.png" 
+                    src="/lovable-uploads/b3062fca-1716-4571-a78c-7189a6b52e2d.png" 
                     alt="Expert profile" 
                     className="w-full h-full object-cover"
                   />
