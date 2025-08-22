@@ -17,7 +17,7 @@ const Hero = () => {
   return <section 
       className="min-h-screen flex items-center justify-center bg-primary text-primary-foreground relative"
       style={{
-        backgroundImage: `url('/lovable-uploads/3d8692c9-9d9f-4271-925a-8759a0a0daf2.png')`,
+        backgroundImage: `url('/lovable-uploads/a745f4c5-7f59-4992-9921-21b243246001.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'

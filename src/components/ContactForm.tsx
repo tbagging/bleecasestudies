@@ -104,7 +104,7 @@ const ContactForm = ({ isOpen, onClose }: ContactFormProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-6">
           {/* Reach out Directly Section */}
           <div className="lg:col-span-2 order-2 lg:order-1">
-            <div className="bg-primary rounded-lg p-6 text-primary-foreground h-full relative overflow-hidden" style={{backgroundImage: 'url(/lovable-uploads/cf7219b1-65cc-4ad2-892e-33ca3dc54528.png)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+            <div className="bg-primary rounded-lg p-6 text-primary-foreground h-full relative overflow-hidden" style={{backgroundImage: 'url(/lovable-uploads/a745f4c5-7f59-4992-9921-21b243246001.png)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
               <div className="absolute inset-0 bg-primary/70 rounded-lg"></div>
               <div className="relative z-10 p-6 text-center h-full flex flex-col justify-center">
                 <img 

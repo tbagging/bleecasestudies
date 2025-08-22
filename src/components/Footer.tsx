@@ -11,7 +11,7 @@ const Footer = () => {
     <footer 
       className="bg-primary text-primary-foreground py-12 relative"
       style={{
-        backgroundImage: `url('/lovable-uploads/3d8692c9-9d9f-4271-925a-8759a0a0daf2.png')`,
+        backgroundImage: `url('/lovable-uploads/a745f4c5-7f59-4992-9921-21b243246001.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'bottom',
         backgroundRepeat: 'no-repeat'
