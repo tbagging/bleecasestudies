@@ -82,8 +82,7 @@ const CaseStudiesSection = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-title font-bold mb-6">Real Results, Real Impact</h2>
           <p className="text-2xl font-body text-muted-foreground max-w-3xl mx-auto">
-            See how we've helped organizations transform from within, creating lasting change 
-            that drives measurable business outcomes.
+            See how we've helped organizations transform from within, since 2016
           </p>
         </div>
 
