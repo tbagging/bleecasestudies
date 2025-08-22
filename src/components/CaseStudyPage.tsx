@@ -223,6 +223,7 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           <Button 
             size="lg"
             onClick={() => setIsContactFormOpen(true)}
+            className="font-sans"
           >
             Let's talk
           </Button>
