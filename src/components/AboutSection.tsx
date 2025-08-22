@@ -10,8 +10,17 @@ const AboutSection = () => {
     const body = "I'm interested in learning more about BLEE's approach to organizational transformation.";
     window.location.href = `mailto:tomer@bleehackathons.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
-  return <section className="py-20 bg-background">
-      <div className="max-w-4xl mx-auto px-6 text-center">
+  return <section 
+      className="py-20 bg-background relative"
+      style={{
+        backgroundImage: `url('/lovable-uploads/e1757da9-604a-414d-8251-255529943135.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <div className="absolute inset-0 bg-white/90"></div>
+      <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
         <img src="/lovable-uploads/b3ee8b18-3ea9-48fa-a1db-fb95bb3c136a.png" alt="BLEE - beyond hackathons" className="w-48 h-auto mx-auto mb-12" />
         
         <h2 className="text-4xl font-title font-bold mb-8">{aboutContent.heading}</h2>
