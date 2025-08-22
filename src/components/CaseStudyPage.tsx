@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Building, TrendingUp, Users, Target, Eye } from "lucide-react";
 import { useContent } from "@/contexts/ContentContext";
+import ContactForm from "@/components/ContactForm";
 
 const cleanTitle = (title: string) => {
   return title.replace(/\bcase study\b/gi, '').trim();
@@ -15,6 +17,7 @@ interface CaseStudyPageProps {
 const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
   const { caseStudies } = useContent();
   const caseStudy = caseStudies.find(cs => cs.id === caseStudyId);
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   
   // Debug logging
   console.log('CaseStudyPage - caseStudy:', caseStudy);
@@ -219,12 +222,17 @@ const CaseStudyPage = ({ caseStudyId }: CaseStudyPageProps) => {
           <h3 className="text-2xl font-title font-bold mb-4">Ready to transform your organization?</h3>
           <Button 
             size="lg"
-            onClick={() => window.location.href = "mailto:hello@blee.com?subject=Let's discuss transformation"}
+            onClick={() => setIsContactFormOpen(true)}
           >
             Let's talk
           </Button>
         </div>
       </div>
+      
+      <ContactForm 
+        isOpen={isContactFormOpen} 
+        onClose={() => setIsContactFormOpen(false)} 
+      />
     </div>
   );
 };

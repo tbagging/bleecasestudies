@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Lock, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ContactForm from "@/components/ContactForm";
 
 const cleanTitle = (title: string) => {
   return title.replace(/\bcase study\b/gi, '').trim();
@@ -17,6 +18,7 @@ const CaseStudy = () => {
   const [email, setEmail] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
 
   // Check if user has already unlocked content
   useEffect(() => {
@@ -216,11 +218,7 @@ const CaseStudy = () => {
         <div className="text-center mt-16 pt-8 border-t">
           <h3 className="text-xl font-semibold mb-4">Ready to create similar results?</h3>
           <Button 
-            onClick={() => {
-              const subject = "Case Study Discussion";
-              const body = `I'm interested in discussing how BLEE can help our organization achieve results similar to the ${caseStudy.company} case study.`;
-              window.location.href = `mailto:hello@blee.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            }}
+            onClick={() => setIsContactFormOpen(true)}
             size="lg"
             className="text-lg px-8 py-4"
           >
@@ -228,6 +226,11 @@ const CaseStudy = () => {
           </Button>
         </div>
       </div>
+      
+      <ContactForm 
+        isOpen={isContactFormOpen} 
+        onClose={() => setIsContactFormOpen(false)} 
+      />
     </div>
   );
 };
