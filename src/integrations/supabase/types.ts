@@ -24,6 +24,7 @@ export type Database = {
           id: string
           image: string | null
           industry: string
+          is_visible: boolean
           logo: string | null
           summary: string | null
           tags: string[]
@@ -39,6 +40,7 @@ export type Database = {
           id: string
           image?: string | null
           industry: string
+          is_visible?: boolean
           logo?: string | null
           summary?: string | null
           tags?: string[]
@@ -54,6 +56,7 @@ export type Database = {
           id?: string
           image?: string | null
           industry?: string
+          is_visible?: boolean
           logo?: string | null
           summary?: string | null
           tags?: string[]

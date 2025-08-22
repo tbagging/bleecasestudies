@@ -227,6 +227,7 @@ const Admin = () => {
           industry: determinedIndustry,
           tags: [],
           fileName: file.name,
+          is_visible: true,
           content: {
             heroImage: "",
             clientSnapshot: parsedContent.clientSnapshot || "",
@@ -255,6 +256,7 @@ const Admin = () => {
           industry: "Unknown", // Can't determine without content
           tags: [], // No tags generated automatically
           fileName: file.name,
+          is_visible: true,
           content: {
             heroImage: "",
             clientSnapshot: "",
@@ -1718,6 +1720,25 @@ const Admin = () => {
                       console.error('Failed to delete case study:', error);
                       toast({
                         title: "Failed to delete",
+                        description: "Please try again.",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                  onToggleVisibility={async (id, isVisible) => {
+                    try {
+                      const updatedCaseStudies = caseStudies.map(cs => 
+                        cs.id === id ? { ...cs, is_visible: isVisible } : cs
+                      );
+                      await updateCaseStudies(updatedCaseStudies);
+                      toast({
+                        title: "Visibility updated",
+                        description: `Case study ${isVisible ? 'shown' : 'hidden'} successfully.`,
+                      });
+                    } catch (error) {
+                      console.error('Failed to update visibility:', error);
+                      toast({
+                        title: "Failed to update visibility",
                         description: "Please try again.",
                         variant: "destructive"
                       });

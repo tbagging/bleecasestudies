@@ -21,16 +21,18 @@ import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { GripVertical, Edit, Trash2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { GripVertical, Edit, Trash2, Eye, EyeOff } from "lucide-react";
 
 interface SortableItemProps {
   id: string;
   caseStudy: any;
   onEdit: (caseStudy: any) => void;
   onDelete: (id: string) => void;
+  onToggleVisibility: (id: string, isVisible: boolean) => void;
 }
 
-function SortableItem({ id, caseStudy, onEdit, onDelete }: SortableItemProps) {
+function SortableItem({ id, caseStudy, onEdit, onDelete, onToggleVisibility }: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -60,34 +62,52 @@ function SortableItem({ id, caseStudy, onEdit, onDelete }: SortableItemProps) {
             </div>
             
             <div className="flex-1 min-w-0">
-              <h4 className="font-medium">{caseStudy.title}</h4>
+              <div className="flex items-center gap-2">
+                <h4 className="font-medium">{caseStudy.title}</h4>
+                {!caseStudy.is_visible && (
+                  <Badge variant="secondary" className="text-xs">
+                    <EyeOff className="w-3 h-3 mr-1" />
+                    Hidden
+                  </Badge>
+                )}
+              </div>
             </div>
             
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit(caseStudy);
-                }}
-                className="flex items-center gap-1"
-              >
-                <Edit className="w-4 h-4" />
-                Edit
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(caseStudy.id);
-                }}
-                className="flex items-center gap-1"
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete
-              </Button>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Eye className="w-4 h-4 text-muted-foreground" />
+                <Switch
+                  checked={caseStudy.is_visible}
+                  onCheckedChange={(checked) => onToggleVisibility(id, checked)}
+                />
+              </div>
+              
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(caseStudy);
+                  }}
+                  className="flex items-center gap-1"
+                >
+                  <Edit className="w-4 h-4" />
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(caseStudy.id);
+                  }}
+                  className="flex items-center gap-1"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -101,13 +121,15 @@ interface SortableCaseStudiesProps {
   onReorder: (newOrder: any[]) => void;
   onEdit: (caseStudy: any) => void;
   onDelete: (id: string) => void;
+  onToggleVisibility: (id: string, isVisible: boolean) => void;
 }
 
 export function SortableCaseStudies({ 
   caseStudies, 
   onReorder, 
   onEdit, 
-  onDelete 
+  onDelete,
+  onToggleVisibility
 }: SortableCaseStudiesProps) {
   const [items, setItems] = useState(caseStudies);
 
@@ -162,6 +184,7 @@ export function SortableCaseStudies({
                   caseStudy={caseStudy}
                   onEdit={onEdit}
                   onDelete={onDelete}
+                  onToggleVisibility={onToggleVisibility}
                 />
               ))}
             </SortableContext>
