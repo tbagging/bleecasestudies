@@ -65,6 +65,30 @@ export type Database = {
         }
         Relationships: []
       }
+      page_content: {
+        Row: {
+          content_data: Json
+          content_key: string
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          content_data: Json
+          content_key: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          content_data?: Json
+          content_key?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

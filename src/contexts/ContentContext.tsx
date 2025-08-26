@@ -70,10 +70,10 @@ interface ContentContextType {
   availableTags: string[];
   caseStudies: CaseStudy[];
   isLoadingCaseStudies: boolean;
-  updateHeroContent: (content: HeroContent) => void;
-  updateAboutContent: (content: AboutContent) => void;
-  updateCTAContent: (content: CTAContent) => void;
-  updateFooterContent: (content: FooterContent) => void;
+  updateHeroContent: (content: HeroContent) => Promise<void>;
+  updateAboutContent: (content: AboutContent) => Promise<void>;
+  updateCTAContent: (content: CTAContent) => Promise<void>;
+  updateFooterContent: (content: FooterContent) => Promise<void>;
   updateClientLogos: (logos: ClientLogo[]) => void;
   updateAvailableTags: (tags: string[]) => void;
   updateCaseStudies: (caseStudies: CaseStudy[]) => Promise<void>;
@@ -160,24 +160,56 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [isLoadingCaseStudies, setIsLoadingCaseStudies] = useState(true);
 
-  const updateHeroContent = (content: HeroContent) => {
+  const updateHeroContent = async (content: HeroContent) => {
     setHeroContent(content);
     localStorage.setItem('heroContent', JSON.stringify(content));
+    
+    try {
+      await supabase
+        .from('page_content')
+        .upsert({ content_key: 'hero', content_data: content as any }, { onConflict: 'content_key' });
+    } catch (error) {
+      console.error('Failed to save hero content to Supabase:', error);
+    }
   };
 
-  const updateAboutContent = (content: AboutContent) => {
+  const updateAboutContent = async (content: AboutContent) => {
     setAboutContent(content);
     localStorage.setItem('aboutContent', JSON.stringify(content));
+    
+    try {
+      await supabase
+        .from('page_content')
+        .upsert({ content_key: 'about', content_data: content as any }, { onConflict: 'content_key' });
+    } catch (error) {
+      console.error('Failed to save about content to Supabase:', error);
+    }
   };
 
-  const updateCTAContent = (content: CTAContent) => {
+  const updateCTAContent = async (content: CTAContent) => {
     setCTAContent(content);
     localStorage.setItem('ctaContent', JSON.stringify(content));
+    
+    try {
+      await supabase
+        .from('page_content')
+        .upsert({ content_key: 'cta', content_data: content as any }, { onConflict: 'content_key' });
+    } catch (error) {
+      console.error('Failed to save CTA content to Supabase:', error);
+    }
   };
 
-  const updateFooterContent = (content: FooterContent) => {
+  const updateFooterContent = async (content: FooterContent) => {
     setFooterContent(content);
     localStorage.setItem('footerContent', JSON.stringify(content));
+    
+    try {
+      await supabase
+        .from('page_content')
+        .upsert({ content_key: 'footer', content_data: content as any }, { onConflict: 'content_key' });
+    } catch (error) {
+      console.error('Failed to save footer content to Supabase:', error);
+    }
   };
 
   const updateClientLogos = (logos: ClientLogo[]) => {
@@ -247,14 +279,45 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Load case studies from Supabase on app start
+  // Load content from Supabase on app start
   useEffect(() => {
-    const load = async () => {
+    const loadContent = async () => {
       try {
         setIsLoadingCaseStudies(true);
-        console.log('Loading case studies from Supabase...');
+        console.log('Loading content from Supabase...');
         
-        // First load from localStorage for instant display
+        // Load page content from Supabase
+        const { data: pageContentData, error: pageContentError } = await supabase
+          .from('page_content')
+          .select('content_key, content_data');
+        
+        if (pageContentError) {
+          console.error('Error loading page content:', pageContentError);
+        } else if (pageContentData) {
+          // Update state with Supabase data, overriding localStorage
+          pageContentData.forEach((item: any) => {
+            switch (item.content_key) {
+              case 'hero':
+                setHeroContent(item.content_data);
+                localStorage.setItem('heroContent', JSON.stringify(item.content_data));
+                break;
+              case 'about':
+                setAboutContent(item.content_data);
+                localStorage.setItem('aboutContent', JSON.stringify(item.content_data));
+                break;
+              case 'cta':
+                setCTAContent(item.content_data);
+                localStorage.setItem('ctaContent', JSON.stringify(item.content_data));
+                break;
+              case 'footer':
+                setFooterContent(item.content_data);
+                localStorage.setItem('footerContent', JSON.stringify(item.content_data));
+                break;
+            }
+          });
+        }
+        
+        // First load case studies from localStorage for instant display
         try {
           const stored = localStorage.getItem('caseStudies');
           if (stored) {
@@ -266,7 +329,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
           // Ignore localStorage errors
         }
         
-        // Then load fresh data from Supabase
+        // Then load fresh case studies data from Supabase
         const { data, error } = await supabase
           .from('case_studies')
           .select('id, title, summary, image, logo, tags, company, industry, display_order, content')
@@ -298,13 +361,13 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
           console.log('Case studies loaded and set successfully');
         }
       } catch (err) {
-        console.error('Failed to load case studies:', err);
+        console.error('Failed to load content:', err);
       } finally {
         setIsLoadingCaseStudies(false);
       }
     };
     
-    load();
+    loadContent();
   }, []);
 
   const value = {

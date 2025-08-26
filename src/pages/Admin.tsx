@@ -370,36 +370,68 @@ const Admin = () => {
     }
   };
 
-  const saveHeroContent = () => {
-    updateHeroContent(localHeroContent);
-    toast({
-      title: "Hero section updated",
-      description: "Your changes have been saved successfully.",
-    });
+  const saveHeroContent = async () => {
+    try {
+      await updateHeroContent(localHeroContent);
+      toast({
+        title: "Hero section updated",
+        description: "Your changes have been saved successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to save hero content",
+        description: "There was an error saving your changes. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const saveAboutContent = () => {
-    updateAboutContent(localAboutContent);
-    toast({
-      title: "About section updated",
-      description: "Your changes have been saved successfully.",
-    });
+  const saveAboutContent = async () => {
+    try {
+      await updateAboutContent(localAboutContent);
+      toast({
+        title: "About section updated",
+        description: "Your changes have been saved successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to save about content",
+        description: "There was an error saving your changes. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const saveFooterContent = () => {
-    updateFooterContent(localFooterContent);
-    toast({
-      title: "Footer section updated",
-      description: "Your changes have been saved successfully.",
-    });
+  const saveFooterContent = async () => {
+    try {
+      await updateFooterContent(localFooterContent);
+      toast({
+        title: "Footer section updated",
+        description: "Your changes have been saved successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to save footer content",
+        description: "There was an error saving your changes. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const saveCTAContent = () => {
-    updateCTAContent(localCTAContent);
-    toast({
-      title: "CTA buttons updated",
-      description: "Your changes have been saved successfully.",
-    });
+  const saveCTAContent = async () => {
+    try {
+      await updateCTAContent(localCTAContent);
+      toast({
+        title: "CTA buttons updated",
+        description: "Your changes have been saved successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to save CTA content",
+        description: "There was an error saving your changes. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const addNewTag = () => {
