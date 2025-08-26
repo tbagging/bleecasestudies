@@ -98,7 +98,7 @@ const CaseStudiesSection = () => {
             />
           </div>
           
-          <div className="hidden md:flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             <span className="text-base font-medium text-muted-foreground mr-2">Filter by industry:</span>
             {allIndustries.map(industry => (
               <Badge
