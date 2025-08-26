@@ -35,7 +35,7 @@ const AboutSection = () => {
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="text-center bg-slate-50 rounded-2xl px-[14px] mx-0 my-0 py-[20px]">
-            <h3 className="text-xl font-title mb-4 text-primary font-extrabold">{aboutContent.clarityTitle}</h3>
+            <h3 className="text-xl font-title mb-4 text-primary font-bold">{aboutContent.clarityTitle}</h3>
             <p className="font-body text-muted-foreground text-lg">
               {aboutContent.clarityDescription}
             </p>
