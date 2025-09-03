@@ -6,8 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 export const AuthStatus = () => {
+  console.log('AuthStatus component mounted');
   const { user, isLoading } = useAuth();
   const { toast } = useToast();
+  
+  console.log('AuthStatus state:', { user: user?.email, isLoading });
 
   const handleLogout = async () => {
     try {
@@ -28,6 +31,7 @@ export const AuthStatus = () => {
   };
 
   if (isLoading) {
+    console.log('AuthStatus: showing loading state');
     return (
       <Badge variant="secondary" className="flex items-center gap-2">
         <Clock className="w-3 h-3" />
@@ -37,6 +41,7 @@ export const AuthStatus = () => {
   }
 
   if (!user) {
+    console.log('AuthStatus: no user found');
     return (
       <Badge variant="destructive" className="flex items-center gap-2">
         <XCircle className="w-3 h-3" />
@@ -62,6 +67,7 @@ export const AuthStatus = () => {
         size="sm"
         onClick={handleLogout}
         className="flex items-center gap-2"
+        data-testid="logout-button"
       >
         <LogOut className="w-3 h-3" />
         Logout
