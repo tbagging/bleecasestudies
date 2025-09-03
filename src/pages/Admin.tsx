@@ -18,6 +18,7 @@ import { SyncStatus } from "@/components/SyncStatus";
 import { SortableCaseStudies } from "@/components/SortableCaseStudies";
 
 const Admin = () => {
+  console.log('Admin component rendering');
   const { toast } = useToast();
   const { 
     heroContent, 
