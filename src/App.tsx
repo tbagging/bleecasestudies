@@ -22,7 +22,6 @@ const App = () => (
         <ContentProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/test" element={<div>Test Route Works!</div>} />
             <Route path="/case-study/:id" element={<CaseStudy />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
