@@ -21,7 +21,7 @@ const AboutSection = () => {
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
         <img src="/lovable-uploads/b3ee8b18-3ea9-48fa-a1db-fb95bb3c136a.png" alt="BLEE - beyond hackathons" className="w-48 h-auto mx-auto mb-12" />
         
-        <h2 className="text-4xl font-title font-bold mb-8">{aboutContent.heading}</h2>
+        <h2 className="text-4xl font-title font-bold mb-8 text-foreground/80">{aboutContent.heading}</h2>
         
         <div className="space-y-6 text-xl font-body text-muted-foreground mb-12 max-w-3xl mx-auto">
           <p>
