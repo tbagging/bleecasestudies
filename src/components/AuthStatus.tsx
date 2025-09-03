@@ -46,6 +46,7 @@ export const AuthStatus = () => {
   }
 
   const isAdmin = user.email === 'tomer@blee.pro';
+  console.log('AuthStatus rendering - user:', user.email, 'isAdmin:', isAdmin);
 
   return (
     <div className="flex items-center gap-3">
