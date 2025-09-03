@@ -9,6 +9,8 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth();
   const location = useLocation();
+  
+  console.log('ProtectedRoute - isLoading:', isLoading, 'user:', user?.email, 'location:', location.pathname);
 
   if (isLoading) {
     return (
