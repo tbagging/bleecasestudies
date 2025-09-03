@@ -37,6 +37,19 @@
 <!-- iOS home screen icon -->
 <link rel="apple-touch-icon" sizes="180x180" href="/BLEEFavicon-180.png?v=2" />
 
+<!-- Admin redirect -->
+    <script>
+  (function () {
+    const r = sessionStorage.redirect;
+    if (r) {
+      delete sessionStorage.redirect;
+      const u = new URL(r);
+      history.replaceState(null, '', u.pathname + u.search + u.hash);
+    }
+  })();
+</script>
+
+    
   </head>
 
   <body>
